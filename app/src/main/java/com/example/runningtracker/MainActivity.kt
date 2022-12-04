@@ -13,22 +13,26 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    @SuppressLint("ResourceType")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        binding.bottomAppbar.background = ContextCompat.getDrawable(
-            this, R.color.background)
-        binding.bottomNavigationView.background = null
-        binding.bottomNavigationView.menu.getItem(1).isEnabled = false
+        setUpUi()
 
         binding.fab.setOnClickListener {
             Toast.makeText(this,
                 "fab clicked", Toast.LENGTH_SHORT).show()
             Log.d("!!!!!!!!!!!!","clicked")
         }
+
+    }
+    @SuppressLint("ResourceType")
+    private fun setUpUi(){
+        binding.bottomAppbar.background = ContextCompat.getDrawable(
+            this, R.color.background)
+        binding.bottomNavigationView.background = null
+        binding.bottomNavigationView.menu.getItem(1).isEnabled = false
         binding.bottomNavigationView.itemIconTintList = ContextCompat
             .getColorStateList(this, R.drawable.color_state_list_resource)
     }

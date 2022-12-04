@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/stepCounterFragment">
 
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.runningtracker.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.example.runningtracker.StatisticsFragment"
+        android:label="fragment_statistics"
+        tools:layout="@layout/fragment_statistics" >
+        <action
+            android:id="@+id/action_statisticsFragment_to_dailyReportDetailFragment"
+            app:destination="@id/dailyReportDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stepCounterFragment"
+        android:name="com.example.runningtracker.StepCounterFragment"
+        android:label="fragment_step_counter"
+        tools:layout="@layout/fragment_step_counter" >
+        <action
+            android:id="@+id/action_stepCounterFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment" />
+        <action
+            android:id="@+id/action_stepCounterFragment_to_trackingFragment"
+            app:destination="@id/trackingFragment" />
+        <action
+            android:id="@+id/action_stepCounterFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trackingFragment"
+        android:name="com.example.runningtracker.TrackingFragment"
+        android:label="fragment_tracking"
+        tools:layout="@layout/fragment_tracking" />
+    <fragment
+        android:id="@+id/dailyReportDetailFragment"
+        android:name="com.example.runningtracker.DailyReportDetailFragment"
+        android:label="fragment_daily_report_detail"
+        tools:layout="@layout/fragment_daily_report_detail" />
 </navigation>
