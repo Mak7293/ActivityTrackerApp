@@ -4,17 +4,17 @@
     <group
         android:checkableBehavior="single">
         <item
-            android:id="@+id/bm_graph"
-            android:icon="@drawable/ic_graph"
-            app:showAsAction="ifRoom"/>
+            android:id="@id/statisticsFragment"
+            android:title="Statistics"
+            android:icon="@drawable/ic_graph"/>
         <item
-            android:id="@+id/placeHolder"
-            android:title=""
-            app:showAsAction="ifRoom"/>
+            android:id="@id/stepCounterFragment"
+            android:title="Step Counter"
+            android:icon="@drawable/ic_step"/>
         <item
-            android:id="@+id/bm_home"
-            android:icon="@drawable/ic_home"
-            app:showAsAction="ifRoom"/>
+            android:id="@id/homeFragment"
+            android:title="Home"
+            android:icon="@drawable/ic_home"/>
     </group>
 
 </menu>

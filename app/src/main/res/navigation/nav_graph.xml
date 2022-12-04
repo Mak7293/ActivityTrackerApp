@@ -14,31 +14,26 @@
         android:id="@+id/statisticsFragment"
         android:name="com.example.runningtracker.StatisticsFragment"
         android:label="fragment_statistics"
-        tools:layout="@layout/fragment_statistics" >
-        <action
-            android:id="@+id/action_statisticsFragment_to_dailyReportDetailFragment"
-            app:destination="@id/dailyReportDetailFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_statistics" />
     <fragment
         android:id="@+id/stepCounterFragment"
         android:name="com.example.runningtracker.StepCounterFragment"
         android:label="fragment_step_counter"
         tools:layout="@layout/fragment_step_counter" >
         <action
-            android:id="@+id/action_stepCounterFragment_to_statisticsFragment"
-            app:destination="@id/statisticsFragment" />
-        <action
             android:id="@+id/action_stepCounterFragment_to_trackingFragment"
             app:destination="@id/trackingFragment" />
-        <action
-            android:id="@+id/action_stepCounterFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/trackingFragment"
         android:name="com.example.runningtracker.TrackingFragment"
         android:label="fragment_tracking"
-        tools:layout="@layout/fragment_tracking" />
+        tools:layout="@layout/fragment_tracking" >
+        <action
+            android:id="@+id/action_trackingFragment_to_stepCounterFragment"
+            app:destination="@id/stepCounterFragment"
+            app:popUpTo="@+id/stepCounterFragment"/>/>
+    </fragment>
     <fragment
         android:id="@+id/dailyReportDetailFragment"
         android:name="com.example.runningtracker.DailyReportDetailFragment"
