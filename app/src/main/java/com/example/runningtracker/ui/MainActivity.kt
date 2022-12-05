@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.itemIconTintList = ContextCompat
             .getColorStateList(this, R.drawable.color_state_list_resource)
+        window.decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.white)
 
 
         changeDestination()

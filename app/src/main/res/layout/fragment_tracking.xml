@@ -21,11 +21,34 @@
             android:text="Tracking Fragment"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:gravity="center"
+    <LinearLayout
+        android:id="@+id/layout_information"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="tracking fragment" />
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+    </LinearLayout>
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/os_map"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tilesource="Mapnik"
+        app:layout_constraintTop_toBottomOf="@+id/layout_information"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_pause_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_play"
+        android:backgroundTint="@color/black"
+        app:tint="#00BB09"
+        app:fabCustomSize="70dp"
+        app:maxImageSize="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="30dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

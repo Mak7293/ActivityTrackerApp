@@ -88,6 +88,7 @@ class StepCounterFragment : Fragment() {
             builder.setNegativeButton(resources.getString(R.string.negative)){  dialogInterface , which ->
                 dialogInterface.dismiss()
             }
+
             create()
             setCancelable(false)
             show()
