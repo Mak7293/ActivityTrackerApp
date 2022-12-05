@@ -98,10 +98,13 @@ class TrackingFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         binding?.osMap?.onPause()
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding?.osMap?.onDetach()
         binding = null
+
     }
 }

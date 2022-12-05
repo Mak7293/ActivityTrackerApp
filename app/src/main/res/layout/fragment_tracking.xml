@@ -24,10 +24,116 @@
     <LinearLayout
         android:id="@+id/layout_information"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                app:srcCompat="@drawable/ic_speed" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="16 km/h"
+                android:fontFamily="@font/semi_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Speed"
+                android:fontFamily="@font/semi_bold"
+                android:textColor="#636363"
+                android:textSize="15sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                app:srcCompat="@drawable/ic_duration" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5:20:10"
+                android:fontFamily="@font/semi_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Duration"
+                android:fontFamily="@font/semi_bold"
+                android:textColor="#636363"
+                android:textSize="15sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:padding="3dp"
+                app:srcCompat="@drawable/ic_energy"
+                android:scaleType="fitCenter"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="326 kcal"
+                android:fontFamily="@font/semi_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Calories"
+                android:fontFamily="@font/semi_bold"
+                android:textColor="#636363"
+                android:textSize="15sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:padding="1dp"
+                app:srcCompat="@drawable/ic_distance" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="10.5 km"
+                android:fontFamily="@font/semi_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Distance"
+                android:fontFamily="@font/semi_bold"
+                android:textColor="#636363"
+                android:textSize="15sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <org.osmdroid.views.MapView
