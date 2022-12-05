@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <FrameLayout
         android:id="@+id/flFragment"
@@ -30,6 +30,9 @@
         android:layout_height="wrap_content"
         app:menu="@menu/bottom_nav_menu"
         app:itemIconSize="30dp"
+        android:padding="2dp"
+        app:itemTextColor="@color/black"
+        app:itemTextAppearanceActive="@style/bottomNavigationAppearance"
         app:itemPaddingBottom="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background ="@color/background" />

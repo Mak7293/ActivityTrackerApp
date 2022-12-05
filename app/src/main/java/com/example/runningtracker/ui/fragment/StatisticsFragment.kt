@@ -1,23 +1,23 @@
-package com.example.runningtracker
+package com.example.runningtracker.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.runningtracker.databinding.FragmentDailyReportDetailBinding
+import com.example.runningtracker.databinding.FragmentStatisticsBinding
 
 
-class DailyReportDetailFragment : Fragment() {
+class StatisticsFragment : Fragment() {
 
-    private var binding: FragmentDailyReportDetailBinding? = null
+    private var binding: FragmentStatisticsBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentDailyReportDetailBinding.inflate(layoutInflater)
+        binding = FragmentStatisticsBinding.inflate(layoutInflater)
         return binding?.root
 
 
@@ -27,6 +27,5 @@ class DailyReportDetailFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
 
 }

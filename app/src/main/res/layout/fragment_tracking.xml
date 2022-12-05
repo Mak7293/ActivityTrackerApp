@@ -4,9 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TrackingFragment">
+    tools:context=".ui.fragment.TrackingFragment">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
+        android:background="@color/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
@@ -14,6 +15,9 @@
             android:id="@+id/toolbar_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textColor="@color/black"
+            android:fontFamily="@font/semi_bold"
+            android:textSize="18sp"
             android:text="Tracking Fragment"/>
     </androidx.appcompat.widget.Toolbar>
 

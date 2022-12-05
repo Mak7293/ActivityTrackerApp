@@ -1,18 +1,14 @@
-package com.example.runningtracker
+package com.example.runningtracker.ui
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.runningtracker.R
 import com.example.runningtracker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -29,13 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.itemIconTintList = ContextCompat
             .getColorStateList(this, R.drawable.color_state_list_resource)
-        binding.bottomNavigationView.itemTextColor = ContextCompat
-            .getColorStateList(this, R.drawable.color_state_list_resource)
+
 
         changeDestination()
-
-
-
 
     }
 
@@ -50,11 +42,12 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener(
             NavController.OnDestinationChangedListener { controller, destination, arguments ->
                 when(destination.id){
-                    R.id.homeFragment,R.id.stepCounterFragment,R.id.statisticsFragment  ->
+                    R.id.homeFragment, R.id.stepCounterFragment, R.id.statisticsFragment ->
                         binding.bottomNavigationView.visibility = View.VISIBLE
                     else  ->  binding.bottomNavigationView.visibility = View.GONE
                 }
             })
     }
+
 
 }

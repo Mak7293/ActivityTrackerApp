@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">RunningTracker</string>
+    <string name="permission_denied_alert_dialog">You have denied location permission
+        access, this app needs them to work properly.</string>
+    <string name="activate_permission">Activate Permission</string>
+    <string name="negative">i don\'t want activate permission</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
