@@ -16,19 +16,15 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.example.runningtracker.model.path.PolyLines
-import com.example.runningtracker.util.Constants
-import com.google.android.gms.location.*
 import com.example.runningtracker.R
+import com.example.runningtracker.model.path.PolyLines
 import com.example.runningtracker.model.path.Polyline
+import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.PrimaryUtility
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
+import java.util.*
 import javax.inject.Inject
 
 
@@ -40,6 +36,8 @@ class TrackingService: LifecycleService() {
     private var isFirstRun = true
     private var serviceKilled = false
 
+    var timer = Timer()
+
     @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -48,7 +46,7 @@ class TrackingService: LifecycleService() {
 
     lateinit var currentNotificationBuilder: NotificationCompat.Builder
 
-    private val timeRunInSeconds = MutableLiveData<Long>()
+    //private val timeRunInSeconds = MutableLiveData<Long>()
 
     companion object{
         val timeRunInMillis = MutableLiveData<Long>()
@@ -58,7 +56,7 @@ class TrackingService: LifecycleService() {
     private fun postInitialValues(){
         isTracking.postValue(false)
         pathPoints.postValue(PolyLines(mutableListOf()))
-        timeRunInSeconds.postValue(0L)
+        //timeRunInSeconds.postValue(0L)
         timeRunInMillis.postValue(0L)
     }
 
@@ -88,7 +86,10 @@ class TrackingService: LifecycleService() {
                         isFirstRun = false
                     }else{
                         Log.d(TAG,"Resuming service")
-                        startTimer()
+                        if (timeRunInMillis.value!! > 0) {
+                            timer = Timer()
+                            startTimer()
+                        }
                     }
                 }
                 Constants.ACTION_PAUSE_SERVICE   ->   {
@@ -104,13 +105,13 @@ class TrackingService: LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    var isTimerEnabled = false
+    /*var isTimerEnabled = false
     private var lapTime = 0L
     private var timeRun = 0L
     private var timeStarted = 0L
-    private var lastSecondTimeStamp = 0L
+    private var lastSecondTimeStamp = 0L*/
 
-    private fun startTimer(){
+    /*private fun startTimer(){
         addEmptyPolyline()
         isTracking.postValue(true)
         timeStarted = System.currentTimeMillis()
@@ -129,11 +130,20 @@ class TrackingService: LifecycleService() {
             }
             timeRun += lapTime
         }
+    }*/
+    private fun startTimer() {
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                timeRunInMillis.postValue(timeRunInMillis.value!! + 100L)
+            }
+        }, 0, 100L)
     }
 
     private fun pauseService(){
         isTracking.postValue(false)
-        isTimerEnabled = false
+        //isTimerEnabled = false
+        timer.cancel()
+
     }
 
     private fun updateNotificationTrackingState(isTracking: Boolean){
@@ -248,10 +258,10 @@ class TrackingService: LifecycleService() {
         }
 
         startForeground(Constants.NOTIFICATION_ID,baseNotificationBuilder.build())
-        timeRunInSeconds.observe(this, Observer {
+        timeRunInMillis.observe(this, Observer {
             if(!serviceKilled) {
                 val notification = currentNotificationBuilder
-                    .setContentText(PrimaryUtility.getFormattedStopWatchTime(it * 1000L))
+                    .setContentText(PrimaryUtility.getFormattedStopWatchTime(it ,false))
                 notificationManager.notify(Constants.NOTIFICATION_ID, notification.build())
             }
         })
