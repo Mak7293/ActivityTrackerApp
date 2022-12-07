@@ -37,6 +37,7 @@
                 android:layout_height="35dp"
                 app:srcCompat="@drawable/ic_speed" />
             <TextView
+                android:id="@+id/tv_avg_speed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -63,10 +64,11 @@
                 android:layout_height="35dp"
                 app:srcCompat="@drawable/ic_duration" />
             <TextView
+                android:id="@+id/tv_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="5:20:10"
+                android:text="5:20:10:00"
                 android:fontFamily="@font/semi_bold"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -91,6 +93,7 @@
                 app:srcCompat="@drawable/ic_energy"
                 android:scaleType="fitCenter"/>
             <TextView
+                android:id="@+id/tv_calories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -118,6 +121,7 @@
                 android:padding="1dp"
                 app:srcCompat="@drawable/ic_distance" />
             <TextView
+                android:id="@+id/tv_distance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -147,7 +151,7 @@
         android:id="@+id/fab_pause_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_play"
+        android:src="@drawable/ic_start"
         android:backgroundTint="@color/black"
         app:tint="#00BB09"
         app:fabCustomSize="70dp"

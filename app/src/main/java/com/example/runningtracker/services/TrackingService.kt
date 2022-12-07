@@ -36,7 +36,7 @@ class TrackingService: LifecycleService() {
     private var isFirstRun = true
     private var serviceKilled = false
 
-    var timer = Timer()
+    private var timer = Timer()
 
     @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -46,22 +46,23 @@ class TrackingService: LifecycleService() {
 
     lateinit var currentNotificationBuilder: NotificationCompat.Builder
 
-    //private val timeRunInSeconds = MutableLiveData<Long>()
 
     companion object{
         val timeRunInMillis = MutableLiveData<Long>()
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<PolyLines>()
+
     }
     private fun postInitialValues(){
         isTracking.postValue(false)
-        pathPoints.postValue(PolyLines(mutableListOf()))
-        //timeRunInSeconds.postValue(0L)
+        pathPoints.postValue(PolyLines(mutableListOf(Polyline(mutableListOf()))))
         timeRunInMillis.postValue(0L)
     }
 
     override fun onCreate() {
         super.onCreate()
+
+        Log.d(TAG,"service started")
 
         currentNotificationBuilder = baseNotificationBuilder
 
@@ -105,43 +106,22 @@ class TrackingService: LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    /*var isTimerEnabled = false
-    private var lapTime = 0L
-    private var timeRun = 0L
-    private var timeStarted = 0L
-    private var lastSecondTimeStamp = 0L*/
-
-    /*private fun startTimer(){
+    private fun startTimer() {
+        /*if(timeRunInMillis.value == null){
+            timeRunInMillis.postValue(1000L)
+        }*/
         addEmptyPolyline()
         isTracking.postValue(true)
-        timeStarted = System.currentTimeMillis()
-        isTimerEnabled = true
-        CoroutineScope(Dispatchers.Main).launch {
-            while (isTracking.value!!){
-                // time difference between now and timeStarted
-                lapTime = System.currentTimeMillis() - timeStarted
-                // post the new lapTime
-                timeRunInMillis.postValue(timeRun + lapTime)
-                if(timeRunInMillis.value!! >= lastSecondTimeStamp + 1000L){
-                    timeRunInSeconds.postValue(timeRunInSeconds.value!! + 1)
-                    lastSecondTimeStamp += 1000L
-                }
-                delay(Constants.TIMER_UPDATE_INTERVAL)
-            }
-            timeRun += lapTime
-        }
-    }*/
-    private fun startTimer() {
+        Log.d("!!!!!!",timeRunInMillis.value.toString())
         timer.schedule(object : TimerTask() {
             override fun run() {
-                timeRunInMillis.postValue(timeRunInMillis.value!! + 100L)
+                timeRunInMillis.postValue(timeRunInMillis.value?.plus(100L) ?: 100L)
             }
         }, 0, 100L)
     }
 
     private fun pauseService(){
         isTracking.postValue(false)
-        //isTimerEnabled = false
         timer.cancel()
 
     }
@@ -246,7 +226,7 @@ class TrackingService: LifecycleService() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun startForegroundService(){
-
+        Log.d(TAG,"Foreground service is started")
         startTimer()
         isTracking.postValue(true)
 
