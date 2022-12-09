@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
@@ -29,6 +31,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
 import com.example.runningtracker.model.path.Polyline
 import com.example.runningtracker.util.Constants
+import com.example.runningtracker.util.Constants.currentOrientation
 import com.example.runningtracker.util.PrimaryUtility
 import org.osmdroid.views.overlay.Marker
 import java.util.*
@@ -40,6 +43,7 @@ class TrackingFragment : Fragment() {
     private var binding: FragmentTrackingBinding? = null
     private lateinit var mapController: IMapController
     private var marker: Marker? = null
+
 
     //private val viewModel: MainViewModel by viewModels()
 
@@ -67,16 +71,7 @@ class TrackingFragment : Fragment() {
         return binding?.root
 
     }
-    private fun getPositionMarker(): Marker { //Singelton
-        if (marker == null) {
-            marker = Marker(binding?.osMap)
-            marker!!.title = "Here I am"
-            marker!!.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker!!.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_location)
-            binding?.osMap?.overlays?.add(marker)
-        }
-        return marker!!
-    }
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -89,6 +84,13 @@ class TrackingFragment : Fragment() {
         binding?.osMap!!.setBuiltInZoomControls(false)
         binding?.osMap!!.setMultiTouchControls(false)
 
+        if(currentOrientation == null) {
+            currentOrientation = requireContext().resources.configuration.orientation
+        }
+        // we need intialize currentOrientaiton with null value somewhere
+
+
+
 
         binding?.fabPauseStart?.setOnClickListener {
             Toast.makeText(requireContext(),
@@ -97,6 +99,16 @@ class TrackingFragment : Fragment() {
         }
         observeLiveData()
 
+    }
+    private fun getPositionMarker(): Marker { //Singelton
+        if (marker == null) {
+            marker = Marker(binding?.osMap)
+            marker!!.title = "Here I am"
+            marker!!.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marker!!.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_location)
+            binding?.osMap?.overlays?.add(marker)
+        }
+        return marker!!
     }
     private val accessBackgroundLocation: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){
@@ -120,7 +132,7 @@ class TrackingFragment : Fragment() {
             ))
             binding?.toolbar?.setNavigationOnClickListener {
                 findNavController().navigate(R.id.action_trackingFragment_to_stepCounterFragment)
-
+                currentOrientation = null
             }
         }
     }
@@ -132,6 +144,10 @@ class TrackingFragment : Fragment() {
             pathPoints = it.polyLines
             addLatestPolyline()
             moveCameraToUserLocation()
+            if(currentOrientation != requireContext().resources.configuration.orientation){
+                addAllPolylines()
+                currentOrientation = requireContext().resources.configuration.orientation
+            }
         })
         TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {
             currentTimeInMillis = it
@@ -209,15 +225,26 @@ class TrackingFragment : Fragment() {
             stopRun()
         }
     }*/
-    /*private fun addAllPolylines(){
-        for (polyline in pathPoints){
+    private fun addAllPolylines(){
+        /*for (polyline in pathPoints){
             val polyLineOptions = PolylineOptions()
                 .color(Constants.POLYLINE_COLOR)
                 .width(Constants.POLYLINE_WIDTH)
                 .addAll(polyline)
             map?.addPolyline(polyLineOptions)
+        }*/
+        Log.d("a!!!",pathPoints.toString())
+        for(polyline in pathPoints){
+            val line = org.osmdroid.views.overlay.Polyline()
+            line.apply {
+                outlinePaint.color = Color.RED
+                outlinePaint.strokeWidth = 10f
+                setPoints(polyline.latLang)
+                allPolyline.add(this)
+            }
+            binding?.osMap?.overlayManager?.add(line)
         }
-    }*/
+    }
     private fun addLatestPolyline(){
         if(pathPoints.isNotEmpty() && pathPoints.last().latLang.size > 1){
             val line = org.osmdroid.views.overlay.Polyline()

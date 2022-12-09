@@ -16,4 +16,7 @@ object Constants {
     const val NOTIFICATION_CHANNEL_NAME= "tracking"
     const val NOTIFICATION_ID= 1
 
+
+    var currentOrientation: Int? = null
+
 }
