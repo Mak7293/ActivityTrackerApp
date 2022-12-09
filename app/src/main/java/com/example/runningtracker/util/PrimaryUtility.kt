@@ -3,9 +3,15 @@ package com.example.runningtracker.util
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import androidx.core.content.ContextCompat
+import com.example.runningtracker.model.path.PolyLines
+import com.example.runningtracker.model.path.Polyline
+import org.osmdroid.util.Distance
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
 object PrimaryUtility {
@@ -29,25 +35,31 @@ object PrimaryUtility {
                         Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                     == PackageManager.PERMISSION_GRANTED)
         }
-    }/*
-    fun calculatePolylineLength(polyline: Polyline): Float{
-        var distance = 0f
-        for(i in 0 ..polyline.size - 2){
-            val pos1 = polyline[i]
-            val pos2 = polyline[i + 1]
-
-            val result = FloatArray(1)
-            Location.distanceBetween(
-                pos1.latitude,
-                pos1.longitude,
-                pos2.latitude,
-                pos2.longitude,
-                result
-            )
-            distance += result[0]
+    }
+    fun calculateDistance(pathPoints: MutableList<Polyline>): Double{
+        var distance: Double = 0.0
+        for(polyline in pathPoints){
+            val line = org.osmdroid.views.overlay.Polyline()
+            line.apply {
+                outlinePaint.color = Color.RED
+                outlinePaint.strokeWidth = 10f
+                setPoints(polyline.latLang)
+            }
+            distance += line.distance
         }
         return distance
-    }*/
+    }
+    fun getFormattedDistance(distanceInMeter: Double): String{
+        if(distanceInMeter < 1000){
+            val df = DecimalFormat("###.#")
+            df.roundingMode = RoundingMode.CEILING
+            return "${df.format(distanceInMeter).toDouble()} meter"
+        }else{
+            val df = DecimalFormat("##.##")
+            df.roundingMode = RoundingMode.CEILING
+            return "${df.format(distanceInMeter/1000).toDouble()} km"
+        }
+    }
     fun getFormattedStopWatchTime(ms: Long,includeMillis: Boolean = false): String{
         var milliseconds = ms
         val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)

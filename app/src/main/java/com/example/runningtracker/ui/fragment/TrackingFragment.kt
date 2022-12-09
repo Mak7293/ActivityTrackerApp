@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -21,10 +20,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentTrackingBinding
 import com.example.runningtracker.services.TrackingService
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.material.snackbar.Snackbar
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -35,7 +30,6 @@ import com.example.runningtracker.util.Constants.currentOrientation
 import com.example.runningtracker.util.PrimaryUtility
 import org.osmdroid.views.overlay.Marker
 import java.util.*
-import kotlin.math.round
 
 
 class TrackingFragment : Fragment() {
@@ -144,8 +138,10 @@ class TrackingFragment : Fragment() {
             pathPoints = it.polyLines
             addLatestPolyline()
             moveCameraToUserLocation()
+            binding?.tvDistance?.text = PrimaryUtility.getFormattedDistance(
+                PrimaryUtility.calculateDistance(pathPoints))
             if(currentOrientation != requireContext().resources.configuration.orientation){
-                addAllPolylines()
+                addAllPolyLines()
                 currentOrientation = requireContext().resources.configuration.orientation
             }
         })
@@ -225,15 +221,7 @@ class TrackingFragment : Fragment() {
             stopRun()
         }
     }*/
-    private fun addAllPolylines(){
-        /*for (polyline in pathPoints){
-            val polyLineOptions = PolylineOptions()
-                .color(Constants.POLYLINE_COLOR)
-                .width(Constants.POLYLINE_WIDTH)
-                .addAll(polyline)
-            map?.addPolyline(polyLineOptions)
-        }*/
-        Log.d("a!!!",pathPoints.toString())
+    private fun addAllPolyLines(){
         for(polyline in pathPoints){
             val line = org.osmdroid.views.overlay.Polyline()
             line.apply {
@@ -242,6 +230,7 @@ class TrackingFragment : Fragment() {
                 setPoints(polyline.latLang)
                 allPolyline.add(this)
             }
+
             binding?.osMap?.overlayManager?.add(line)
         }
     }
