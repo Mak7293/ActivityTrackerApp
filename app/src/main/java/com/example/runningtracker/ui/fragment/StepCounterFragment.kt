@@ -18,8 +18,9 @@ import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentStepCounterBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class StepCounterFragment : Fragment() {
 
     private var binding: FragmentStepCounterBinding? = null

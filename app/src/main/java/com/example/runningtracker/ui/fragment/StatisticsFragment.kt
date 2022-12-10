@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.runningtracker.databinding.FragmentStatisticsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class StatisticsFragment : Fragment() {
 
     private var binding: FragmentStatisticsBinding? = null

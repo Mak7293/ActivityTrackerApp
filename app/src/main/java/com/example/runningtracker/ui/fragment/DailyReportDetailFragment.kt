@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.runningtracker.databinding.FragmentDailyReportDetailBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class DailyReportDetailFragment : Fragment() {
 
     private var binding: FragmentDailyReportDetailBinding? = null

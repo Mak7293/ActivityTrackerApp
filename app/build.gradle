@@ -40,6 +40,9 @@ android {
 
 dependencies {
 
+    //Rounded profile image third party library
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
     // Architectural Component
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 

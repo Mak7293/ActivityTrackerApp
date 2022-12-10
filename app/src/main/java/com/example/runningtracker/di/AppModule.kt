@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.example.runningtracker.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,12 +18,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    /*@Provides
+    @Provides
     @Singleton
     fun privateSharedPreferences(app: Application): SharedPreferences =
         app.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE)
 
-    @Provides
+    /*@Provides
     @Singleton
     fun provideName(sharedPref: SharedPreferences): String = sharedPref.getString(
         Constants.KEY_NAME, "") ?: ""

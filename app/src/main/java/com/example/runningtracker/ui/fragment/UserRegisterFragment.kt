@@ -5,21 +5,25 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.runningtracker.databinding.FragmentHomeBinding
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.runningtracker.R
+import com.example.runningtracker.databinding.FragmentUserRegisterBinding
 
-@AndroidEntryPoint
-class HomeFragment : Fragment() {
 
-    private var binding: FragmentHomeBinding? = null
+class UserRegisterFragment : Fragment() {
+
+    private var binding: FragmentUserRegisterBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(layoutInflater)
+        binding = FragmentUserRegisterBinding.inflate(layoutInflater)
         return binding?.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
 
     }
@@ -28,4 +32,5 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
 }

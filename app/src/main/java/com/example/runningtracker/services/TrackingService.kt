@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer
 import com.example.runningtracker.R
 import com.example.runningtracker.model.path.PolyLines
 import com.example.runningtracker.model.path.Polyline
+import com.example.runningtracker.ui.fragment.TrackingFragment
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.PrimaryUtility
 import com.google.android.gms.location.*
@@ -57,6 +58,7 @@ class TrackingService: LifecycleService() {
         isTracking.postValue(false)
         pathPoints.postValue(PolyLines(mutableListOf(Polyline(mutableListOf()))))
         timeRunInMillis.postValue(0L)
+
     }
 
     override fun onCreate() {
@@ -117,7 +119,7 @@ class TrackingService: LifecycleService() {
             override fun run() {
                 timeRunInMillis.postValue(timeRunInMillis.value?.plus(100L) ?: 100L)
             }
-        }, 0, 100L)
+        }, 0, Constants.TIMER_UPDATE_INTERVAL)
     }
 
     private fun pauseService(){

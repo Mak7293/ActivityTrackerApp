@@ -4,12 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.Location
 import android.os.Build
 import androidx.core.content.ContextCompat
-import com.example.runningtracker.model.path.PolyLines
 import com.example.runningtracker.model.path.Polyline
-import org.osmdroid.util.Distance
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
@@ -59,6 +56,11 @@ object PrimaryUtility {
             df.roundingMode = RoundingMode.CEILING
             return "${df.format(distanceInMeter/1000).toDouble()} km"
         }
+    }
+    fun getFormattedAvgSpeed(distanceInMeter: Double, timeRun: Long): String {
+        val df = DecimalFormat("##.##")
+        df.roundingMode = RoundingMode.CEILING
+        return "${df.format((distanceInMeter / (timeRun / 1000)) * 3.6).toDouble()} km/hr"
     }
     fun getFormattedStopWatchTime(ms: Long,includeMillis: Boolean = false): String{
         var milliseconds = ms
