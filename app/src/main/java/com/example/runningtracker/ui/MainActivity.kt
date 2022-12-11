@@ -3,13 +3,16 @@ package com.example.runningtracker.ui
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.ActivityMainBinding
+import com.example.runningtracker.ui.fragment.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,6 +54,21 @@ class MainActivity : AppCompatActivity() {
                     else  ->  binding.bottomNavigationView.visibility = View.GONE
                 }
             })
+    }
+
+    override fun onBackPressed() {
+        val currentFragment = supportFragmentManager?.findFragmentById(R.id.navHostFragment)
+            ?.childFragmentManager?.fragments?.first()
+        Log.d("currentFragment",currentFragment.toString())
+        when(currentFragment){
+            is SplashScreenFragment ->  this.finish()
+            is UserRegisterFragment ->  this.finish()
+            is StepCounterFragment ->  this.finish()
+            is StatisticsFragment ->  this.finish()
+            is HomeFragment ->  this.finish()
+            else  ->   super.onBackPressed()
+        }
+
     }
 
 

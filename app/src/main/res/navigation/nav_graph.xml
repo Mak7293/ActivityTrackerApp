@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/stepCounterFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -32,11 +32,34 @@
         <action
             android:id="@+id/action_trackingFragment_to_stepCounterFragment"
             app:destination="@id/stepCounterFragment"
-            app:popUpTo="@+id/stepCounterFragment"/>/>
+            app:popUpTo="@+id/stepCounterFragment"
+            app:popUpToInclusive="true"/>/>
     </fragment>
     <fragment
         android:id="@+id/dailyReportDetailFragment"
         android:name="com.example.runningtracker.ui.fragment.DailyReportDetailFragment"
         android:label="fragment_daily_report_detail"
         tools:layout="@layout/fragment_daily_report_detail" />
+    <fragment
+        android:id="@+id/userRegisterFragment"
+        android:name="com.example.runningtracker.ui.fragment.UserRegisterFragment"
+        android:label="fragment_user_register"
+        tools:layout="@layout/fragment_user_register" >
+        <action
+            android:id="@+id/action_userRegisterFragment_to_stepCounterFragment"
+            app:destination="@id/stepCounterFragment"
+            app:popUpTo="@+id/stepCounterFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.example.runningtracker.ui.fragment.SplashScreenFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_userRegisterFragment"
+            app:destination="@id/userRegisterFragment"
+            app:popUpTo="@+id/userRegisterFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

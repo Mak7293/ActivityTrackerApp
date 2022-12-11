@@ -2,13 +2,97 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/ic_background"
     android:layout_height="match_parent"
+    android:padding="30dp"
     tools:context=".ui.fragment.UserRegisterFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:background="@drawable/card_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:padding="20dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:fontFamily="@font/semi_bold"
+            android:textSize="18sp"
+            android:text="Please Enter your details"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:boxStrokeColor="@color/edit_text_appearance_color"
+            app:hintTextColor="@color/edit_text_appearance_color"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:fontFamily="@font/regular"
+                android:textCursorDrawable="@drawable/curser_color"
+                android:hint="Name"
+                android:textColor="#363a43"
+                android:textColorHint="#788089"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:boxStrokeColor="@color/edit_text_appearance_color"
+            app:hintTextColor="@color/edit_text_appearance_color"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_weight"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:fontFamily="@font/regular"
+                android:textCursorDrawable="@drawable/curser_color"
+                android:hint="Weight"
+                android:textColor="#363a43"
+                android:textColorHint="#788089"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:boxStrokeColor="@color/edit_text_appearance_color"
+            app:hintTextColor="@color/edit_text_appearance_color"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_height"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Height"
+                android:textCursorDrawable="@drawable/curser_color"
+                android:fontFamily="@font/regular"
+                android:textColor="#363a43"
+                android:textColorHint="#788089"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:boxStrokeColor="@color/edit_text_appearance_color"
+            app:hintTextColor="@color/edit_text_appearance_color"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et_age"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:textCursorDrawable="@drawable/curser_color"
+                android:hint="Age"
+                android:fontFamily="@font/regular"
+                android:textColor="#363a43"
+                android:textColorHint="#788089"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 </FrameLayout>
