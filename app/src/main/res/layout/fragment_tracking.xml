@@ -178,7 +178,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:layout_marginHorizontal="10dp"
-            android:background="@drawable/btn_save_drawable"
+            android:background="@drawable/btn_green_drawable"
             android:text="@string/save_toDb"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_reset_tracking"
@@ -188,7 +188,7 @@
             android:textSize="16sp"
             android:fontFamily="@font/semi_bold"
             android:layout_marginHorizontal="10dp"
-            android:background="@drawable/btn_reset_drawable"
+            android:background="@drawable/btn_red_drawable"
             android:text="@string/reset_tracking"/>
     </LinearLayout>
 

@@ -14,18 +14,14 @@ import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.view.*
 import android.view.animation.AnticipateOvershootInterpolator
-import android.view.animation.TranslateAnimation
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginBottom
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentTrackingBinding
@@ -34,16 +30,13 @@ import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
+import com.example.runningtracker.databinding.CancelRunDialogBinding
 import com.example.runningtracker.model.path.Polyline
 import com.example.runningtracker.ui.MaterialBottomSheet
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.Constants.currentOrientation
 import com.example.runningtracker.util.PrimaryUtility
-import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.osmdroid.views.overlay.Marker
 import java.util.*
 import javax.inject.Inject
@@ -71,8 +64,7 @@ class TrackingFragment : Fragment() {
     var weight = 80f*/
 
     private var currentTimeInMillis = 0L
-
-    //private var menu: Menu? = null
+    private var menu: Menu? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,8 +76,11 @@ class TrackingFragment : Fragment() {
             .load(requireContext().applicationContext,
                 activity?.getPreferences(Context.MODE_PRIVATE))
 
+        // in fragment we need setHasOptionsMenu to true in onCreateView,
+        // in fragment onCreateOptionsMenu only call when we use setHasOptionsMenu to true
+        // only in activity onCreateOptionsMenu called by default
+        setHasOptionsMenu(true)
         return binding?.root
-
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -105,7 +100,14 @@ class TrackingFragment : Fragment() {
         }
         // we need intialize currentOrientaiton with null value somewhere
 
-
+        binding?.btnResetTracking?.setOnClickListener {
+            Toast.makeText(requireContext(),"Track was reset",
+                Toast.LENGTH_LONG).show()
+        }
+        binding?.btnSaveToDb?.setOnClickListener {
+            Toast.makeText(requireContext(),"Track was saved in database",
+                Toast.LENGTH_LONG).show()
+        }
         binding?.fabPauseStart?.setOnClickListener {
             toggleRun()
         }
@@ -118,6 +120,7 @@ class TrackingFragment : Fragment() {
         }else{
             addPolyLines = true
         }
+
 
     }
     private fun getPositionMarker(): Marker { //Singelton
@@ -214,7 +217,7 @@ class TrackingFragment : Fragment() {
     }
     private fun toggleRun(){
         if (isTracking){
-            //menu?.getItem(0)?.isVisible = true
+            menu?.getItem(0)?.isVisible = true
             slideUp(1000)
             sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
         } else{
@@ -235,7 +238,7 @@ class TrackingFragment : Fragment() {
                 ContextCompat.getDrawable(requireContext(),R.drawable.ic_stop))
             binding?.fabPauseStart?.imageTintList = ColorStateList
                 .valueOf(Color.parseColor("#FF0000"))
-            //menu?.getItem(0)?.isVisible = true
+            menu?.getItem(0)?.isVisible = true
             //binding?.btnFinishRun?.visibility = View.GONE
         }
     }
@@ -314,45 +317,55 @@ class TrackingFragment : Fragment() {
             it.action = action
             requireContext().startService(it)
         }
-
-    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.toolbar_tracking_menu,menu)
+        inflater.inflate(R.menu.cancel_run_menu,menu)
         this.menu = menu
-    }*/
-
+    }
     //we can change visibility of menu item with onPrepareOptionsMenu
-    /*override fun onPrepareOptionsMenu(menu: Menu) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         if(currentTimeInMillis > 0L){
             this.menu?.getItem(0)?.isVisible = true
         }
-    }*/
+    }
 
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
-            R.id.miCancelTracking  ->   {
+            R.id.cancel_run  ->   {
                 showCancelTrackingDialog()
 
             }
         }
         return super.onOptionsItemSelected(item)
-    }*/
-    /*private fun showCancelTrackingDialog(){
-        CancelTrackingDialog().apply {
-            setYesListener {
-                stopRun()
+    }
+    private fun showCancelTrackingDialog(){
+        val dialog: Dialog = Dialog(requireContext(),R.style.DialogTheme)
+        val dialogBinding = CancelRunDialogBinding.inflate(layoutInflater)
+        dialog.apply {
+            setContentView(dialogBinding.root)
+            setCanceledOnTouchOutside(false)
+            setCancelable(false)
+            dialogBinding.apply {
+                btnYes.setOnClickListener {
+                    stopRun()
+                    dialog.dismiss()
+                }
+                btnNo.setOnClickListener {
+                    dialog.dismiss()
+                }
             }
-        }.show(parentFragmentManager,CANCEL_TRACKING_DIALOG_TAG)
-    }*/
-    /*private fun stopRun(){
-        binding?.tvTimer?.text = "00:00:00:00"
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
+    }
+    private fun stopRun(){
+        binding?.tvDuration?.text = "00:00:00:00"
         sendCommandToService(Constants.ACTION_STOP_SERVICE)
-        findNavController().navigate(R.id.action_trackingFragment_to_runFragment)
-    }*/
-
+        findNavController().navigate(R.id.action_trackingFragment_to_stepCounterFragment)
+        currentOrientation = null
+    }
     private fun slideUp(duration: Long = 500){
-
         constraintSet.clone(binding?.mainConstraintLayout)
         constraintSet.clear(R.id.ll_save_reset,ConstraintSet.TOP)
         constraintSet.connect(R.id.ll_save_reset,ConstraintSet.BOTTOM,R.id.main_constraint_layout,ConstraintSet.BOTTOM)
@@ -368,7 +381,6 @@ class TrackingFragment : Fragment() {
 
     }
     private fun slideDown(duration: Long = 500) {
-
         constraintSet.clone(binding?.mainConstraintLayout)
         constraintSet.connect(R.id.ll_save_reset,ConstraintSet.TOP,R.id.main_constraint_layout,ConstraintSet.BOTTOM)
         constraintSet.connect(R.id.fab_pause_start,ConstraintSet.BOTTOM, R.id.main_constraint_layout,ConstraintSet.BOTTOM,30)
@@ -382,17 +394,14 @@ class TrackingFragment : Fragment() {
         constraintSet.applyTo(binding?.mainConstraintLayout)
 
     }
-
     override fun onResume() {
         super.onResume()
         binding?.osMap?.onResume()
     }
-
     override fun onPause() {
         super.onPause()
         binding?.osMap?.onPause()
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding?.osMap?.onDetach()
