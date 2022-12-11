@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main_constraint_layout"
     tools:context=".ui.fragment.TrackingFragment">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -142,23 +143,53 @@
 
     <org.osmdroid.views.MapView
         android:id="@+id/os_map"
+        tilesource="Mapnik"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tilesource="Mapnik"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_information"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteX="0dp" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_pause_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_start"
         android:backgroundTint="@color/black"
+        android:layout_marginBottom="10dp"
         app:tint="#00BB09"
         app:fabCustomSize="70dp"
         app:maxImageSize="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ll_save_reset"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="30dp"/>
+        app:layout_constraintEnd_toEndOf="parent" />
+    <LinearLayout
+        android:id="@+id/ll_save_reset"
+        android:orientation="horizontal"
+        android:background="@drawable/bottom_sheet_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_save_to_db"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/btn_save_drawable"
+            android:text="@string/save_toDb"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_reset_tracking"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:textSize="16sp"
+            android:fontFamily="@font/semi_bold"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/btn_reset_drawable"
+            android:text="@string/reset_tracking"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

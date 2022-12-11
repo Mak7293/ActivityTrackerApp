@@ -38,7 +38,6 @@ class MaterialBottomSheet : BottomSheetDialogFragment() {
                 .edit()
                 .putString(Constants.Activity_Type, Constants.ACTIVITY_BICYCLING)
                 .apply()
-            Toast.makeText(requireContext(),"Bicycling!!", Toast.LENGTH_SHORT).show()
             dismiss()
         }
         bottomSheetBinding?.ivActivityRunning?.setOnClickListener {
@@ -46,7 +45,6 @@ class MaterialBottomSheet : BottomSheetDialogFragment() {
                 .edit()
                 .putString(Constants.Activity_Type, Constants.ACTIVITY_RUN_OR_WALK)
                 .apply()
-            Toast.makeText(requireContext(),"Running!!", Toast.LENGTH_SHORT).show()
             dismiss()
         }
         dialog?.setCancelable(false)

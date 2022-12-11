@@ -2,6 +2,7 @@ package com.example.runningtracker.ui.fragment
 
 import android.Manifest.permission.*
 import android.app.ActivityManager
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,14 +10,22 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.transition.ChangeBounds
+import android.transition.TransitionManager
 import android.view.*
+import android.view.animation.AnticipateOvershootInterpolator
+import android.view.animation.TranslateAnimation
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginBottom
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentTrackingBinding
@@ -30,7 +39,11 @@ import com.example.runningtracker.ui.MaterialBottomSheet
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.Constants.currentOrientation
 import com.example.runningtracker.util.PrimaryUtility
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.osmdroid.views.overlay.Marker
 import java.util.*
 import javax.inject.Inject
@@ -42,6 +55,7 @@ class TrackingFragment : Fragment() {
     private lateinit var mapController: IMapController
     private var marker: Marker? = null
     private var addPolyLines: Boolean = false
+    private var constraintSet: ConstraintSet = ConstraintSet()
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -93,8 +107,6 @@ class TrackingFragment : Fragment() {
 
 
         binding?.fabPauseStart?.setOnClickListener {
-            Toast.makeText(requireContext(),
-                "ready for tracking!!",Toast.LENGTH_SHORT).show()
             toggleRun()
         }
         observeLiveData()
@@ -200,12 +212,13 @@ class TrackingFragment : Fragment() {
         binding?.tvDistance?.text = PrimaryUtility.getFormattedDistance(distance)
         binding?.tvAvgSpeed?.text = PrimaryUtility.getFormattedAvgSpeed(distance,currentTimeInMillis)
     }
-
     private fun toggleRun(){
         if (isTracking){
             //menu?.getItem(0)?.isVisible = true
+            slideUp(1000)
             sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
         } else{
+            slideDown(1000)
             sendCommandToService(Constants.ACTION_START_OR_RESUME_SERVICE)
         }
     }
@@ -338,6 +351,38 @@ class TrackingFragment : Fragment() {
         findNavController().navigate(R.id.action_trackingFragment_to_runFragment)
     }*/
 
+    private fun slideUp(duration: Long = 500){
+
+        constraintSet.clone(binding?.mainConstraintLayout)
+        constraintSet.clear(R.id.ll_save_reset,ConstraintSet.TOP)
+        constraintSet.connect(R.id.ll_save_reset,ConstraintSet.BOTTOM,R.id.main_constraint_layout,ConstraintSet.BOTTOM)
+        constraintSet.clear(R.id.fab_pause_start,ConstraintSet.BOTTOM)
+        constraintSet.connect(R.id.fab_pause_start,ConstraintSet.BOTTOM,R.id.ll_save_reset,ConstraintSet.TOP,30)
+
+        val transition = ChangeBounds()
+        transition.interpolator = AnticipateOvershootInterpolator(1.0f)
+        transition.duration = duration
+        TransitionManager.beginDelayedTransition(binding?.mainConstraintLayout, transition)
+
+        constraintSet.applyTo(binding?.mainConstraintLayout)
+
+    }
+    private fun slideDown(duration: Long = 500) {
+
+        constraintSet.clone(binding?.mainConstraintLayout)
+        constraintSet.connect(R.id.ll_save_reset,ConstraintSet.TOP,R.id.main_constraint_layout,ConstraintSet.BOTTOM)
+        constraintSet.connect(R.id.fab_pause_start,ConstraintSet.BOTTOM, R.id.main_constraint_layout,ConstraintSet.BOTTOM,30)
+        constraintSet.clear(R.id.ll_save_reset,ConstraintSet.BOTTOM)
+
+        val transition = ChangeBounds()
+        transition.interpolator = AnticipateOvershootInterpolator(1.0f)
+        transition.duration = duration
+        TransitionManager.beginDelayedTransition(binding?.mainConstraintLayout, transition)
+
+        constraintSet.applyTo(binding?.mainConstraintLayout)
+
+    }
+
     override fun onResume() {
         super.onResume()
         binding?.osMap?.onResume()
@@ -346,13 +391,11 @@ class TrackingFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         binding?.osMap?.onPause()
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding?.osMap?.onDetach()
         binding = null
-
     }
 }
