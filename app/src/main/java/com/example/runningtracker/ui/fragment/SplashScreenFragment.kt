@@ -7,6 +7,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentSplashScreenBinding
@@ -22,11 +23,7 @@ class SplashScreenFragment : Fragment() {
     ): View? {
         binding = FragmentSplashScreenBinding.inflate(layoutInflater)
         // remove bar on top of screen
-        activity?.window?.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
-
+        requireActivity().window?.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         return binding?.root
     }
 
@@ -34,8 +31,15 @@ class SplashScreenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            findNavController().navigate(R.id.action_splashScreenFragment_to_userRegisterFragment)
-
+            val navOptions = NavOptions
+                .Builder()
+                .setPopUpTo(R.id.splashScreenFragment, true)
+                .build()
+            findNavController().navigate(
+                R.id.action_splashScreenFragment_to_userRegisterFragment,
+                savedInstanceState,
+                navOptions
+            )
         },2500)
     }
 

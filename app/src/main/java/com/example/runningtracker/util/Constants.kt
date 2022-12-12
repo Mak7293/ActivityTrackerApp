@@ -9,6 +9,10 @@ object Constants {
     const val ACTION_SHOW_TRACKING_FRAGMENT = "actionShowTrackingFragment"
 
     const val SHARED_PREFERENCES_NAME = "shared_preferences"
+    const val KEY_NAME = "key_name"
+    const val KEY_HEIGHT = "key_height"
+    const val KEY_WEIGHT = "key_weight"
+    const val KEY_FIRST_TIME_TOGGLE = "key_first_time_toggle"
 
     const val ACTIVITY_RUN_OR_WALK = "activity_run_or_walk"
     const val ACTIVITY_BICYCLING = "activity_bicycling"

@@ -31,9 +31,7 @@
         tools:layout="@layout/fragment_tracking" >
         <action
             android:id="@+id/action_trackingFragment_to_stepCounterFragment"
-            app:destination="@id/stepCounterFragment"
-            app:popUpTo="@+id/stepCounterFragment"
-            app:popUpToInclusive="true"/>/>
+            app:destination="@id/stepCounterFragment"/>
     </fragment>
     <fragment
         android:id="@+id/dailyReportDetailFragment"
@@ -47,9 +45,7 @@
         tools:layout="@layout/fragment_user_register" >
         <action
             android:id="@+id/action_userRegisterFragment_to_stepCounterFragment"
-            app:destination="@id/stepCounterFragment"
-            app:popUpTo="@+id/stepCounterFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/stepCounterFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
@@ -58,8 +54,6 @@
         tools:layout="@layout/fragment_splash_screen" >
         <action
             android:id="@+id/action_splashScreenFragment_to_userRegisterFragment"
-            app:destination="@id/userRegisterFragment"
-            app:popUpTo="@+id/userRegisterFragment"
-            app:popUpToInclusive="true"/>
+            app:destination="@id/userRegisterFragment" />
     </fragment>
 </navigation>

@@ -3,27 +3,40 @@ package com.example.runningtracker.ui.fragment
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentStepCounterBinding
+import com.example.runningtracker.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StepCounterFragment : Fragment() {
 
     private var binding: FragmentStepCounterBinding? = null
+    private var name: String? = null
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +44,7 @@ class StepCounterFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentStepCounterBinding.inflate(layoutInflater)
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         return binding?.root
     }
 
@@ -39,9 +53,19 @@ class StepCounterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        name = sharedPref.getString(Constants.KEY_NAME,"")
+        setUpToolbar()
         binding?.fab?.setOnClickListener {
             getPermission()
-
+        }
+    }
+    private fun setUpToolbar(){
+        (activity as AppCompatActivity).setSupportActionBar(binding?.toolbar)
+        val actionBar = (activity as AppCompatActivity).supportActionBar
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true)
+            binding?.toolbar?.navigationIcon = null
+            binding?.toolbarTv?.text = "Lets go " + name + "!!"
         }
     }
     private fun getPermission(){
@@ -68,7 +92,8 @@ class StepCounterFragment : Fragment() {
                         R.id.action_stepCounterFragment_to_trackingFragment)
                 }
             }else{
-                //
+                Toast.makeText(requireContext(),"Please confirm require location" +
+                        " permission",Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -89,7 +114,6 @@ class StepCounterFragment : Fragment() {
             builder.setNegativeButton(resources.getString(R.string.negative)){  dialogInterface , which ->
                 dialogInterface.dismiss()
             }
-
             create()
             setCancelable(false)
             show()

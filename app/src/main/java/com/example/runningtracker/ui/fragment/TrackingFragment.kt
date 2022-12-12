@@ -30,6 +30,7 @@ import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import com.example.runningtracker.databinding.CancelRunDialogBinding
 import com.example.runningtracker.model.path.Polyline
 import com.example.runningtracker.ui.MaterialBottomSheet
@@ -82,7 +83,6 @@ class TrackingFragment : Fragment() {
         setHasOptionsMenu(true)
         return binding?.root
     }
-
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -120,8 +120,6 @@ class TrackingFragment : Fragment() {
         }else{
             addPolyLines = true
         }
-
-
     }
     private fun getPositionMarker(): Marker { //Singelton
         if (marker == null) {
@@ -162,7 +160,15 @@ class TrackingFragment : Fragment() {
                 requireContext(), R.drawable.ic_back
             ))
             binding?.toolbar?.setNavigationOnClickListener {
-                findNavController().navigate(R.id.action_trackingFragment_to_stepCounterFragment)
+                val navOptions = NavOptions
+                    .Builder()
+                    .setPopUpTo(R.id.splashScreenFragment, true)
+                    .build()
+                findNavController().navigate(
+                    R.id.action_trackingFragment_to_stepCounterFragment,
+                    null,
+                    navOptions
+                )
                 currentOrientation = null
             }
         }

@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             is HomeFragment ->  this.finish()
             else  ->   super.onBackPressed()
         }
-
+        super.onBackPressed()
     }
 
 

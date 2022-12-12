@@ -11,9 +11,10 @@
         android:background="@drawable/card_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:padding="20dp">
+        android:padding="15dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,7 +54,7 @@
                 android:layout_height="48dp"
                 android:fontFamily="@font/regular"
                 android:textCursorDrawable="@drawable/curser_color"
-                android:hint="Weight"
+                android:hint="Weight In Kg"
                 android:textColor="#363a43"
                 android:textColorHint="#788089"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -69,7 +70,7 @@
                 android:id="@+id/et_height"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="Height"
+                android:hint="Height In Cm"
                 android:textCursorDrawable="@drawable/curser_color"
                 android:fontFamily="@font/regular"
                 android:textColor="#363a43"
@@ -94,5 +95,12 @@
                 android:textColorHint="#788089"
                 tools:ignore="SpeakableTextPresentCheck" />
         </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:id="@+id/btn_save_user_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save details"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#3F51B5"/>
     </LinearLayout>
 </FrameLayout>
