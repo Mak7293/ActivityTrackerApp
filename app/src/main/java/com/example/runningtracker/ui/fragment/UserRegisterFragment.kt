@@ -76,7 +76,8 @@ class UserRegisterFragment : Fragment() {
         val name = binding?.etName?.text.toString()
         val weight = binding?.etWeight?.text.toString()
         val height = binding?.etHeight?.text.toString()
-        if(name.isEmpty() || weight.isEmpty() || height.isEmpty()){
+        val age = binding?.etAge?.text.toString()
+        if(name.isEmpty() || weight.isEmpty() || height.isEmpty() || age.isEmpty()){
             return false
         }
         sharedPref
@@ -84,6 +85,7 @@ class UserRegisterFragment : Fragment() {
             .putString(Constants.KEY_NAME, name)
             .putFloat(Constants.KEY_WEIGHT, weight.toFloat())
             .putInt(Constants.KEY_HEIGHT,weight.toInt())
+            .putInt(Constants.KEY_AGE,weight.toInt())
             .putBoolean(Constants.KEY_FIRST_TIME_TOGGLE, false)
             .apply()
         return  true

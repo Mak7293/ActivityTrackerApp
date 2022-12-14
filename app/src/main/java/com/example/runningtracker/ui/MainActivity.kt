@@ -1,6 +1,7 @@
 package com.example.runningtracker.ui
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,10 +9,14 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.ActivityMainBinding
+import com.example.runningtracker.databinding.CancelRunDialogBinding
 import com.example.runningtracker.ui.fragment.*
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         changeDestination()
 
     }
-
     private fun changeDestination(){
         val host: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.navHostFragment) as NavHostFragment? ?: return
@@ -55,21 +59,52 @@ class MainActivity : AppCompatActivity() {
                 }
             })
     }
-
+    private fun showExitAppDialog(
+        header: String = resources.getString(R.string.exit_app_header_dialog),
+        content: String = resources.getString(R.string.exit_app_content_dialog)
+    ){
+        val dialog: Dialog = Dialog(this,R.style.DialogTheme)
+        val dialogBinding = CancelRunDialogBinding.inflate(layoutInflater)
+        dialog.apply {
+            setContentView(dialogBinding.root)
+            setCanceledOnTouchOutside(false)
+            setCancelable(false)
+            dialogBinding.apply {
+                tvContent.text = content
+                tvHeader.text = header
+                btnYes.setOnClickListener {
+                    this@MainActivity.finish()
+                    dialog.dismiss()
+                }
+                btnNo.setOnClickListener {
+                    dialog.dismiss()
+                }
+            }
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
+    }
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager?.findFragmentById(R.id.navHostFragment)
             ?.childFragmentManager?.fragments?.first()
         Log.d("currentFragment",currentFragment.toString())
         when(currentFragment){
-            is SplashScreenFragment ->  this.finish()
-            is UserRegisterFragment ->  this.finish()
-            is StepCounterFragment ->  this.finish()
-            is StatisticsFragment ->  this.finish()
-            is HomeFragment ->  this.finish()
+            is SplashScreenFragment -> {
+                showExitAppDialog()
+            }
+            is UserRegisterFragment ->  {
+                showExitAppDialog()
+            }
+            is StepCounterFragment  ->  {
+                showExitAppDialog()
+            }
+            is StatisticsFragment   ->  {
+                showExitAppDialog()
+            }
+            is HomeFragment         ->  {
+                showExitAppDialog()
+            }
             else  ->   super.onBackPressed()
         }
-        super.onBackPressed()
     }
-
-
 }

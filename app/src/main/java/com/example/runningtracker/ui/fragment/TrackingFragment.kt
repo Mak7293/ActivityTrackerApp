@@ -146,7 +146,7 @@ class TrackingFragment : Fragment() {
                 /*Toast.makeText(requireContext(),"Permission Granted" +
                         "For access background location", Toast.LENGTH_LONG).show()*/
             }else{
-                findNavController().navigate(R.id.action_trackingFragment_to_stepCounterFragment)
+                backToStepCounterFragment()
                 Toast.makeText(requireContext(),"Please allow all time access to this app " +
                         "for proper tracking of your activity", Toast.LENGTH_LONG).show()
             }
@@ -160,19 +160,23 @@ class TrackingFragment : Fragment() {
                 requireContext(), R.drawable.ic_back
             ))
             binding?.toolbar?.setNavigationOnClickListener {
-                val navOptions = NavOptions
-                    .Builder()
-                    .setPopUpTo(R.id.splashScreenFragment, true)
-                    .build()
-                findNavController().navigate(
-                    R.id.action_trackingFragment_to_stepCounterFragment,
-                    null,
-                    navOptions
-                )
+                backToStepCounterFragment()
                 currentOrientation = null
             }
         }
     }
+    private fun backToStepCounterFragment(){
+        val navOptions = NavOptions
+            .Builder()
+            .setPopUpTo(R.id.splashScreenFragment, true)
+            .build()
+        findNavController().navigate(
+            R.id.action_trackingFragment_to_stepCounterFragment,
+            null,
+            navOptions
+        )
+    }
+
     private fun observeLiveData(){
         TrackingService.isTracking.observe(viewLifecycleOwner, Observer {
             updateTracking(it)
@@ -339,13 +343,15 @@ class TrackingFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.cancel_run  ->   {
-                showCancelTrackingDialog()
-
+                showCancelTrackingDialog(
+                    resources.getString(R.string.cancel_run_header_dialog),
+                    resources.getString(R.string.cancel_run_content_dialog)
+                )
             }
         }
         return super.onOptionsItemSelected(item)
     }
-    private fun showCancelTrackingDialog(){
+    private fun showCancelTrackingDialog(header: String, content: String){
         val dialog: Dialog = Dialog(requireContext(),R.style.DialogTheme)
         val dialogBinding = CancelRunDialogBinding.inflate(layoutInflater)
         dialog.apply {
@@ -353,6 +359,8 @@ class TrackingFragment : Fragment() {
             setCanceledOnTouchOutside(false)
             setCancelable(false)
             dialogBinding.apply {
+                tvContent.text = content
+                tvHeader.text = header
                 btnYes.setOnClickListener {
                     stopRun()
                     dialog.dismiss()

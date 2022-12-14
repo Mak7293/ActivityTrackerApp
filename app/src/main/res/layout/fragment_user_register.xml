@@ -33,10 +33,11 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_name"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="55dp"
                 android:fontFamily="@font/regular"
                 android:textCursorDrawable="@drawable/curser_color"
                 android:hint="Name"
+                android:inputType="text"
                 android:textColor="#363a43"
                 android:textColorHint="#788089"
                 tools:ignore="SpeakableTextPresentCheck" />
@@ -51,11 +52,13 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_weight"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="55dp"
                 android:fontFamily="@font/regular"
+                android:text="6554"
                 android:textCursorDrawable="@drawable/curser_color"
                 android:hint="Weight In Kg"
                 android:textColor="#363a43"
+                android:inputType="number"
                 android:textColorHint="#788089"
                 tools:ignore="SpeakableTextPresentCheck" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -69,8 +72,9 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_height"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="55dp"
                 android:hint="Height In Cm"
+                android:inputType="number"
                 android:textCursorDrawable="@drawable/curser_color"
                 android:fontFamily="@font/regular"
                 android:textColor="#363a43"
@@ -87,9 +91,10 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_age"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="55dp"
                 android:textCursorDrawable="@drawable/curser_color"
                 android:hint="Age"
+                android:inputType="number"
                 android:fontFamily="@font/regular"
                 android:textColor="#363a43"
                 android:textColorHint="#788089"

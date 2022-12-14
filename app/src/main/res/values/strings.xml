@@ -8,5 +8,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save_toDb">Save to DataBase</string>
     <string name="reset_tracking">Reset Tracking</string>
+    <string name="edit_your_details">Edit your details</string>
+    <string name="cancel_run_header_dialog">Do you want Cancel the Run?</string>
+    <string name="cancel_run_content_dialog">Are you sure to cancel the current run and delete all its data?</string>
+    <string name="exit_app_header_dialog">Exit!!</string>
+    <string name="exit_app_content_dialog">Are you sure to Exit this App?</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

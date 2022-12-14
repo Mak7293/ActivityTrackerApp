@@ -40,7 +40,7 @@ class SplashScreenFragment : Fragment() {
                 savedInstanceState,
                 navOptions
             )
-        },2500)
+        },500)
     }
 
     override fun onDestroyView() {
