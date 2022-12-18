@@ -52,7 +52,6 @@ class StepCounterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         name = sharedPref.getString(Constants.KEY_NAME,"")
         setUpToolbar()
         binding?.fab?.setOnClickListener {
@@ -97,7 +96,6 @@ class StepCounterFragment : Fragment() {
             }
         }
     }
-
     private fun alertDialogForPermissionDenied(){
         val builder = AlertDialog.Builder(requireContext())
         builder.apply {
@@ -119,8 +117,6 @@ class StepCounterFragment : Fragment() {
             show()
         }
     }
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null

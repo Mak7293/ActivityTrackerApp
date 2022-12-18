@@ -1,27 +1,36 @@
 package com.example.runningtracker.ui.fragment
 
 import android.Manifest.permission.*
+import android.annotation.SuppressLint
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.*
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DimenRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.core.view.drawToBitmap
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentTrackingBinding
@@ -32,13 +41,18 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import com.example.runningtracker.databinding.CancelRunDialogBinding
-import com.example.runningtracker.model.path.Polyline
+import com.example.runningtracker.db.RunningEntity
+import com.example.runningtracker.path_model.path.Polyline
 import com.example.runningtracker.ui.MaterialBottomSheet
+import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.Constants.currentOrientation
 import com.example.runningtracker.util.PrimaryUtility
 import dagger.hilt.android.AndroidEntryPoint
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -50,19 +64,20 @@ class TrackingFragment : Fragment() {
     private var marker: Marker? = null
     private var addPolyLines: Boolean = false
     private var constraintSet: ConstraintSet = ConstraintSet()
+    private var isFirstTimeLaunch = true
 
     @Inject
     lateinit var sharedPref: SharedPreferences
 
+    @Inject
+    lateinit var simpleDateFormat: SimpleDateFormat
 
-    //private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
-    var allPolyline = mutableListOf<org.osmdroid.views.overlay.Polyline>()
+    private var allPolyline = mutableListOf<org.osmdroid.views.overlay.Polyline>()
 
-    /*@set:Inject
-    var weight = 80f*/
 
     private var currentTimeInMillis = 0L
     private var menu: Menu? = null
@@ -87,13 +102,12 @@ class TrackingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpToolbar()
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ) {
-            accessBackgroundLocation.launch(ACCESS_BACKGROUND_LOCATION)
-        }
+
         binding?.osMap?.setTileSource(TileSourceFactory.MAPNIK)
         mapController = binding?.osMap?.controller!!
         binding?.osMap!!.setBuiltInZoomControls(false)
         binding?.osMap!!.setMultiTouchControls(false)
+        binding?.osMap?.setTileSource(TileSourceFactory.MAPNIK)
 
         if(currentOrientation == null) {
             currentOrientation = requireContext().resources.configuration.orientation
@@ -101,24 +115,29 @@ class TrackingFragment : Fragment() {
         // we need intialize currentOrientaiton with null value somewhere
 
         binding?.btnResetTracking?.setOnClickListener {
-            Toast.makeText(requireContext(),"Track was reset",
-                Toast.LENGTH_LONG).show()
+            showTrackingDialog(
+                resources.getString(R.string.reset_tracking_header_dialog),
+                resources.getString(R.string.reset_tracking_content_dialog),
+                Constants.ACTION_RESET_RUN
+            )
         }
         binding?.btnSaveToDb?.setOnClickListener {
-            Toast.makeText(requireContext(),"Track was saved in database",
-                Toast.LENGTH_LONG).show()
+            zoomToSeeWholeTrack()
         }
         binding?.fabPauseStart?.setOnClickListener {
             toggleRun()
         }
         observeLiveData()
-
-        /* this line of code will be work when service is running and app is fully closed,
-        but user decide to open app by clicking on notification*/
-        if(!isServiceRunning(requireContext(),"TrackingService")){
-            fireBottomSheet()
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ) {
+            accessBackgroundLocation.launch(ACCESS_BACKGROUND_LOCATION)
         }else{
-            addPolyLines = true
+            /* this line of code will be work when service is running and app is fully closed,
+             but user decide to open app by clicking on notification*/
+            if(!isServiceRunning(requireContext(),"TrackingService")){
+                fireBottomSheet()
+            }else{
+                addPolyLines = true
+            }
         }
     }
     private fun getPositionMarker(): Marker { //Singelton
@@ -143,12 +162,19 @@ class TrackingFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()){
                 isGranted ->
             if(isGranted){
-                /*Toast.makeText(requireContext(),"Permission Granted" +
-                        "For access background location", Toast.LENGTH_LONG).show()*/
+                /* this line of code will be work when service is running and app is fully closed,
+                but user decide to open app by clicking on notification*/
+                if(!isServiceRunning(requireContext(),"TrackingService")){
+                    fireBottomSheet()
+                }else{
+                    addPolyLines = true
+                }
             }else{
-                backToStepCounterFragment()
-                Toast.makeText(requireContext(),"Please allow all time access to this app " +
-                        "for proper tracking of your activity", Toast.LENGTH_LONG).show()
+                isFirstTimeLaunch = false
+                alertDialogForPermissionDenied()
+                Toast.makeText(requireContext(),
+                    resources.getString(R.string.all_time_location_permission),
+                    Toast.LENGTH_LONG).show()
             }
         }
     private fun setUpToolbar(){
@@ -163,6 +189,28 @@ class TrackingFragment : Fragment() {
                 backToStepCounterFragment()
                 currentOrientation = null
             }
+        }
+    }
+    private fun alertDialogForPermissionDenied(){
+        val builder = AlertDialog.Builder(requireContext())
+        builder.apply {
+            setTitle("Permission Denied")
+            setMessage(resources.getString(R.string.all_time_location_permission))
+            setIcon(R.drawable.ic_alert)
+            setPositiveButton(resources.getString(R.string.activate_permission)){  dialogInterface , which ->
+                dialogInterface.dismiss()
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package",requireContext().packageName,null)
+                intent.data = uri
+                startActivity(intent)
+            }
+            builder.setNegativeButton(resources.getString(R.string.negative)){  dialogInterface , which ->
+                dialogInterface.dismiss()
+                backToStepCounterFragment()
+            }
+            create()
+            setCancelable(false)
+            show()
         }
     }
     private fun backToStepCounterFragment(){
@@ -185,7 +233,7 @@ class TrackingFragment : Fragment() {
             pathPoints = it.polyLines
             addLatestPolyline()
             moveCameraToUserLocation()
-            if(currentTimeInMillis != 0L) {
+            if(currentTimeInMillis > 1000L) {
                 updateUiText()
             }
             //polyline survive from screen rotation
@@ -216,14 +264,22 @@ class TrackingFragment : Fragment() {
             serviceInfo.service.shortClassName.contains(serviceClassName)
         }
     }
-    fun fireBottomSheet(){
+    private fun fireBottomSheet(){
         val modalBottomSheet = MaterialBottomSheet()
         modalBottomSheet.show(requireActivity().supportFragmentManager, MaterialBottomSheet.TAG)
     }
+    @SuppressLint("SetTextI18n")
     private fun updateUiText(){
         val distance = PrimaryUtility.calculateDistance(pathPoints)
+        val caloriesBurned = PrimaryUtility.calculateBurnedCalories(
+            currentTimeInMillis,
+            PrimaryUtility.calculateDistance(pathPoints),
+            sharedPref.getFloat(Constants.KEY_WEIGHT,0f),
+            sharedPref.getString(Constants.Activity_Type,"")!!
+        )
+        binding?.tvCalories?.text = "$caloriesBurned Cal"
         binding?.tvDistance?.text = PrimaryUtility.getFormattedDistance(distance)
-        binding?.tvAvgSpeed?.text = PrimaryUtility.getFormattedAvgSpeed(distance,currentTimeInMillis)
+        binding?.tvAvgSpeed?.text = "${PrimaryUtility.getAvgSpeed(distance,currentTimeInMillis)} km"
     }
     private fun toggleRun(){
         if (isTracking){
@@ -242,14 +298,12 @@ class TrackingFragment : Fragment() {
                 ContextCompat.getDrawable(requireContext(),R.drawable.ic_start))
             binding?.fabPauseStart?.imageTintList = ColorStateList
                 .valueOf(Color.parseColor("#00BB09"))
-            //binding?.btnFinishRun?.visibility = View.VISIBLE
         }else if (isTracking){
             binding?.fabPauseStart?.setImageDrawable(
                 ContextCompat.getDrawable(requireContext(),R.drawable.ic_stop))
             binding?.fabPauseStart?.imageTintList = ColorStateList
                 .valueOf(Color.parseColor("#FF0000"))
             menu?.getItem(0)?.isVisible = true
-            //binding?.btnFinishRun?.visibility = View.GONE
         }
     }
     private fun moveCameraToUserLocation(){
@@ -260,24 +314,25 @@ class TrackingFragment : Fragment() {
             getPositionMarker().position = pathPoints.last().latLang.last()
         }
     }
-    /*private fun zoomToSeeWholeTrack(){
-        val bounds = LatLngBounds.Builder()
-        for (polyline in pathPoints){
-            for(pos in polyline){
-                bounds.include(pos)
-            }
-        }
-        map?.moveCamera(
-            CameraUpdateFactory.newLatLngBounds(
-                bounds.build(),
-                binding?.mapView!!.width,
-                binding?.mapView!!.height,
-                (binding?.mapView!!.height * 0.05f).toInt()
-            )
+    private fun zoomToSeeWholeTrack(){
+        val bounds: BoundingBox = BoundingBox.fromGeoPoints(pathPoints.getPoint())
+
+        binding?.osMap?.zoomToBoundingBox(
+            bounds, false,50,19.0,0L
         )
-    }*/
-    /*private fun endRunAndSaveToDb(){
-        map?.snapshot {  bmp  ->
+        binding?.osMap?.invalidate()
+        endRunAndSaveToDb()
+    }
+    private fun MutableList<Polyline>.getPoint(): List<GeoPoint>{
+        val geoPointList: MutableList<GeoPoint> = mutableListOf()
+        for(i in this.indices){
+            for(l in this[i].latLang)
+            geoPointList.add(l)
+        }
+        return geoPointList
+    }
+    private fun endRunAndSaveToDb(){
+       /* map?.snapshot {  bmp  ->
             var distanceInMeters = 0
             for(polyline in pathPoints){
                 distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
@@ -290,13 +345,37 @@ class TrackingFragment : Fragment() {
                 , currentTimeInMillis, caloriesBurned)
             viewModel.insertRun(run)
 
-            Snackbar.make(
-                requireView(),
-                "Run saved successfully",
-                Snackbar.LENGTH_LONG).show()
-            stopRun()
-        }
-    }*/
+
+        }*/
+        val bitmap = binding?.osMap?.drawToBitmap()
+        val distanceInMeter = PrimaryUtility.calculateDistance(pathPoints).toInt()
+        val avgSpeed = PrimaryUtility.getAvgSpeed(
+            PrimaryUtility.calculateDistance(pathPoints),currentTimeInMillis)
+        val dateTimeStamp = Calendar.getInstance().timeInMillis
+        val dateString = simpleDateFormat.format(Date(dateTimeStamp))
+        val date: Date? = simpleDateFormat.parse(dateString)
+        val activityType = sharedPref.getString(Constants.Activity_Type,"")
+        val caloriesBurned = PrimaryUtility.calculateBurnedCalories(
+            currentTimeInMillis,
+            PrimaryUtility.calculateDistance(pathPoints),
+            sharedPref.getFloat(Constants.KEY_WEIGHT,0f),
+            activityType!!
+        )
+        val run = RunningEntity(
+            Date = date,
+            runningImg = bitmap,
+            runningAvgSpeedKMH = avgSpeed,
+            runningDistanceInMeters = distanceInMeter,
+            runningTimeInMillis = currentTimeInMillis,
+            activity_type = activityType,
+            stepCount = 0,
+            CaloriesBurned = caloriesBurned
+        )
+        viewModel.insertRun(run)
+        Toast.makeText(requireContext(),"Track was saved in database",
+            Toast.LENGTH_LONG).show()
+        stopRun()
+    }
     private fun addAllPolyLines(){
         for(polyline in pathPoints){
             val line = org.osmdroid.views.overlay.Polyline()
@@ -343,15 +422,16 @@ class TrackingFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.cancel_run  ->   {
-                showCancelTrackingDialog(
+                showTrackingDialog(
                     resources.getString(R.string.cancel_run_header_dialog),
-                    resources.getString(R.string.cancel_run_content_dialog)
+                    resources.getString(R.string.cancel_run_content_dialog),
+                    Constants.ACTION_STOP_RUN
                 )
             }
         }
         return super.onOptionsItemSelected(item)
     }
-    private fun showCancelTrackingDialog(header: String, content: String){
+    private fun showTrackingDialog(header: String, content: String, action: String){
         val dialog: Dialog = Dialog(requireContext(),R.style.DialogTheme)
         val dialogBinding = CancelRunDialogBinding.inflate(layoutInflater)
         dialog.apply {
@@ -362,7 +442,20 @@ class TrackingFragment : Fragment() {
                 tvContent.text = content
                 tvHeader.text = header
                 btnYes.setOnClickListener {
-                    stopRun()
+                    when(action){
+                        Constants.ACTION_STOP_RUN  ->   stopRun()
+                        Constants.ACTION_RESET_RUN ->    {
+                            Toast.makeText(requireContext(),"Track was reset",
+                                Toast.LENGTH_LONG).show()
+
+                            sendCommandToService(Constants.ACTION_STOP_SERVICE)
+                            for(i in allPolyline) {
+                                binding?.osMap?.overlayManager?.remove(i)
+                            }
+                            allPolyline.clear()
+                            mapController.setZoom(18.5)
+                        }
+                    }
                     dialog.dismiss()
                 }
                 btnNo.setOnClickListener {
@@ -376,7 +469,7 @@ class TrackingFragment : Fragment() {
     private fun stopRun(){
         binding?.tvDuration?.text = "00:00:00:00"
         sendCommandToService(Constants.ACTION_STOP_SERVICE)
-        findNavController().navigate(R.id.action_trackingFragment_to_stepCounterFragment)
+        backToStepCounterFragment()
         currentOrientation = null
     }
     private fun slideUp(duration: Long = 500){
@@ -408,9 +501,15 @@ class TrackingFragment : Fragment() {
         constraintSet.applyTo(binding?.mainConstraintLayout)
 
     }
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onResume() {
         super.onResume()
         binding?.osMap?.onResume()
+        if(ContextCompat.checkSelfPermission(requireContext(),
+                ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED && !isFirstTimeLaunch
+        ){
+            accessBackgroundLocation.launch(ACCESS_BACKGROUND_LOCATION)
+        }
     }
     override fun onPause() {
         super.onPause()

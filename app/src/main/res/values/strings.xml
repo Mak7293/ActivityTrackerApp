@@ -13,5 +13,8 @@
     <string name="cancel_run_content_dialog">Are you sure to cancel the current run and delete all its data?</string>
     <string name="exit_app_header_dialog">Exit!!</string>
     <string name="exit_app_content_dialog">Are you sure to Exit this App?</string>
+    <string name="reset_tracking_header_dialog">Reset Tracking!!</string>
+    <string name="reset_tracking_content_dialog">Are you sure to Reset Tracking? All of your Tracking Activity will be lost.</string>
+    <string name="all_time_location_permission">Please allow all time access to this app for proper tracking of your activity.</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

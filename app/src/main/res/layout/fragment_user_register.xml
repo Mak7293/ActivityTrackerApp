@@ -54,7 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:fontFamily="@font/regular"
-                android:text="6554"
                 android:textCursorDrawable="@drawable/curser_color"
                 android:hint="Weight In Kg"
                 android:textColor="#363a43"
