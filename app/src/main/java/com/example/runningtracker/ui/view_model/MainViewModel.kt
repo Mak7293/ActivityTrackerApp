@@ -70,4 +70,5 @@ class MainViewModel@Inject constructor(
     fun deleteRun(run: RunningEntity) = viewModelScope.launch {
         mainRepository.deleteRun(run)
     }
+
 }

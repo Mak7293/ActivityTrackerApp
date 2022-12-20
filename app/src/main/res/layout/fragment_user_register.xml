@@ -27,8 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            app:boxStrokeColor="@color/edit_text_appearance_color"
-            app:hintTextColor="@color/edit_text_appearance_color"
+            app:boxStrokeColor="@color/green_primary_color"
+            app:hintTextColor="@color/green_primary_color"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_name"
@@ -46,8 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            app:boxStrokeColor="@color/edit_text_appearance_color"
-            app:hintTextColor="@color/edit_text_appearance_color"
+            app:boxStrokeColor="@color/green_primary_color"
+            app:hintTextColor="@color/green_primary_color"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_weight"
@@ -65,8 +65,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            app:boxStrokeColor="@color/edit_text_appearance_color"
-            app:hintTextColor="@color/edit_text_appearance_color"
+            app:boxStrokeColor="@color/green_primary_color"
+            app:hintTextColor="@color/green_primary_color"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_height"
@@ -84,8 +84,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            app:boxStrokeColor="@color/edit_text_appearance_color"
-            app:hintTextColor="@color/edit_text_appearance_color"
+            app:boxStrokeColor="@color/green_primary_color"
+            app:hintTextColor="@color/green_primary_color"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/et_age"

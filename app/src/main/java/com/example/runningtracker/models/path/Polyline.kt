@@ -1,4 +1,4 @@
-package com.example.runningtracker.path_model.path
+package com.example.runningtracker.models.path
 
 import org.osmdroid.util.GeoPoint
 

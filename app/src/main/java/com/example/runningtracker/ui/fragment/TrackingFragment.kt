@@ -17,19 +17,16 @@ import android.os.Bundle
 import android.provider.Settings
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.*
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.DimenRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import androidx.core.view.drawToBitmap
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
@@ -41,8 +38,8 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import com.example.runningtracker.databinding.CancelRunDialogBinding
-import com.example.runningtracker.db.RunningEntity
-import com.example.runningtracker.path_model.path.Polyline
+import com.example.runningtracker.models.path.Polyline
+import com.example.runningtracker.test_db.TestDatabase
 import com.example.runningtracker.ui.MaterialBottomSheet
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.Constants
@@ -146,7 +143,7 @@ class TrackingFragment : Fragment() {
             marker!!.title = "Here I am"
             marker!!.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             if(sharedPref.getString(Constants.Activity_Type,"") ==
-                Constants.ACTIVITY_BICYCLING){
+                Constants.ACTIVITY_CYCLING){
                 marker!!.icon = ContextCompat.getDrawable(requireContext(), R.drawable.marker_bicycle)
             }else if(sharedPref.getString(Constants.Activity_Type,"") ==
                 Constants.ACTIVITY_RUN_OR_WALK){
@@ -332,22 +329,8 @@ class TrackingFragment : Fragment() {
         return geoPointList
     }
     private fun endRunAndSaveToDb(){
-       /* map?.snapshot {  bmp  ->
-            var distanceInMeters = 0
-            for(polyline in pathPoints){
-                distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
-            }
-            val avgSpeed = round((distanceInMeters / 1000f) /
-                    (currentTimeInMillis / 1000f / 60 / 60) * 10) / 10f
-            val dateTimestamp = Calendar.getInstance().timeInMillis
-            val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
-            val run = Run(bmp, dateTimestamp, avgSpeed, distanceInMeters
-                , currentTimeInMillis, caloriesBurned)
-            viewModel.insertRun(run)
 
-
-        }*/
-        val bitmap = binding?.osMap?.drawToBitmap()
+       /* val bitmap = binding?.osMap?.drawToBitmap()
         val distanceInMeter = PrimaryUtility.calculateDistance(pathPoints).toInt()
         val avgSpeed = PrimaryUtility.getAvgSpeed(
             PrimaryUtility.calculateDistance(pathPoints),currentTimeInMillis)
@@ -362,16 +345,17 @@ class TrackingFragment : Fragment() {
             activityType!!
         )
         val run = RunningEntity(
-            Date = date,
+            date = date,
             runningImg = bitmap,
             runningAvgSpeedKMH = avgSpeed,
             runningDistanceInMeters = distanceInMeter,
             runningTimeInMillis = currentTimeInMillis,
             activity_type = activityType,
             stepCount = 0,
-            CaloriesBurned = caloriesBurned
+            caloriesBurned = caloriesBurned
         )
-        viewModel.insertRun(run)
+        viewModel.insertRun(run)*/
+        TestDatabase(simpleDateFormat,viewModel).saveFakeDateToDb()
         Toast.makeText(requireContext(),"Track was saved in database",
             Toast.LENGTH_LONG).show()
         stopRun()

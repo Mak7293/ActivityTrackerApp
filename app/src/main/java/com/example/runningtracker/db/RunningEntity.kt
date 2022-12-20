@@ -10,13 +10,13 @@ import java.util.Date
 data class RunningEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null,
-    val Date: Date? = null,
+    val date: Date? = null,
     var runningImg: Bitmap? = null,
     var runningAvgSpeedKMH: Double = 0.0,
     var runningDistanceInMeters: Int = 0,
     var runningTimeInMillis: Long = 0L,
     var activity_type: String = "",
     val stepCount: Int = 0,
-    var CaloriesBurned: Double = 0.0
+    var caloriesBurned: Double = 0.0
 )
 

@@ -1,4 +1,4 @@
-package com.example.runningtracker.path_model.path
+package com.example.runningtracker.models.path
 
 data class PolyLines(
     val polyLines: MutableList<Polyline>

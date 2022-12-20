@@ -1,7 +1,5 @@
 package com.example.runningtracker.util
 
-import android.app.Activity
-
 object Constants {
     const val ACTION_START_OR_RESUME_SERVICE = "actionStartOrResumeService"
     const val ACTION_PAUSE_SERVICE = "actionPauseService"
@@ -16,7 +14,7 @@ object Constants {
     const val KEY_FIRST_TIME_TOGGLE = "key_first_time_toggle"
 
     const val ACTIVITY_RUN_OR_WALK = "activity_run_or_walk"
-    const val ACTIVITY_BICYCLING = "activity_bicycling"
+    const val ACTIVITY_CYCLING = "activity_bicycling"
     const val ACTIVITY_COUNTING_STEPS = "activity_counting_steps"
     const val Activity_Type = "Activity_type"
 

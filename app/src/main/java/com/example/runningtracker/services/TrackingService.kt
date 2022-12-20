@@ -17,8 +17,8 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.runningtracker.R
-import com.example.runningtracker.path_model.path.PolyLines
-import com.example.runningtracker.path_model.path.Polyline
+import com.example.runningtracker.models.path.PolyLines
+import com.example.runningtracker.models.path.Polyline
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.PrimaryUtility
 import com.google.android.gms.location.*

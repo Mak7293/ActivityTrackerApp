@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.runningtracker.databinding.BottomSheetBinding
 import com.example.runningtracker.util.Constants
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -36,7 +35,7 @@ class MaterialBottomSheet : BottomSheetDialogFragment() {
         bottomSheetBinding?.ivActivityCycling?.setOnClickListener {
             sharedPref
                 .edit()
-                .putString(Constants.Activity_Type, Constants.ACTIVITY_BICYCLING)
+                .putString(Constants.Activity_Type, Constants.ACTIVITY_CYCLING)
                 .apply()
             dismiss()
         }
