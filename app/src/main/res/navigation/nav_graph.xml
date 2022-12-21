@@ -14,7 +14,11 @@
         android:id="@+id/statisticsFragment"
         android:name="com.example.runningtracker.ui.fragment.StatisticsFragment"
         android:label="fragment_statistics"
-        tools:layout="@layout/fragment_statistics" />
+        tools:layout="@layout/fragment_statistics" >
+        <action
+            android:id="@+id/action_statisticsFragment_to_dailyReportDetailFragment"
+            app:destination="@id/dailyReportDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/stepCounterFragment"
         android:name="com.example.runningtracker.ui.fragment.StepCounterFragment"
@@ -37,7 +41,14 @@
         android:id="@+id/dailyReportDetailFragment"
         android:name="com.example.runningtracker.ui.fragment.DailyReportDetailFragment"
         android:label="fragment_daily_report_detail"
-        tools:layout="@layout/fragment_daily_report_detail" />
+        tools:layout="@layout/fragment_daily_report_detail" >
+        <action
+            android:id="@+id/action_dailyReportDetailFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment" />
+        <argument
+            android:name="day"
+            app:argType="com.example.runningtracker.models.day.Day" />
+    </fragment>
     <fragment
         android:id="@+id/userRegisterFragment"
         android:name="com.example.runningtracker.ui.fragment.UserRegisterFragment"

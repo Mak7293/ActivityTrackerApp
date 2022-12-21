@@ -213,7 +213,7 @@ class TrackingFragment : Fragment() {
     private fun backToStepCounterFragment(){
         val navOptions = NavOptions
             .Builder()
-            .setPopUpTo(R.id.splashScreenFragment, true)
+            .setPopUpTo(R.id.trackingFragment, true)
             .build()
         findNavController().navigate(
             R.id.action_trackingFragment_to_stepCounterFragment,

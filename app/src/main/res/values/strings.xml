@@ -16,5 +16,7 @@
     <string name="reset_tracking_header_dialog">Reset Tracking!!</string>
     <string name="reset_tracking_content_dialog">Are you sure to Reset Tracking? All of your Tracking Activity will be lost.</string>
     <string name="all_time_location_permission">Please allow all time access to this app for proper tracking of your activity.</string>
+    <string name="delete_day_header">Delete this day!!</string>
+    <string name="delete_day_content">Are you sure to delete all activity of this day?</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

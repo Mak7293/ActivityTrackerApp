@@ -14,7 +14,7 @@ import java.util.*
 class StatisticsAdapter(
     private val list: List<Day>,
     private val sdf: SimpleDateFormat,
-    private val btnListener:(id: Int,day: Day) -> Unit):
+    private val btnListener:(day: Day) -> Unit):
     RecyclerView.Adapter<StatisticsAdapter.ViewHolder>(){
 
     class ViewHolder(val binding: StaticRecyclerItemRowBinding)
@@ -29,7 +29,12 @@ class StatisticsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.tvDate.text = "Date: ${getStringFormattedDate(item.day.keys.first())}"
-        holder.binding.tvCalories.text = "Calories Burned: ${AllBurnedCaloriesInSpecificDay(item)} Cal"
+        holder.binding.tvCalories.text = "Calories Burned:" +
+                " ${AllBurnedCaloriesInSpecificDay(item)} Cal"
+        holder.binding.btnDetails.setOnClickListener {
+            btnListener.invoke(item)
+        }
+
     }
 
     override fun getItemCount(): Int {

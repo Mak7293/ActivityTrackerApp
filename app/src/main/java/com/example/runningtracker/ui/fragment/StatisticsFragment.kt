@@ -1,15 +1,21 @@
 package com.example.runningtracker.ui.fragment
 
 import android.os.Bundle
+import android.transition.ChangeBounds
+import android.transition.TransitionManager
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
+import android.view.animation.AnticipateOvershootInterpolator
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningtracker.Adapters.StatisticsAdapter
+import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentStatisticsBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.day.Day
@@ -71,9 +77,17 @@ class StatisticsFragment : Fragment() {
             Log.d("Day-ssss", days.toString())
             withContext(Dispatchers.Main){
                 setupRecyclerView()
+                animateRecyclerView()
             }
         }
-
+    }
+    private fun animateRecyclerView(){
+        binding?.rvStatistics?.layoutParams?.height = LayoutParams.MATCH_PARENT
+        val transition = ChangeBounds()
+        transition.interpolator = AnticipateOvershootInterpolator(1.0f)
+        transition.duration = 1500L
+        TransitionManager.beginDelayedTransition(binding?.rvStatistics, transition)
+        binding?.rvStatistics?.requestLayout()
 
     }
     private fun setupRecyclerView(){
@@ -81,8 +95,8 @@ class StatisticsFragment : Fragment() {
             binding?.tvContent?.visibility = View.INVISIBLE
             binding?.rvStatistics?.visibility = View.VISIBLE
             val adapter = StatisticsAdapter(days, sdf
-            ) { updateId, day ->
-                goToDetailsFragment(updateId, day)
+            ) {  day ->
+                goToDetailsFragment(day)
             }
             binding?.rvStatistics?.layoutManager = LinearLayoutManager(
                 requireContext(), LinearLayoutManager.VERTICAL,false)
@@ -93,11 +107,15 @@ class StatisticsFragment : Fragment() {
             binding?.rvStatistics?.visibility = View.INVISIBLE
         }
     }
-    private fun goToDetailsFragment(id: Int, day:Day){
+    private fun goToDetailsFragment( day:Day){
+
+        val bundle = Bundle().apply {
+            putSerializable("day",day)
+        }
+        findNavController().navigate(
+            R.id.action_statisticsFragment_to_dailyReportDetailFragment,bundle)
 
     }
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
