@@ -32,7 +32,7 @@ class StatisticsFragment : Fragment() {
     private var binding: FragmentStatisticsBinding? = null
     private val viewModel: StatisticsViewModel by viewModels()
     lateinit var run: List<RunningEntity>
-    private val days = mutableListOf<Day>()
+
 
     @Inject
     lateinit var sdf: SimpleDateFormat
@@ -58,6 +58,7 @@ class StatisticsFragment : Fragment() {
         }
     }
     private fun getMapOfActivityInSpecificDate() {
+        val days = mutableListOf<Day>()
         val dates = mutableSetOf<Date>()
         for (i in run) {
             i.date?.let {
@@ -76,21 +77,21 @@ class StatisticsFragment : Fragment() {
             }
             Log.d("Day-ssss", days.toString())
             withContext(Dispatchers.Main){
-                setupRecyclerView()
-                animateRecyclerView()
+                setupRecyclerView(days)
+                animateRecyclerView(days)
             }
         }
     }
-    private fun animateRecyclerView(){
+    private fun animateRecyclerView(days: MutableList<Day>){
         binding?.rvStatistics?.layoutParams?.height = LayoutParams.MATCH_PARENT
         val transition = ChangeBounds()
         transition.interpolator = AnticipateOvershootInterpolator(1.0f)
-        transition.duration = 1500L
+        transition.duration = 1000L
         TransitionManager.beginDelayedTransition(binding?.rvStatistics, transition)
         binding?.rvStatistics?.requestLayout()
 
     }
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView(days: MutableList<Day>){
         if (days.isNotEmpty()){
             binding?.tvContent?.visibility = View.INVISIBLE
             binding?.rvStatistics?.visibility = View.VISIBLE
@@ -108,7 +109,7 @@ class StatisticsFragment : Fragment() {
         }
     }
     private fun goToDetailsFragment( day:Day){
-
+        Log.d("detailDay",day.toString())
         val bundle = Bundle().apply {
             putSerializable("day",day)
         }

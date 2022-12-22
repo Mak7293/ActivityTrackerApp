@@ -1,6 +1,7 @@
 package com.example.runningtracker.Adapters
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -45,10 +46,11 @@ class StatisticsAdapter(
     }
     private fun AllBurnedCaloriesInSpecificDay(day: Day): Float{
         var totalCalories: Float = 0.0F
-        val a = day.day.values.toMutableList()
-        for(i in day.day.values){
-            for(j in i)
-            totalCalories += j.caloriesBurned.toFloat()
+        val a = day.day.get(day.day.keys.last())!!
+        Log.d("adapterFirst", day.day.get(day.day.keys.first())!!.toString())
+        Log.d("adapterLast", day.day.get(day.day.keys.last())!!.toString())
+        for(i in day.day.get(day.day.keys.last())!!){
+            totalCalories += i.caloriesBurned.toFloat()
         }
         return totalCalories
     }
