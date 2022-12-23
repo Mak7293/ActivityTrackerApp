@@ -1,4 +1,4 @@
-package com.example.runningtracker.ui
+package com.example.runningtracker.util
 
 import android.content.SharedPreferences
 import android.os.Bundle

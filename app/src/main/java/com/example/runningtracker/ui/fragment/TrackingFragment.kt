@@ -40,7 +40,7 @@ import androidx.navigation.NavOptions
 import com.example.runningtracker.databinding.CancelRunDialogBinding
 import com.example.runningtracker.models.path.Polyline
 import com.example.runningtracker.test_db.TestDatabase
-import com.example.runningtracker.ui.MaterialBottomSheet
+import com.example.runningtracker.util.MaterialBottomSheet
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.Constants.currentOrientation

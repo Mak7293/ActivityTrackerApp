@@ -33,6 +33,9 @@ object Constants {
     const val NOTIFICATION_CHANNEL_NAME= "tracking"
     const val NOTIFICATION_ID= 1
 
+    const val SLIDE_LEFT = "slide_left"
+    const val SLIDE_RIGHT = "slide_right"
+
 
     var currentOrientation: Int? = null
 
