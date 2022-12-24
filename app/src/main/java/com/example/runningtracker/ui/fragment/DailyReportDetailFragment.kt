@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavOptions
@@ -18,7 +19,9 @@ import com.example.runningtracker.R
 import com.example.runningtracker.databinding.CancelRunDialogBinding
 import com.example.runningtracker.databinding.FragmentDailyReportDetailBinding
 import com.example.runningtracker.models.day.Day
+import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.util.Constants
+import com.example.runningtracker.util.NavUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import javax.inject.Inject
@@ -63,14 +66,11 @@ class DailyReportDetailFragment : Fragment() {
             ))
             binding?.toolbarTv?.text = "Date: ${sdf.format(day.day.values.first().first().date!!)}"
             binding?.toolbar?.setNavigationOnClickListener {
-                val navOptions = NavOptions
-                    .Builder()
-                    .setPopUpTo(R.id.dailyReportDetailFragment, true)
-                    .build()
+
                 findNavController().navigate(
                     R.id.action_dailyReportDetailFragment_to_statisticsFragment,
                     null,
-                    navOptions
+                    NavUtils.navOptions(activity as MainActivity)[Constants.SLIDE_BOTTOM]
                 )
             }
         }

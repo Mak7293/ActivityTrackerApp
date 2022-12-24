@@ -40,10 +40,12 @@ import androidx.navigation.NavOptions
 import com.example.runningtracker.databinding.CancelRunDialogBinding
 import com.example.runningtracker.models.path.Polyline
 import com.example.runningtracker.test_db.TestDatabase
+import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.util.MaterialBottomSheet
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.Constants.currentOrientation
+import com.example.runningtracker.util.NavUtils
 import com.example.runningtracker.util.PrimaryUtility
 import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.util.BoundingBox
@@ -211,14 +213,10 @@ class TrackingFragment : Fragment() {
         }
     }
     private fun backToStepCounterFragment(){
-        val navOptions = NavOptions
-            .Builder()
-            .setPopUpTo(R.id.trackingFragment, true)
-            .build()
         findNavController().navigate(
             R.id.action_trackingFragment_to_stepCounterFragment,
             null,
-            navOptions
+            NavUtils.navOptions(activity as MainActivity)[Constants.SLIDE_BOTTOM]
         )
     }
 

@@ -35,6 +35,8 @@ object Constants {
 
     const val SLIDE_LEFT = "slide_left"
     const val SLIDE_RIGHT = "slide_right"
+    const val SLIDE_TOP = "slide_top"
+    const val SLIDE_BOTTOM = "slide_bottom"
 
 
     var currentOrientation: Int? = null

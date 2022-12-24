@@ -10,8 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.animation.AnticipateOvershootInterpolator
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningtracker.Adapters.StatisticsAdapter
@@ -19,7 +22,10 @@ import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentStatisticsBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.day.Day
+import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.ui.view_model.StatisticsViewModel
+import com.example.runningtracker.util.Constants
+import com.example.runningtracker.util.NavUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
@@ -108,15 +114,17 @@ class StatisticsFragment : Fragment() {
             binding?.rvStatistics?.visibility = View.INVISIBLE
         }
     }
-    private fun goToDetailsFragment( day:Day){
+    private fun goToDetailsFragment(day:Day){
         Log.d("detailDay",day.toString())
+
         val bundle = Bundle().apply {
             putSerializable("day",day)
         }
         findNavController().navigate(
-            R.id.action_statisticsFragment_to_dailyReportDetailFragment,bundle)
-
+            R.id.action_statisticsFragment_to_dailyReportDetailFragment
+            ,bundle,NavUtils.navOptions(activity as MainActivity)[Constants.SLIDE_TOP])
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null

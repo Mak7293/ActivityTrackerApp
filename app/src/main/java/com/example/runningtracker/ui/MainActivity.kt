@@ -11,12 +11,15 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.ActivityMainBinding
 import com.example.runningtracker.databinding.CancelRunDialogBinding
 import com.example.runningtracker.ui.fragment.*
 import com.example.runningtracker.util.Constants
+import com.example.runningtracker.util.NavUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -52,52 +55,50 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.stepCounterFragment -> {
-                    when(getCurrentFragment().keys.first()){
+                    when(NavUtils.getCurrentFragment(this).keys.first()){
                         is HomeFragment        -> {
                             navController.navigate(
                                 R.id.stepCounterFragment, null,
-                                navOptions()[Constants.SLIDE_RIGHT])
+                                NavUtils.navOptions(this)[Constants.SLIDE_RIGHT])
                         }
                         is StatisticsFragment  -> {
                             navController.navigate(
                                 R.id.stepCounterFragment, null,
-                                navOptions()[Constants.SLIDE_LEFT])
+                                NavUtils.navOptions(this)[Constants.SLIDE_LEFT])
                         }
                     }
                 }
                 R.id.homeFragment -> {
-                    when(getCurrentFragment().keys.first()){
+                    when(NavUtils.getCurrentFragment(this).keys.first()){
                         is StepCounterFragment   -> {
                             navController.navigate(
                                 R.id.homeFragment, null,
-                                navOptions()[Constants.SLIDE_LEFT])
+                                NavUtils.navOptions(this)[Constants.SLIDE_LEFT])
                         }
                         is StatisticsFragment    -> {
                             navController.navigate(
                                 R.id.homeFragment, null,
-                                navOptions()[Constants.SLIDE_LEFT])
+                                NavUtils.navOptions(this)[Constants.SLIDE_LEFT])
                         }
                     }
                 }
                 R.id.statisticsFragment -> {
-                    when(getCurrentFragment().keys.first()){
+                    when(NavUtils.getCurrentFragment(this).keys.first()){
                         is StepCounterFragment   -> {
                             navController.navigate(
                                 R.id.statisticsFragment, null,
-                                navOptions()[Constants.SLIDE_RIGHT])
+                                NavUtils.navOptions(this)[Constants.SLIDE_RIGHT])
                         }
                         is HomeFragment    -> {
                             navController.navigate(
                                 R.id.statisticsFragment, null,
-                                navOptions()[Constants.SLIDE_RIGHT])
+                                NavUtils.navOptions(this)[Constants.SLIDE_RIGHT])
                         }
                     }
                 }
             }
             true
         }
-
-        //binding.bottomNavigationView.setupWithNavController(navController)
         binding.bottomNavigationView.setOnNavigationItemReselectedListener { /*NO-OP */}
 
         navController.addOnDestinationChangedListener(
@@ -109,25 +110,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
     }
-    private fun setStartDestination(){
-        navController.navigate(R.id.stepCounterFragment)
-    }
-    private fun navOptions(): Map<String,NavOptions>{
-        val optionsSlideInLeft = NavOptions.Builder()
-            .setLaunchSingleTop(true)
-            .setEnterAnim(R.anim.slide_in_right)
-            .setExitAnim(R.anim.slide_out_right)
-            .setPopUpTo(getCurrentFragment().values.first(),true)
-            .build()
-        val optionsSlideInRight = NavOptions.Builder()
-            .setLaunchSingleTop(true)
-            .setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_out_left)
-            .setPopUpTo(getCurrentFragment().values.first(),true)
-            .build()
-        return mapOf(Constants.SLIDE_LEFT to optionsSlideInLeft,
-            Constants.SLIDE_RIGHT to optionsSlideInRight)
-    }
+
     private fun showExitAppDialog(
         header: String = resources.getString(R.string.exit_app_header_dialog),
         content: String = resources.getString(R.string.exit_app_content_dialog)
@@ -153,16 +136,7 @@ class MainActivity : AppCompatActivity() {
             show()
         }
     }
-    private fun getCurrentFragment(): Map<Fragment?,Int>{
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment)
-            ?.childFragmentManager?.fragments?.first()
-        return when(currentFragment){
-            is StatisticsFragment    ->   mapOf(currentFragment to R.id.statisticsFragment)
-            is StepCounterFragment   ->   mapOf(currentFragment to R.id.stepCounterFragment)
-            is HomeFragment          ->   mapOf(currentFragment to R.id.homeFragment)
-            else                     ->   mapOf()
-        }
-    }
+
     private fun applyEnglishLanguage(locale: Locale = Locale.ENGLISH){
         val config = this.resources.configuration
         val sysLocale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -183,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     override fun onBackPressed() {
-        val currentFragment = getCurrentFragment().keys.first()
+        val currentFragment = NavUtils.getCurrentFragment(this).keys.last()
         Log.d("currentFragment",currentFragment.toString())
         when(currentFragment){
             is SplashScreenFragment -> {
@@ -192,7 +166,7 @@ class MainActivity : AppCompatActivity() {
             is UserRegisterFragment ->  {
                 showExitAppDialog()
             }
-            /*is StepCounterFragment  ->  {
+            is StepCounterFragment  ->  {
                 showExitAppDialog()
             }
             is StatisticsFragment   ->  {
@@ -200,7 +174,21 @@ class MainActivity : AppCompatActivity() {
             }
             is HomeFragment         ->  {
                 showExitAppDialog()
-            }*/
+            }
+            is DailyReportDetailFragment  ->  {
+                navController.navigate(
+                    R.id.action_dailyReportDetailFragment_to_statisticsFragment,
+                    null,
+                    NavUtils.navOptions(this)[Constants.SLIDE_BOTTOM]
+                )
+            }
+            is TrackingFragment  ->  {
+                navController.navigate(
+                    R.id.action_trackingFragment_to_stepCounterFragment,
+                    null,
+                    NavUtils.navOptions(this)[Constants.SLIDE_BOTTOM]
+                )
+            }
             else  ->   super.onBackPressed()
         }
     }

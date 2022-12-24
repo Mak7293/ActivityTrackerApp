@@ -24,7 +24,9 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentStepCounterBinding
+import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.util.Constants
+import com.example.runningtracker.util.NavUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -88,7 +90,9 @@ class StepCounterFragment : Fragment() {
             if (isGranted) {
                 if (permissionName == Manifest.permission.ACCESS_FINE_LOCATION) {
                     findNavController().navigate(
-                        R.id.action_stepCounterFragment_to_trackingFragment)
+                        R.id.action_stepCounterFragment_to_trackingFragment,null,
+                        NavUtils.navOptions(activity as MainActivity)[Constants.SLIDE_TOP]
+                    )
                 }
             }else{
                 Toast.makeText(requireContext(),"Please confirm require location" +

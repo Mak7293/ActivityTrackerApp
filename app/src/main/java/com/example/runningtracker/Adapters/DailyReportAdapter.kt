@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.DailyReportRecyclerItemBinding
+import com.example.runningtracker.databinding.StaticRecyclerItemRowBinding
 
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.util.Constants
@@ -26,15 +27,23 @@ class DailyReportAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val layoutParams = LinearLayout.LayoutParams((parent.width*0.8).toInt()
-            , LinearLayout.LayoutParams.WRAP_CONTENT)
+        if(list.size>1){
+            val layoutParams = LinearLayout.LayoutParams((parent.width*0.8).toInt()
+                , LinearLayout.LayoutParams.WRAP_CONTENT)
 
-        layoutParams.setMargins((15.toDp()).toPx(),0,(40.toDp()).toPx(),0)
-        val view = LayoutInflater.from(context).inflate(R.layout.daily_report_recycler_item,
-            parent, false)
-        view.layoutParams = layoutParams
+            layoutParams.setMargins((15.toDp()).toPx(),0,(40.toDp()).toPx(),0)
+            val view = LayoutInflater.from(context).inflate(R.layout.daily_report_recycler_item,
+                parent, false)
+            view.layoutParams = layoutParams
 
-        return ViewHolder(DailyReportRecyclerItemBinding.bind(view))
+            return ViewHolder(DailyReportRecyclerItemBinding.bind(view))
+        }else{
+            return ViewHolder(
+                DailyReportRecyclerItemBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+            )
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
