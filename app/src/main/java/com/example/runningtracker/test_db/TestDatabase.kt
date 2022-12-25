@@ -1,5 +1,10 @@
 package com.example.runningtracker.test_db
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import com.example.runningtracker.R
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.Constants
@@ -9,7 +14,8 @@ import java.util.*
 
 class TestDatabase(
     private val sdf: SimpleDateFormat,
-    private val viewModel: MainViewModel
+    private val viewModel: MainViewModel,
+    private val context: Context
 ){
     private fun generateDate(pastDay: Float): Date? {
         val dateTimeStamp = Calendar.getInstance().timeInMillis - (pastDay * 86_400_000).toLong()
@@ -20,6 +26,7 @@ class TestDatabase(
     private fun generateTimeInMillis(minute: Float): Long {
         return (minute * 60 * 1000).toLong()
     }
+
     private fun getTestRunningList():List<RunningEntity>{
 
         val run: List<RunningEntity> = listOf(

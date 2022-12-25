@@ -38,6 +38,7 @@ object Constants {
     const val SLIDE_TOP = "slide_top"
     const val SLIDE_BOTTOM = "slide_bottom"
 
+    const val IMAGE_DIRECTORY = "RunningTrackerDirectory"
 
     var currentOrientation: Int? = null
 

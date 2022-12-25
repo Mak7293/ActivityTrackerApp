@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.DailyReportRecyclerItemBinding
-import com.example.runningtracker.databinding.StaticRecyclerItemRowBinding
 
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.util.Constants
@@ -28,7 +28,7 @@ class DailyReportAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         if(list.size>1){
-            val layoutParams = LinearLayout.LayoutParams((parent.width*0.8).toInt()
+            val layoutParams = LinearLayout.LayoutParams((parent.width*0.85).toInt()
                 , LinearLayout.LayoutParams.WRAP_CONTENT)
 
             layoutParams.setMargins((15.toDp()).toPx(),0,(40.toDp()).toPx(),0)
@@ -57,16 +57,34 @@ class DailyReportAdapter(
         }else if(item.activity_type == Constants.ACTIVITY_RUN_OR_WALK){
             holder.binding.ivActivity.setImageResource(R.drawable.ic_walking)
         }
+        holder.binding.ivTrack.setImageURI(item.runningImg)
+        holder.binding.ivTrack.scaleType = ImageView.ScaleType.CENTER_CROP
+        setUiConfig(holder)
+
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
+    private fun setUiConfig(holder: ViewHolder){
+        if(list.size>1){
+            holder.binding.tvAvgSpeed.textSize = 14.0f
+            holder.binding.tvTime.textSize =  14.0f
+            holder.binding.tvDistance.textSize =  14.0f
+            holder.binding.tvCaloriesBurned.textSize = 14.0f
+            holder.binding.cvImageHolder.layoutParams?.height = 1200.toDp()
+            holder.binding.cvImageHolder.layoutParams?.width = 1200.toDp()
+            holder.binding.cvImageHolder.requestLayout()
+            holder.binding.ivActivity.layoutParams?.height = 375.toDp()
+            holder.binding.ivActivity.layoutParams?.width = 3750.toDp()
+            holder.binding.ivActivity.requestLayout()
+        }
+    }
     private fun getFormattedStringTime(timeInMillis: Long): String{
         val timeInSeconds = timeInMillis/1000
-        val minute = timeInSeconds/60
-        val seconds = if(timeInSeconds - (minute * 60) != 0L) {
-            "${timeInSeconds - (minute * 60)}"
+        val minute = if (timeInSeconds/60 < 10) "0${timeInSeconds / 60}" else timeInSeconds/60
+        val seconds = if(timeInSeconds - ((timeInSeconds/60 ) * 60) != 0L) {
+            "${timeInSeconds - ((timeInSeconds/60 ) * 60)}"
         }else{
             "00"
         }

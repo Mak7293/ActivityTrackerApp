@@ -1,15 +1,18 @@
 package com.example.runningtracker.ui.fragment
 
+import android.Manifest
 import android.Manifest.permission.*
 import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -17,6 +20,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.*
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.fragment.app.Fragment
@@ -27,6 +31,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
@@ -38,6 +43,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import com.example.runningtracker.databinding.CancelRunDialogBinding
+import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.path.Polyline
 import com.example.runningtracker.test_db.TestDatabase
 import com.example.runningtracker.ui.MainActivity
@@ -51,6 +57,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -121,7 +131,13 @@ class TrackingFragment : Fragment() {
             )
         }
         binding?.btnSaveToDb?.setOnClickListener {
-            zoomToSeeWholeTrack()
+            try{
+                zoomToSeeWholeTrack()
+            }catch (e: IllegalArgumentException){
+                Toast.makeText(requireContext(),
+                    "There is no Track to save in DataBase.",Toast.LENGTH_SHORT).show()
+            }
+
         }
         binding?.fabPauseStart?.setOnClickListener {
             toggleRun()
@@ -316,7 +332,8 @@ class TrackingFragment : Fragment() {
             bounds, false,50,19.0,0L
         )
         binding?.osMap?.invalidate()
-        endRunAndSaveToDb()
+        accessReadWritePermission.launch(arrayOf(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE))
+
     }
     private fun MutableList<Polyline>.getPoint(): List<GeoPoint>{
         val geoPointList: MutableList<GeoPoint> = mutableListOf()
@@ -326,9 +343,8 @@ class TrackingFragment : Fragment() {
         }
         return geoPointList
     }
-    private fun endRunAndSaveToDb(){
+    private fun endRunAndSaveToDb(savedImageUri: Uri){
 
-       /* val bitmap = binding?.osMap?.drawToBitmap()
         val distanceInMeter = PrimaryUtility.calculateDistance(pathPoints).toInt()
         val avgSpeed = PrimaryUtility.getAvgSpeed(
             PrimaryUtility.calculateDistance(pathPoints),currentTimeInMillis)
@@ -344,7 +360,7 @@ class TrackingFragment : Fragment() {
         )
         val run = RunningEntity(
             date = date,
-            runningImg = bitmap,
+            runningImg = savedImageUri,
             runningAvgSpeedKMH = avgSpeed,
             runningDistanceInMeters = distanceInMeter,
             runningTimeInMillis = currentTimeInMillis,
@@ -352,11 +368,45 @@ class TrackingFragment : Fragment() {
             stepCount = 0,
             caloriesBurned = caloriesBurned
         )
-        viewModel.insertRun(run)*/
-        TestDatabase(simpleDateFormat,viewModel).saveFakeDateToDb()
-        Toast.makeText(requireContext(),"Track was saved in database",
+        viewModel.insertRun(run)
+
+        //TestDatabase(simpleDateFormat,viewModel,requireContext()).saveFakeDateToDb()
+        Toast.makeText(requireContext(),"Track Was Saved to Database successfully.",
             Toast.LENGTH_LONG).show()
         stopRun()
+    }
+    private val accessReadWritePermission: ActivityResultLauncher<Array<String>> =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
+                permissions -> permissions.entries.forEach {
+            val permissionName = it.key
+            val isGranted = it.value
+            if (isGranted) {
+                if (permissionName == WRITE_EXTERNAL_STORAGE) {
+                    saveImageToInternalStorage(binding?.osMap?.drawToBitmap()!!)
+                }
+            }else{
+                if (permissionName == WRITE_EXTERNAL_STORAGE) {
+                    Toast.makeText(requireContext(),
+                        "Permission Denied For saving tracking image to Database",
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        }
+    private fun saveImageToInternalStorage(bitmap: Bitmap) {
+        val wrapper = ContextWrapper(requireContext())
+        var file = wrapper.getDir(Constants.IMAGE_DIRECTORY,Context.MODE_PRIVATE)
+        file = File(file,"${UUID.randomUUID()}.jpg")
+        try {
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+            stream.flush()
+            stream.close()
+            endRunAndSaveToDb(Uri.parse(file.absolutePath))
+        }catch (e: IOException){
+            e.printStackTrace()
+            Log.d("errorSaveBitmap","!!!!!!!")
+        }
     }
     private fun addAllPolyLines(){
         for(polyline in pathPoints){
@@ -483,6 +533,7 @@ class TrackingFragment : Fragment() {
         constraintSet.applyTo(binding?.mainConstraintLayout)
 
     }
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onResume() {
         super.onResume()

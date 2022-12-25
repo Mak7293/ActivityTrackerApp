@@ -50,8 +50,6 @@ class StatisticsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentStatisticsBinding.inflate(layoutInflater)
         return binding?.root
-
-
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,18 +82,23 @@ class StatisticsFragment : Fragment() {
             Log.d("Day-ssss", days.toString())
             withContext(Dispatchers.Main){
                 setupRecyclerView(days)
-                animateRecyclerView(days)
+                animateRecyclerView()
             }
         }
     }
-    private fun animateRecyclerView(days: MutableList<Day>){
-        binding?.rvStatistics?.layoutParams?.height = LayoutParams.MATCH_PARENT
-        val transition = ChangeBounds()
-        transition.interpolator = AnticipateOvershootInterpolator(1.0f)
-        transition.duration = 1000L
-        TransitionManager.beginDelayedTransition(binding?.rvStatistics, transition)
-        binding?.rvStatistics?.requestLayout()
-
+    private fun animateRecyclerView(){
+        try {
+            binding?.rvStatistics?.layoutParams?.height = LayoutParams.MATCH_PARENT
+            val transition = ChangeBounds()
+            transition.interpolator = AnticipateOvershootInterpolator(0.5f)
+            transition.duration = 1000L
+            transition?.let {
+                TransitionManager.beginDelayedTransition(binding?.rvStatistics, it)
+            }
+        }catch (e: java.lang.NullPointerException){
+            binding?.rvStatistics?.layoutParams?.height = LayoutParams.MATCH_PARENT
+            binding?.rvStatistics?.requestLayout()
+        }
     }
     private fun setupRecyclerView(days: MutableList<Day>){
         if (days.isNotEmpty()){

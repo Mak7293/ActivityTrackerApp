@@ -94,7 +94,7 @@ class HomeFragment : Fragment() {
             llView.layoutParams?.width = 0
             tvView.visibility = View.INVISIBLE
             val transition = ChangeBounds()
-            transition.interpolator = AnticipateOvershootInterpolator(1.0f)
+            transition.interpolator = AnticipateOvershootInterpolator(0.5f)
             transition.duration = 1000L
             TransitionManager.beginDelayedTransition(llView, transition)
             llView.requestLayout()
@@ -104,7 +104,7 @@ class HomeFragment : Fragment() {
             jobName.join()
             llEtView.layoutParams?.width = LayoutParams.MATCH_PARENT
             val transition1 = ChangeBounds()
-            transition1.interpolator = AnticipateOvershootInterpolator(1.0f)
+            transition1.interpolator = AnticipateOvershootInterpolator(0.5f)
             transition1.duration = 1000L
             TransitionManager.beginDelayedTransition(llEtView, transition1)
             llEtView.requestLayout()
@@ -174,10 +174,10 @@ class HomeFragment : Fragment() {
                     sharedPref.edit().putFloat(key, etView.text.toString().toFloat()).apply()
                 }
                 Constants.KEY_HEIGHT  -> {
-                    sharedPref.edit().putInt(key, etView.text.toString().toInt()).apply()
+                    sharedPref.edit().putInt(key, etView.text.toString().toFloat().toInt()).apply()
                 }
                 Constants.KEY_AGE     -> {
-                    sharedPref.edit().putInt(key, etView.text.toString().toInt()).apply()
+                    sharedPref.edit().putInt(key, etView.text.toString().toFloat().toInt()).apply()
                 }
             }
         }
