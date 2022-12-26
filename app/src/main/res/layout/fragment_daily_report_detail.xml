@@ -7,7 +7,7 @@
     tools:context=".ui.fragment.DailyReportDetailFragment">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:background="@color/background"
+        android:background="@color/dark_4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">

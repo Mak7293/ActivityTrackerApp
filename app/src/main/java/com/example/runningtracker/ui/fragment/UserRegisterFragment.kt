@@ -1,18 +1,22 @@
 package com.example.runningtracker.ui.fragment
 
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentUserRegisterBinding
 import com.example.runningtracker.util.Constants
+import com.example.runningtracker.util.Theme
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -31,11 +35,16 @@ class UserRegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentUserRegisterBinding.inflate(layoutInflater)
-
         return binding?.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ){
+            binding?.mainLayout?.background = ContextCompat.getDrawable(
+                requireContext(),R.drawable.ic_background)
+        }
+        Theme.setUpUserRegisterFragmentUi(requireContext(),binding!!)
 
         isFirstTime = sharedPref.getBoolean(Constants.KEY_FIRST_TIME_TOGGLE,true)
         if (!isFirstTime){

@@ -1,5 +1,7 @@
 package com.example.runningtracker.util
 
+import javax.inject.Inject
+
 object Constants {
     const val ACTION_START_OR_RESUME_SERVICE = "actionStartOrResumeService"
     const val ACTION_PAUSE_SERVICE = "actionPauseService"
@@ -12,6 +14,8 @@ object Constants {
     const val KEY_AGE = "key_age"
     const val KEY_WEIGHT = "key_weight"
     const val KEY_FIRST_TIME_TOGGLE = "key_first_time_toggle"
+
+    const val ACTION_CHANGE_THEME = "action_change_theme"
 
     const val ACTIVITY_RUN_OR_WALK = "activity_run_or_walk"
     const val ACTIVITY_CYCLING = "activity_bicycling"
@@ -27,6 +31,11 @@ object Constants {
     const val LOCATION_UPDATE_INTERVAL = 5000L
     const val FASTEST_LOCATION_INTERVAL = 2000L
 
+    const val THEME_DAY = "themeDay"
+    const val THEME_NIGHT = "themeNight"
+    const val THEME_DEFAULT = "themeDefault"
+    const val THEME_KEY = "themeKey"
+
     const val MAP_ZOOM = 18.5
 
     const val NOTIFICATION_CHANNEL_ID = "tracking_channel"
@@ -41,5 +50,7 @@ object Constants {
     const val IMAGE_DIRECTORY = "RunningTrackerDirectory"
 
     var currentOrientation: Int? = null
+    var currentTheme: String? = null
+
 
 }

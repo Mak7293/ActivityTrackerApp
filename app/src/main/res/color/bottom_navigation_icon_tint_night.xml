@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true"
-        android:color="#005002"/>
+        android:color="@color/yellow_primary_color"/>
     <item android:state_pressed="false"
-        android:color="#686868"/>
+        android:color="@color/dark_3"/>
 </selector>

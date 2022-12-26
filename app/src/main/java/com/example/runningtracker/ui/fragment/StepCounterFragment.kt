@@ -16,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -46,8 +47,13 @@ class StepCounterFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentStepCounterBinding.inflate(layoutInflater)
-        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        //customizeTheme()
         return binding?.root
+
+
+
+
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -119,6 +125,32 @@ class StepCounterFragment : Fragment() {
             create()
             setCancelable(false)
             show()
+        }
+    }
+    private fun customizeTheme(currentTheme: String){
+
+        if(currentTheme == Constants.THEME_NIGHT){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                //setDefaultUiTheme()
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }else{
+                //setNightUiTheme()
+            }
+        }else if(currentTheme == Constants.THEME_DAY){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                //setDefaultUiTheme()
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }else{
+                //setDayUiTheme()
+            }
+        }else if(currentTheme == Constants.THEME_DEFAULT){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                //setDefaultUiTheme()
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }else{
+                // This line will not be executed in under api 29 device
+                //setDayUiTheme()
+            }
         }
     }
     override fun onDestroyView() {

@@ -10,12 +10,31 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/dark_1</item>
         <!-- Customize your theme here. -->
         <item name="android:textAllCaps">false</item>
     </style>
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+    <style name="general_text_view" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textColor">@color/dark_8</item>
+    </style>
+    <style name="main_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@color/dark_0</item>
+    </style>
+    <style name="bottom_navigation_overlay" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@color/dark_1</item>
+    </style>
+    <style name="fab_overlay" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:backgroundTint">@color/dark_7</item>
+        <item name="android:tint">@android:color/black</item>
+    </style>
+    <style name="toolbar_overlay" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:background">@color/dark_1</item>
+    </style>
+    <style name="toolbar_text_overlay" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textColor">@color/dark_7</item>
     </style>
 </resources>

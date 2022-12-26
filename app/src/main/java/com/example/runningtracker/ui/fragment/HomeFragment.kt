@@ -1,9 +1,13 @@
 package com.example.runningtracker.ui.fragment
 
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +17,12 @@ import android.view.animation.AnticipateOvershootInterpolator
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentHomeBinding
+import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -36,13 +43,14 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(layoutInflater)
+        themeTypeChecked()
         return binding?.root
-
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         binding?.tvName?.text =
             "Name: " +sharedPref.getString(Constants.KEY_NAME,"")
@@ -86,7 +94,11 @@ class HomeFragment : Fragment() {
             hideEditText(binding!!.llAge,binding!!.tvAge,binding!!.llEtAge,
                 binding!!.etAge,Constants.KEY_AGE)
         }
+        binding?.themeRadioGroup?.setOnCheckedChangeListener {  group , checkId ->
+            onRadioThemeButtonClicked(checkId)
+        }
     }
+
     private fun showEditText(
         llView: LinearLayout, tvView: TextView,
         llEtView: LinearLayout, etView: EditText, key: String){
@@ -182,7 +194,34 @@ class HomeFragment : Fragment() {
             }
         }
     }
+    private fun onRadioThemeButtonClicked(checkId: Int) {
+        // Check which radio button was clicked
 
+        when (checkId) {
+            R.id.radio_btn_day     -> {
+                MainActivity.currentTheme.postValue(Constants.THEME_DAY)
+            }
+            R.id.radio_btn_night   -> {
+                MainActivity.currentTheme.postValue(Constants.THEME_NIGHT)
+            }
+            R.id.radio_btn_default -> {
+                MainActivity.currentTheme.postValue(Constants.THEME_DEFAULT)
+            }
+        }
+    }
+    private fun themeTypeChecked(){
+        when (MainActivity.currentTheme.value) {
+            Constants.THEME_DEFAULT -> {
+                binding?.radioBtnDefault?.isChecked = true
+            }
+            Constants.THEME_DAY -> {
+                binding?.radioBtnDay?.isChecked = true
+            }
+            Constants.THEME_NIGHT -> {
+                binding?.radioBtnNight?.isChecked = true
+            }
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null

@@ -9,6 +9,19 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="green_primary_color">#006018</color>
-    <color name="background">#ACACAC</color>
+    <color name="yellow_primary_color">#FFBF00</color>
+
     <color name="divider_color">#6A6A6A</color>
+
+    <!--myColorPallet-->
+    <color name="dark_0">#212529</color>
+    <color name="dark_1">#343a40</color>
+    <color name="dark_2">#495057</color>
+    <color name="dark_3">#6c757d</color>
+    <color name="dark_4">#adb5bd</color>
+    <color name="dark_5">#ced4da</color>
+    <color name="dark_6">#dee2e6</color>
+    <color name="dark_7">#e9ecef</color>
+    <color name="dark_8">#f8f9fa</color>
+
 </resources>
