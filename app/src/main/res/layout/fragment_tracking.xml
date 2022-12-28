@@ -8,9 +8,10 @@
     tools:context=".ui.fragment.TrackingFragment">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/toolbar_tracking_fragment_overlay"
+        style="@style/toolbar_with_navigation_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         app:layout_constraintTop_toTopOf="parent">
         <TextView
             android:id="@+id/toolbar_tv"
@@ -45,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="16 km/h"
+                android:text="00 km/h"
                 android:fontFamily="@font/semi_bold"
                 android:theme="@style/general_text_view"
                 android:textSize="16sp" />
@@ -73,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="5:20:10:00"
+                android:text="0:00:00:00"
                 android:fontFamily="@font/semi_bold"
                 android:theme="@style/general_text_view"
                 android:textSize="16sp" />
@@ -103,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="326 kcal"
+                android:text="0.0 kcal"
                 android:fontFamily="@font/semi_bold"
                 android:theme="@style/general_text_view"
                 android:textSize="16sp" />
@@ -132,7 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="10.5 km"
+                android:text="0.0 km"
                 android:fontFamily="@font/semi_bold"
                 android:theme="@style/general_text_view"
                 android:textSize="16sp" />
@@ -173,7 +174,7 @@
     <LinearLayout
         android:id="@+id/ll_save_reset"
         android:orientation="horizontal"
-        android:background="@drawable/bottom_sheet_background_day"
+        android:theme="@style/ll_save_reset_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="5dp"

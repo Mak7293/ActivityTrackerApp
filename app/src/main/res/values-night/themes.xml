@@ -20,6 +20,18 @@
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/regular</item>
     </style>
+    <style name="ib_save_edit_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/btn_edit_night</item>
+    </style>
+    <style name="ll_save_reset_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/bottom_sheet_background_night</item>
+    </style>
+    <style name="statistics_adapter_background" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@drawable/static_recycler_item_row_bg_night</item>
+    </style>
+    <style name="cv_daily_report" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:background">@color/dark_1</item>
+    </style>
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
@@ -39,6 +51,10 @@
         <item name="boxStrokeColor">@color/yellow_primary_color</item>
         <item name="hintTextColor">@color/yellow_primary_color</item>
     </style>
+    <style name="btn_click_to_see_detail" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:textColor">@color/dark_0</item>
+        <item name="android:background">@drawable/btn_yellow_drawable</item>
+    </style>
     <style name="general_text_view_secondary" parent="ThemeOverlay.MaterialComponents.Dark">
         <item name="android:textColor">#ACACAC</item>
     </style>
@@ -55,9 +71,10 @@
         <item name="android:backgroundTint">@color/dark_7</item>
         <item name="android:tint">@android:color/black</item>
     </style>
-    <style name="toolbar_tracking_fragment_overlay" parent="Widget.AppCompat.Toolbar">
+    <style name="toolbar_with_navigation_btn" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/dark_1</item>
         <item name="navigationIcon">@drawable/ic_back_night</item>
+        <item name="colorControlNormal">@color/dark_7</item>
     </style>
     <style name="toolbar_overlay" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:background">@color/dark_1</item>

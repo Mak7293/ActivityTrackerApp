@@ -1,6 +1,7 @@
 package com.example.runningtracker.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Build
@@ -8,18 +9,25 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.ActivityMainBinding
 import com.example.runningtracker.databinding.CancelRunDialogBinding
+import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.ui.fragment.*
+import com.example.runningtracker.ui.view_model.StatisticsViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.NavUtils
 import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -28,12 +36,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val viewModel: StatisticsViewModel by viewModels()
 
     @Inject
     lateinit var sharedPref: SharedPreferences
 
     companion object{
         var currentTheme: MutableLiveData<String> = MutableLiveData()
+        lateinit var run: List<RunningEntity>
     }
 
     @SuppressLint("ResourceType")
@@ -44,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         currentTheme.postValue(sharedPref.getString(Constants.THEME_KEY, Constants.THEME_DEFAULT))
         observeLiveData()
+        getAllTotalActivityInSpecificDay()
 
         Theme.setUpUi(binding,this)
 
@@ -169,7 +180,13 @@ class MainActivity : AppCompatActivity() {
             resources.updateConfiguration(config, resources.displayMetrics)
         }
     }
-
+    private fun getAllTotalActivityInSpecificDay(){
+        lifecycleScope.launch((Dispatchers.Main)) {
+            viewModel.totalActivitySortedByDate().collect{
+                run = it
+            }
+        }
+    }
     override fun onBackPressed() {
         val currentFragment = NavUtils.getCurrentFragment(this).keys.last()
         Log.d("currentFragment",currentFragment.toString())

@@ -2,15 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/main_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingStart="10dp"
     android:paddingVertical="10dp"
     android:layout_marginHorizontal="10dp"
     android:layout_marginVertical="5dp"
-    android:background="@drawable/static_recycler_item_row_bg">
+    android:theme="@style/statistics_adapter_background">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/main_content"
+        android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -23,7 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Date: xx.xx.xx"
-            android:textColor="@color/black"
+            android:background="@android:color/transparent"
+            android:theme="@style/general_text_view"
             android:fontFamily="@font/semi_bold"
             android:textSize="16sp"/>
         <TextView
@@ -31,8 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Calories Burned: xx.xx.xx"
-            android:textColor="#3E3E3E"
+            android:theme="@style/general_text_view"
             android:fontFamily="@font/regular"
+            android:background="@android:color/transparent"
             android:textSize="14sp"/>
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_details"
@@ -41,7 +45,7 @@
             android:padding="5dp"
             android:background="@drawable/btn_green_drawable"
             android:text="Click to see Details"
-            android:textColor="@color/white"
+            android:theme="@style/btn_click_to_see_detail"
             android:fontFamily="@font/semi_bold"
             android:textSize="12sp"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -53,12 +57,14 @@
         android:layout_marginStart="30dp"
         android:visibility="visible"
         android:layout_marginEnd="10dp"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toEndOf="@+id/main_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_3"
+            android:background="@android:color/transparent"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/ic_test"
@@ -74,6 +80,7 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_2"
+            android:background="@android:color/transparent"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/ic_test"
@@ -89,6 +96,7 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_1"
+            android:background="@android:color/transparent"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/ic_test"

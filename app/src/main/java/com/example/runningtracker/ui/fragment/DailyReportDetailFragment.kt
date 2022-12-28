@@ -24,6 +24,7 @@ import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.NavUtils
+import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,6 +58,7 @@ class DailyReportDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Theme.setUpDailyReportDetailUi(requireContext(),binding!!)
         setHasOptionsMenu(true)
         day = args.day
         setUpToolbar()
@@ -68,10 +70,6 @@ class DailyReportDetailFragment : Fragment() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
-            binding?.toolbar?.setNavigationIcon(
-                ContextCompat.getDrawable(
-                requireContext(), R.drawable.ic_back_day
-            ))
             binding?.toolbarTv?.text = "Date: ${sdf.format(day.day.values.first().first().date!!)}"
             binding?.toolbar?.setNavigationOnClickListener {
                 backToStatisticsFragment()

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.animation.AnticipateOvershootInterpolator
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -37,7 +38,6 @@ class StatisticsFragment : Fragment() {
 
     private var binding: FragmentStatisticsBinding? = null
     private val viewModel: StatisticsViewModel by viewModels()
-    lateinit var run: List<RunningEntity>
 
 
     @Inject
@@ -54,17 +54,12 @@ class StatisticsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            viewModel.totalActivitySortedByDate().collect{
-                run = it
-                getMapOfActivityInSpecificDate()
-            }
-        }
+        getMapOfActivityInSpecificDate(viewModel)
     }
-    private fun getMapOfActivityInSpecificDate() {
+    private fun getMapOfActivityInSpecificDate(vm: StatisticsViewModel) {
         val days = mutableListOf<Day>()
         val dates = mutableSetOf<Date>()
-        for (i in run) {
+        for (i in MainActivity.run) {
             i.date?.let {
                 dates.add(it)
             }
@@ -74,7 +69,7 @@ class StatisticsFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             for (i in datesList) {
                 val d = Day(mutableMapOf())
-                val list = viewModel.getTotalActivityInSpecificDay(i)
+                val list = vm.getTotalActivityInSpecificDay(i)
                 val a = mutableMapOf(i to list)
                 d.day = a
                 days.add(d)
@@ -92,7 +87,7 @@ class StatisticsFragment : Fragment() {
             val transition = ChangeBounds()
             transition.interpolator = AnticipateOvershootInterpolator(0.5f)
             transition.duration = 1000L
-            transition?.let {
+            transition.let {
                 TransitionManager.beginDelayedTransition(binding?.rvStatistics, it)
             }
         }catch (e: java.lang.NullPointerException){
@@ -104,7 +99,7 @@ class StatisticsFragment : Fragment() {
         if (days.isNotEmpty()){
             binding?.tvContent?.visibility = View.INVISIBLE
             binding?.rvStatistics?.visibility = View.VISIBLE
-            val adapter = StatisticsAdapter(days, sdf
+            val adapter = StatisticsAdapter(requireContext(),days, sdf
             ) {  day ->
                 goToDetailsFragment(day)
             }

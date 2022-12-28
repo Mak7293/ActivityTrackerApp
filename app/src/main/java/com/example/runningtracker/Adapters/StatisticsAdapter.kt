@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.runningtracker.databinding.StaticRecyclerItemRowBinding
 import com.example.runningtracker.models.day.Day
+import com.example.runningtracker.util.Theme
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
 
 
 class StatisticsAdapter(
+    private val context: Context,
     private val list: List<Day>,
     private val sdf: SimpleDateFormat,
     private val btnListener:(day: Day) -> Unit):
@@ -84,6 +86,7 @@ class StatisticsAdapter(
                 holder.binding.iv3.setImageURI(imageList[2])
             }
         }
+        Theme.setUpStatisticsAdapterUi(context, holder)
     }
     private fun getStringFormattedDate(date: Date): String{
         return sdf.format(Date(date.time))

@@ -22,6 +22,22 @@
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/regular</item>
     </style>
+    <style name="ib_save_edit_background" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background">@drawable/btn_edit_day</item>
+    </style>
+    <style name="ll_save_reset_background" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background">@drawable/bottom_sheet_background_day</item>
+    </style>
+    <style name="statistics_adapter_background" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background">@drawable/static_recycler_item_row_bg_day</item>
+    </style>
+    <style name="btn_click_to_see_detail" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:textColor">@color/dark_7</item>
+        <item name="android:background">@drawable/btn_green_drawable</item>
+    </style>
+    <style name="cv_daily_report" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:background">@color/dark_6</item>
+    </style>
     <style name="icon_image_view" parent="ThemeOverlay.MaterialComponents.Light">
         <item name="android:tint">@color/dark_0</item>
     </style>
@@ -60,9 +76,10 @@
     <style name="toolbar_overlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/dark_4</item>
     </style>
-    <style name="toolbar_tracking_fragment_overlay" parent="Widget.AppCompat.Toolbar">
+    <style name="toolbar_with_navigation_btn" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/dark_4</item>
         <item name="navigationIcon">@drawable/ic_back_day</item>
+        <item name="colorControlNormal">@color/dark_0</item>
     </style>
     <style name="toolbar_text_overlay" parent="ThemeOverlay.MaterialComponents.Light">
         <item name="android:textColor">@color/dark_0</item>

@@ -2,13 +2,14 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.cardview.widget.CardView
         android:id="@+id/recyclerCardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
-        android:backgroundTint="#D5F2FF"
+        android:theme="@style/cv_daily_report"
         app:cardCornerRadius="20dp"
         android:elevation="10dp">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +41,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/regular"
-                android:textColor="@color/black"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/cv_image_holder"/>
@@ -52,7 +53,7 @@
                 android:layout_marginVertical="5dp"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/regular"
-                android:textColor="@color/black"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_distance"/>
@@ -64,7 +65,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/regular"
-                android:textColor="@color/black"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_time"/>
@@ -76,7 +77,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="15dp"
                 android:fontFamily="@font/regular"
-                android:textColor="@color/black"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_calories_burned"/>
@@ -88,14 +89,13 @@
                 android:layout_marginHorizontal="10dp"
                 android:src="@drawable/ic_steps"
                 app:civ_circle_background_color="@color/white"
-                app:civ_border_color="@android:color/darker_gray"
+                app:civ_border_color="@color/dark_4"
                 app:civ_border_width="1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_avg_speed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/cv_image_holder"
-                android:layout_marginEnd="20dp"
-                />
+                android:layout_marginEnd="20dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

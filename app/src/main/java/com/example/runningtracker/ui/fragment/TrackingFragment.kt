@@ -41,6 +41,7 @@ import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import com.example.runningtracker.databinding.CancelRunDialogBinding
 import com.example.runningtracker.db.RunningEntity
@@ -51,8 +52,12 @@ import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.*
 import com.example.runningtracker.util.Constants.currentOrientation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import java.io.File
 import java.io.FileOutputStream
@@ -108,7 +113,6 @@ class TrackingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpToolbar()
-        Theme.setUpTrackingFragmentUi(requireContext(),binding!!)
 
         binding?.osMap?.setTileSource(TileSourceFactory.MAPNIK)
         mapController = binding?.osMap?.controller!!
@@ -378,6 +382,7 @@ class TrackingFragment : Fragment() {
             val isGranted = it.value
             if (isGranted) {
                 if (permissionName == WRITE_EXTERNAL_STORAGE) {
+                    binding?.osMap?.addOnFirstLayoutListener { _, _, _, _, _ -> }
                     saveImageToInternalStorage(binding?.osMap?.drawToBitmap()!!)
                 }
             }else{
@@ -388,7 +393,7 @@ class TrackingFragment : Fragment() {
                 }
             }
         }
-        }
+    }
     private fun saveImageToInternalStorage(bitmap: Bitmap) {
         val wrapper = ContextWrapper(requireContext())
         var file = wrapper.getDir(Constants.IMAGE_DIRECTORY,Context.MODE_PRIVATE)

@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_day"
+                    style="@style/ib_save_edit_background"
                     android:src="@drawable/ic_save"/>
             </LinearLayout>
             <LinearLayout
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_day"
+                    style="@style/ib_save_edit_background"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>
@@ -132,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_day"
+                    style="@style/ib_save_edit_background"
                     android:src="@drawable/ic_save"/>
             </LinearLayout>
             <LinearLayout
@@ -162,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_day"
+                    style="@style/ib_save_edit_background"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>
@@ -202,7 +202,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_day"
+                    style="@style/ib_save_edit_background"
                     android:src="@drawable/ic_save"/>
             </LinearLayout>
             <LinearLayout
@@ -232,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_day"
+                    style="@style/ib_save_edit_background"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>
@@ -272,7 +272,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_day"
+                    style="@style/ib_save_edit_background"
                     android:src="@drawable/ic_save"/>
             </LinearLayout>
             <LinearLayout
@@ -302,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_day"
+                    style="@style/ib_save_edit_background"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>

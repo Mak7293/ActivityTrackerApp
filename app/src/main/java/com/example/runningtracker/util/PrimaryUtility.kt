@@ -1,12 +1,16 @@
 package com.example.runningtracker.util
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.runningtracker.models.path.Polyline
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
@@ -119,4 +123,5 @@ object PrimaryUtility {
                 "${ if (seconds < 10) "0" else "" }$seconds:" +
                 "${ if (milliseconds < 10) "0" else "" }$milliseconds"
     }
+
 }

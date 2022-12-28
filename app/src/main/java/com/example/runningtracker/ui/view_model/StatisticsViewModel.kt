@@ -12,6 +12,7 @@ class StatisticsViewModel@Inject constructor(
     private val mainRepository: MainRepository
 ):ViewModel() {
 
+
     fun totalActivitySortedByDate() = mainRepository.getAllActivitySortedByDate()
 
     fun getTotalActivityInSpecificDay(date: Date) = mainRepository.getAllActivityInSpecificDate(date)

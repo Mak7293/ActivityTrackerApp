@@ -10,8 +10,10 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
+import com.example.runningtracker.Adapters.StatisticsAdapter
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.ActivityMainBinding
+import com.example.runningtracker.databinding.FragmentDailyReportDetailBinding
 import com.example.runningtracker.databinding.FragmentHomeBinding
 import com.example.runningtracker.databinding.FragmentTrackingBinding
 import com.example.runningtracker.databinding.FragmentUserRegisterBinding
@@ -64,7 +66,7 @@ object Theme {
         val currentNightMode = context.resources.configuration
             .uiMode and Configuration.UI_MODE_NIGHT_MASK
         if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            binding.contentLayout?.background = ContextCompat
+            binding.contentLayout.background = ContextCompat
                 .getDrawable(context,R.drawable.card_background_day)
         }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
             binding.contentLayout?.background = ContextCompat
@@ -76,55 +78,54 @@ object Theme {
         val currentNightMode = context.resources.configuration
             .uiMode and Configuration.UI_MODE_NIGHT_MASK
         if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            binding.contentLayout?.background = ContextCompat
+            binding.contentLayout.background = ContextCompat
                 .getDrawable(context,R.drawable.card_background_day)
-            binding.ibEditAge.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_day)
-            binding.ibEditHeight.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_day)
-            binding.ibEditName.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_day)
-            binding.ibEditWeight.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_day)
-            binding.ibSaveAge.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_day)
-            binding.ibSaveHeight.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_day)
-            binding.ibSaveName.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_day)
-            binding.ibSaveWeight.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_day)
         }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
             binding.contentLayout.background = ContextCompat
                 .getDrawable(context,R.drawable.card_background_night)
-            binding.ibEditAge.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_night)
-            binding.ibEditHeight.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_night)
-            binding.ibEditName.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_night)
-            binding.ibEditWeight.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_night)
-            binding.ibSaveAge.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_night)
-            binding.ibSaveHeight.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_night)
-            binding.ibSaveName.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_night)
-            binding.ibSaveWeight.background = ContextCompat
-                .getDrawable(context,R.drawable.btn_edit_night)
         }
     }
-    fun setUpTrackingFragmentUi(context: Context,binding: FragmentTrackingBinding){
+    fun setUpStatisticsAdapterUi(context: Context, holder: StatisticsAdapter.ViewHolder){
         val currentNightMode = context.resources.configuration
             .uiMode and Configuration.UI_MODE_NIGHT_MASK
         if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            binding.llSaveReset.background = ContextCompat
-                .getDrawable(context,R.drawable.bottom_sheet_background_day)
-
+            holder.binding.iv1.borderColor = ContextCompat
+                .getColor(context,R.color.green_primary_color)
+            holder.binding.iv2.borderColor = ContextCompat
+                .getColor(context,R.color.green_primary_color)
+            holder.binding.iv3.borderColor = ContextCompat
+                .getColor(context,R.color.green_primary_color)
         }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
-            binding.llSaveReset.background = ContextCompat
-                .getDrawable(context,R.drawable.bottom_sheet_background_night)
+            holder.binding.iv1.borderColor = ContextCompat
+                .getColor(context,R.color.yellow_primary_color)
+            holder.binding.iv2.borderColor = ContextCompat
+                .getColor(context,R.color.yellow_primary_color)
+            holder.binding.iv3.borderColor = ContextCompat
+                .getColor(context,R.color.yellow_primary_color)
         }
     }
+    fun setUpDailyReportDetailUi(context: Context,binding: FragmentDailyReportDetailBinding){
+        val currentNightMode = context.resources.configuration
+            .uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            binding.ivSteps.borderColor = ContextCompat
+                .getColor(context,R.color.dark_3)
+            binding.ivTotalCalories.borderColor = ContextCompat
+                .getColor(context,R.color.dark_3)
+            binding.ivSteps.circleBackgroundColor = ContextCompat
+                .getColor(context,R.color.dark_8)
+            binding.ivTotalCalories.circleBackgroundColor = ContextCompat
+                .getColor(context,R.color.dark_8)
+        }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
+            binding.ivSteps.borderColor = ContextCompat
+                .getColor(context,R.color.dark_5)
+            binding.ivTotalCalories.borderColor = ContextCompat
+                .getColor(context,R.color.dark_5)
+            binding.ivSteps.circleBackgroundColor = ContextCompat
+                .getColor(context,R.color.dark_3)
+            binding.ivTotalCalories.circleBackgroundColor = ContextCompat
+                .getColor(context,R.color.dark_3)
+        }
+    }
+
 }
