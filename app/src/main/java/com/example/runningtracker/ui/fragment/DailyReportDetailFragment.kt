@@ -70,7 +70,7 @@ class DailyReportDetailFragment : Fragment() {
             actionBar.setDisplayHomeAsUpEnabled(true)
             binding?.toolbar?.setNavigationIcon(
                 ContextCompat.getDrawable(
-                requireContext(), R.drawable.ic_back
+                requireContext(), R.drawable.ic_back_day
             ))
             binding?.toolbarTv?.text = "Date: ${sdf.format(day.day.values.first().first().date!!)}"
             binding?.toolbar?.setNavigationOnClickListener {

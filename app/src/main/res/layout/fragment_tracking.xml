@@ -8,7 +8,7 @@
     tools:context=".ui.fragment.TrackingFragment">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:background="@color/dark_4"
+        style="@style/toolbar_tracking_fragment_overlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
@@ -16,7 +16,8 @@
             android:id="@+id/toolbar_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/black"
+            android:theme="@style/toolbar_text_overlay"
+            style="@style/Widget.MaterialComponents.TextView"
             android:fontFamily="@font/semi_bold"
             android:textSize="18sp"
             android:text="Tracking Fragment"/>
@@ -26,6 +27,7 @@
         android:id="@+id/layout_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/main_background"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
         <LinearLayout
@@ -36,6 +38,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
+                android:theme="@style/icon_image_view"
                 app:srcCompat="@drawable/ic_speed" />
             <TextView
                 android:id="@+id/tv_avg_speed"
@@ -44,7 +47,7 @@
                 android:gravity="center"
                 android:text="16 km/h"
                 android:fontFamily="@font/semi_bold"
-                android:textColor="@color/black"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp" />
             <TextView
                 android:layout_width="match_parent"
@@ -52,7 +55,7 @@
                 android:gravity="center"
                 android:text="Speed"
                 android:fontFamily="@font/semi_bold"
-                android:textColor="#636363"
+                android:theme="@style/general_text_view_secondary"
                 android:textSize="15sp" />
         </LinearLayout>
         <LinearLayout
@@ -63,6 +66,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
+                android:theme="@style/icon_image_view"
                 app:srcCompat="@drawable/ic_duration" />
             <TextView
                 android:id="@+id/tv_duration"
@@ -71,7 +75,7 @@
                 android:gravity="center"
                 android:text="5:20:10:00"
                 android:fontFamily="@font/semi_bold"
-                android:textColor="@color/black"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp" />
             <TextView
                 android:layout_width="match_parent"
@@ -79,7 +83,7 @@
                 android:gravity="center"
                 android:text="Duration"
                 android:fontFamily="@font/semi_bold"
-                android:textColor="#636363"
+                android:theme="@style/general_text_view_secondary"
                 android:textSize="15sp" />
         </LinearLayout>
         <LinearLayout
@@ -91,6 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:padding="3dp"
+                android:theme="@style/icon_image_view"
                 app:srcCompat="@drawable/ic_energy"
                 android:scaleType="fitCenter"/>
             <TextView
@@ -100,7 +105,7 @@
                 android:gravity="center"
                 android:text="326 kcal"
                 android:fontFamily="@font/semi_bold"
-                android:textColor="@color/black"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp" />
             <TextView
                 android:layout_width="match_parent"
@@ -108,7 +113,7 @@
                 android:gravity="center"
                 android:text="Calories"
                 android:fontFamily="@font/semi_bold"
-                android:textColor="#636363"
+                android:theme="@style/general_text_view_secondary"
                 android:textSize="15sp" />
         </LinearLayout>
         <LinearLayout
@@ -120,6 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:padding="1dp"
+                android:theme="@style/icon_image_view"
                 app:srcCompat="@drawable/ic_distance" />
             <TextView
                 android:id="@+id/tv_distance"
@@ -128,7 +134,7 @@
                 android:gravity="center"
                 android:text="10.5 km"
                 android:fontFamily="@font/semi_bold"
-                android:textColor="@color/black"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp" />
             <TextView
                 android:layout_width="match_parent"
@@ -136,7 +142,7 @@
                 android:gravity="center"
                 android:text="Distance"
                 android:fontFamily="@font/semi_bold"
-                android:textColor="#636363"
+                android:theme="@style/general_text_view_secondary"
                 android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
@@ -167,7 +173,7 @@
     <LinearLayout
         android:id="@+id/ll_save_reset"
         android:orientation="horizontal"
-        android:background="@drawable/bottom_sheet_background"
+        android:background="@drawable/bottom_sheet_background_day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="5dp"

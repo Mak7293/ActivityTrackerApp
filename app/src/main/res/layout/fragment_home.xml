@@ -7,6 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.HomeFragment">
     <LinearLayout
+        android:id="@+id/content_layout"
         android:background="@drawable/card_background_day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,8 +20,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:theme="@style/general_text_view"
             android:gravity="center"
-            android:textColor="@color/black"
             android:fontFamily="@font/semi_bold"
             android:textSize="18sp"
             android:text="@string/edit_your_details"/>
@@ -41,19 +43,17 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="5dp"
-                    app:boxStrokeColor="@color/green_primary_color"
-                    app:hintTextColor="@color/green_primary_color"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:background="@android:color/transparent"
+                    style="@style/general_text_field">
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/regular"
-                        android:textCursorDrawable="@drawable/curser_color"
+                        android:textCursorDrawable="@drawable/cursor_color_day"
                         android:hint="Name"
                         android:layout_gravity="bottom"
-                        android:textColor="#363a43"
-                        android:textColorHint="#788089"
+                        android:theme="@style/general_edit_text"
                         tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <ImageButton
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_drawable"
+                    android:background="@drawable/btn_edit_day"
                     android:src="@drawable/ic_save"/>
             </LinearLayout>
             <LinearLayout
@@ -83,7 +83,8 @@
                     android:layout_marginStart="15dp"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:background="@android:color/transparent"
+                    android:theme="@style/general_text_view"
                     tools:ignore="RtlCompat" />
                 <ImageButton
                     android:id="@+id/ib_edit_name"
@@ -91,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_drawable"
+                    android:background="@drawable/btn_edit_day"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>
@@ -112,19 +113,17 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="5dp"
-                    app:boxStrokeColor="@color/green_primary_color"
-                    app:hintTextColor="@color/green_primary_color"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:background="@android:color/transparent"
+                    style="@style/general_text_field">
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_weight"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/regular"
-                        android:textCursorDrawable="@drawable/curser_color"
+                        android:textCursorDrawable="@drawable/cursor_color_day"
                         android:hint="Weight"
                         android:layout_gravity="bottom"
-                        android:textColor="#363a43"
-                        android:textColorHint="#788089"
+                        android:theme="@style/general_edit_text"
                         tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <ImageButton
@@ -133,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_drawable"
+                    android:background="@drawable/btn_edit_day"
                     android:src="@drawable/ic_save"/>
             </LinearLayout>
             <LinearLayout
@@ -154,7 +153,8 @@
                     android:layout_marginStart="15dp"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:background="@android:color/transparent"
+                    android:theme="@style/general_text_view"
                     tools:ignore="RtlCompat" />
                 <ImageButton
                     android:id="@+id/ib_edit_weight"
@@ -162,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_drawable"
+                    android:background="@drawable/btn_edit_day"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>
@@ -183,19 +183,17 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="5dp"
-                    app:boxStrokeColor="@color/green_primary_color"
-                    app:hintTextColor="@color/green_primary_color"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:background="@android:color/transparent"
+                    style="@style/general_text_field">
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_height"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/regular"
-                        android:textCursorDrawable="@drawable/curser_color"
+                        android:textCursorDrawable="@drawable/cursor_color_day"
                         android:hint="Height"
                         android:layout_gravity="bottom"
-                        android:textColor="#363a43"
-                        android:textColorHint="#788089"
+                        android:theme="@style/general_edit_text"
                         tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <ImageButton
@@ -204,7 +202,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_drawable"
+                    android:background="@drawable/btn_edit_day"
                     android:src="@drawable/ic_save"/>
             </LinearLayout>
             <LinearLayout
@@ -225,7 +223,8 @@
                     android:layout_marginStart="15dp"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:background="@android:color/transparent"
+                    android:theme="@style/general_text_view"
                     tools:ignore="RtlCompat" />
                 <ImageButton
                     android:id="@+id/ib_edit_height"
@@ -233,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_drawable"
+                    android:background="@drawable/btn_edit_day"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>
@@ -254,19 +253,17 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="5dp"
-                    app:boxStrokeColor="@color/green_primary_color"
-                    app:hintTextColor="@color/green_primary_color"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:background="@android:color/transparent"
+                    style="@style/general_text_field">
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_age"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/regular"
-                        android:textCursorDrawable="@drawable/curser_color"
+                        android:textCursorDrawable="@drawable/cursor_color_day"
                         android:hint="Age"
                         android:layout_gravity="bottom"
-                        android:textColor="#363a43"
-                        android:textColorHint="#788089"
+                        android:theme="@style/general_edit_text"
                         tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <ImageButton
@@ -275,7 +272,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_drawable"
+                    android:background="@drawable/btn_edit_day"
                     android:src="@drawable/ic_save"/>
             </LinearLayout>
             <LinearLayout
@@ -296,7 +293,8 @@
                     android:layout_marginStart="15dp"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
-                    android:textColor="@color/black"
+                    android:background="@android:color/transparent"
+                    android:theme="@style/general_text_view"
                     tools:ignore="RtlCompat" />
                 <ImageButton
                     android:id="@+id/ib_edit_age"
@@ -304,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:background="@drawable/btn_edit_drawable"
+                    android:background="@drawable/btn_edit_day"
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>
@@ -329,7 +327,8 @@
                 android:layout_marginTop="10dp"
                 android:text="Application Theme:"
                 android:layout_marginStart="10dp"
-                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                android:theme="@style/general_text_view"
                 android:textSize="16sp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -14,9 +14,33 @@
         <!-- Customize your theme here. -->
         <item name="android:textAllCaps">false</item>
     </style>
+    <style name="bottom_navigation_item_text_appearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/regular</item>
+    </style>
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog.MinWidth">
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+    <style name="icon_image_view" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:tint">@color/dark_6</item>
+    </style>
+    <style name="general_button" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textColor">@color/dark_0</item>
+        <item name="android:backgroundTint">@color/yellow_primary_color</item>
+    </style>
+    <style name="general_edit_text" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textCursorDrawable">@drawable/cursor_color_night</item>
+        <item name="android:textColorHint">@color/dark_7</item>
+    </style>
+    <style name="general_text_field" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/yellow_primary_color</item>
+        <item name="hintTextColor">@color/yellow_primary_color</item>
+    </style>
+    <style name="general_text_view_secondary" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="android:textColor">#ACACAC</item>
     </style>
     <style name="general_text_view" parent="ThemeOverlay.MaterialComponents.Dark">
         <item name="android:textColor">@color/dark_8</item>
@@ -30,6 +54,10 @@
     <style name="fab_overlay" parent="ThemeOverlay.MaterialComponents.Dark">
         <item name="android:backgroundTint">@color/dark_7</item>
         <item name="android:tint">@android:color/black</item>
+    </style>
+    <style name="toolbar_tracking_fragment_overlay" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/dark_1</item>
+        <item name="navigationIcon">@drawable/ic_back_night</item>
     </style>
     <style name="toolbar_overlay" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:background">@color/dark_1</item>

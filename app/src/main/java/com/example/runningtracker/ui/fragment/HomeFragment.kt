@@ -24,6 +24,7 @@ import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentHomeBinding
 import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.util.Constants
+import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -51,7 +52,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        Theme.setUpHomeFragmentUi(requireContext(),binding!!)
         binding?.tvName?.text =
             "Name: " +sharedPref.getString(Constants.KEY_NAME,"")
         binding?.tvWeight?.text =

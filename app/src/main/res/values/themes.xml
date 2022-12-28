@@ -21,13 +21,27 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/regular</item>
-
     </style>
-    <style name="user_register_card_view" parent="ThemeOverlay.MaterialComponents.Light">
-
+    <style name="icon_image_view" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:tint">@color/dark_0</item>
+    </style>
+    <style name="general_edit_text" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:textCursorDrawable">@drawable/cursor_color_day</item>
+        <item name="android:textColorHint">@color/dark_0</item>
+    </style>
+    <style name="general_text_field" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/green_primary_color</item>
+        <item name="hintTextColor">@color/green_primary_color</item>
+    </style>
+    <style name="general_button" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:textColor">@color/dark_7</item>
+        <item name="android:backgroundTint">@color/green_primary_color</item>
     </style>
     <style name="general_text_view" parent="ThemeOverlay.MaterialComponents.Light">
         <item name="android:textColor">@color/dark_0</item>
+    </style>
+    <style name="general_text_view_secondary" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:textColor">#636363</item>
     </style>
     <style name="main_background" parent="ThemeOverlay.MaterialComponents.Light">
         <item name="android:background">@color/dark_7</item>
@@ -45,6 +59,10 @@
     </style>
     <style name="toolbar_overlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/dark_4</item>
+    </style>
+    <style name="toolbar_tracking_fragment_overlay" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/dark_4</item>
+        <item name="navigationIcon">@drawable/ic_back_day</item>
     </style>
     <style name="toolbar_text_overlay" parent="ThemeOverlay.MaterialComponents.Light">
         <item name="android:textColor">@color/dark_0</item>

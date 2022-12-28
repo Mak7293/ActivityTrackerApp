@@ -47,12 +47,9 @@ import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.path.Polyline
 import com.example.runningtracker.test_db.TestDatabase
 import com.example.runningtracker.ui.MainActivity
-import com.example.runningtracker.util.MaterialBottomSheet
 import com.example.runningtracker.ui.view_model.MainViewModel
-import com.example.runningtracker.util.Constants
+import com.example.runningtracker.util.*
 import com.example.runningtracker.util.Constants.currentOrientation
-import com.example.runningtracker.util.NavUtils
-import com.example.runningtracker.util.PrimaryUtility
 import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
@@ -111,6 +108,7 @@ class TrackingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpToolbar()
+        Theme.setUpTrackingFragmentUi(requireContext(),binding!!)
 
         binding?.osMap?.setTileSource(TileSourceFactory.MAPNIK)
         mapController = binding?.osMap?.controller!!
@@ -197,9 +195,7 @@ class TrackingFragment : Fragment() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
-            binding?.toolbar?.setNavigationIcon(ContextCompat.getDrawable(
-                requireContext(), R.drawable.ic_back
-            ))
+
             binding?.toolbar?.setNavigationOnClickListener {
                 backToStepCounterFragment()
                 currentOrientation = null
