@@ -306,6 +306,76 @@
                     android:src="@drawable/ic_edit"/>
             </LinearLayout>
         </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/ll_et_step"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="5dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tf_step"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:background="@android:color/transparent"
+                    style="@style/general_text_field">
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_step"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/regular"
+                        android:textCursorDrawable="@drawable/cursor_color_day"
+                        android:hint="Step"
+                        android:layout_gravity="bottom"
+                        android:theme="@style/general_edit_text"
+                        tools:ignore="SpeakableTextPresentCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <ImageButton
+                    android:id="@+id/ib_save_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    style="@style/ib_save_edit_background"
+                    android:src="@drawable/ic_save"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_step"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="5dp">
+                <TextView
+                    android:id="@+id/tv_step"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Daily Steps"
+                    android:fontFamily="@font/regular"
+                    android:gravity="center"
+                    android:layout_marginStart="15dp"
+                    android:textAlignment="textStart"
+                    android:textSize="18sp"
+                    android:background="@android:color/transparent"
+                    android:theme="@style/general_text_view"
+                    tools:ignore="RtlCompat" />
+                <ImageButton
+                    android:id="@+id/ib_edit_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    style="@style/ib_save_edit_background"
+                    android:src="@drawable/ic_edit"/>
+            </LinearLayout>
+        </FrameLayout>
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider1"
             android:layout_width="match_parent"

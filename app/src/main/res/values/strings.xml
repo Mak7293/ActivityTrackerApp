@@ -18,5 +18,6 @@
     <string name="all_time_location_permission">Please allow all time access to this app for proper tracking of your activity.</string>
     <string name="delete_day_header">Delete this day!!</string>
     <string name="delete_day_content">Are you sure to delete all activity of this day?</string>
+    <string name="step_counter_alert">If you don\'t need this app count your steps please press stop button, because this app would consume your device power in background.</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

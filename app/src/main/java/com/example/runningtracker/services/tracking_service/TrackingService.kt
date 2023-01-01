@@ -1,4 +1,4 @@
-package com.example.runningtracker.services
+package com.example.runningtracker.services.tracking_service
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -26,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.util.GeoPoint
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 
 
 @AndroidEntryPoint
@@ -42,6 +43,7 @@ class TrackingService: LifecycleService() {
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     @Inject
+    @Named("tracking_fragment")
     lateinit var baseNotificationBuilder: NotificationCompat.Builder
 
     lateinit var currentNotificationBuilder: NotificationCompat.Builder
@@ -111,7 +113,7 @@ class TrackingService: LifecycleService() {
 
         addEmptyPolyline()
         isTracking.postValue(true)
-        Log.d("!!!!!!",timeRunInMillis.value.toString())
+        Log.d("!!!!!!", timeRunInMillis.value.toString())
         timer.schedule(object : TimerTask() {
             override fun run() {
                 timeRunInMillis.postValue(timeRunInMillis.value?.plus(100L) ?: 100L)

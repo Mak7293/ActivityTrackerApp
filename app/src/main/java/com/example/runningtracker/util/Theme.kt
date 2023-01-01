@@ -1,38 +1,36 @@
 package com.example.runningtracker.util
 
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
+import android.view.Menu
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.example.runningtracker.Adapters.StatisticsAdapter
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.ActivityMainBinding
 import com.example.runningtracker.databinding.FragmentDailyReportDetailBinding
 import com.example.runningtracker.databinding.FragmentHomeBinding
-import com.example.runningtracker.databinding.FragmentTrackingBinding
+import com.example.runningtracker.databinding.FragmentStepCounterBinding
 import com.example.runningtracker.databinding.FragmentUserRegisterBinding
 import com.example.runningtracker.ui.MainActivity
-import kotlinx.coroutines.MainScope
 
 object Theme {
 
     fun setProperTheme(sharedPref: SharedPreferences,context: Context,navController: NavController){
         when(MainActivity.currentTheme.value){
-            Constants.THEME_DAY    ->  {
+            Constants.THEME_DAY      ->  {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 saveThemeStateToSharedPref(Constants.THEME_KEY,Constants.THEME_DAY,sharedPref)
             }
-            Constants.THEME_NIGHT    -> {
+            Constants.THEME_NIGHT    ->  {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 saveThemeStateToSharedPref(Constants.THEME_KEY,Constants.THEME_NIGHT,sharedPref)
             }
-            Constants.THEME_DEFAULT    -> {
+            Constants.THEME_DEFAULT  ->  {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 saveThemeStateToSharedPref(Constants.THEME_KEY,Constants.THEME_DEFAULT,sharedPref)
             }
@@ -69,39 +67,59 @@ object Theme {
             binding.contentLayout.background = ContextCompat
                 .getDrawable(context,R.drawable.card_background_day)
         }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
-            binding.contentLayout?.background = ContextCompat
+            binding.contentLayout.background = ContextCompat
                 .getDrawable(context,R.drawable.card_background_night)
 
         }
     }
-    fun setUpHomeFragmentUi(context: Context,binding: FragmentHomeBinding){
-        val currentNightMode = context.resources.configuration
+    fun setUpStatusBarColorForUnderApi29Dark(activity: Activity){
+        val currentNightMode = activity.resources.configuration
             .uiMode and Configuration.UI_MODE_NIGHT_MASK
         if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
-            binding.contentLayout.background = ContextCompat
-                .getDrawable(context,R.drawable.card_background_day)
+            activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dark_4)
         }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
-            binding.contentLayout.background = ContextCompat
-                .getDrawable(context,R.drawable.card_background_night)
+            activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dark_1)
         }
     }
-    fun setUpStatisticsAdapterUi(context: Context, holder: StatisticsAdapter.ViewHolder){
-        val currentNightMode = context.resources.configuration
+    fun setUpStatusBarColorForUnderApi29Light(activity: Activity){
+        val currentNightMode = activity.resources.configuration
+            .uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dark_7)
+        }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
+            activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dark_0)
+        }
+    }
+    fun setUpHomeFragmentUi(activity: Activity, binding: FragmentHomeBinding){
+        val currentNightMode = activity.resources.configuration
+            .uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            binding.contentLayout.background = ContextCompat
+                .getDrawable(activity,R.drawable.card_background_day)
+        }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
+            binding.contentLayout.background = ContextCompat
+                .getDrawable(activity,R.drawable.card_background_night)
+        }
+        setUpStatusBarColorForUnderApi29Light(activity)
+
+    }
+    fun setUpStatisticsAdapterUi(activity: Activity, holder: StatisticsAdapter.ViewHolder){
+        val currentNightMode = activity.resources.configuration
             .uiMode and Configuration.UI_MODE_NIGHT_MASK
         if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
             holder.binding.iv1.borderColor = ContextCompat
-                .getColor(context,R.color.green_primary_color)
+                .getColor(activity,R.color.green_primary_color)
             holder.binding.iv2.borderColor = ContextCompat
-                .getColor(context,R.color.green_primary_color)
+                .getColor(activity,R.color.green_primary_color)
             holder.binding.iv3.borderColor = ContextCompat
-                .getColor(context,R.color.green_primary_color)
+                .getColor(activity,R.color.green_primary_color)
         }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
             holder.binding.iv1.borderColor = ContextCompat
-                .getColor(context,R.color.yellow_primary_color)
+                .getColor(activity,R.color.yellow_primary_color)
             holder.binding.iv2.borderColor = ContextCompat
-                .getColor(context,R.color.yellow_primary_color)
+                .getColor(activity,R.color.yellow_primary_color)
             holder.binding.iv3.borderColor = ContextCompat
-                .getColor(context,R.color.yellow_primary_color)
+                .getColor(activity,R.color.yellow_primary_color)
         }
     }
     fun setUpDailyReportDetailUi(context: Context,binding: FragmentDailyReportDetailBinding){
@@ -125,6 +143,35 @@ object Theme {
                 .getColor(context,R.color.dark_3)
             binding.ivTotalCalories.circleBackgroundColor = ContextCompat
                 .getColor(context,R.color.dark_3)
+        }
+    }
+    fun setUpStepCounterUi(activity: Activity,binding: FragmentStepCounterBinding){
+        val currentNightMode = activity.resources.configuration
+            .uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            binding.progressBar.dotColor = ContextCompat.getColor(
+                activity,R.color.green_primary_color)
+            binding.progressBar.progressColor = ContextCompat.getColor(
+                activity,R.color.green_primary_color)
+            binding.progressBar.textColor = ContextCompat.getColor(
+                activity,R.color.green_primary_color)
+        }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
+            binding.progressBar.dotColor = ContextCompat.getColor(
+                activity,R.color.yellow_primary_color)
+            binding.progressBar.progressColor = ContextCompat.getColor(
+                activity,R.color.yellow_primary_color)
+            binding.progressBar.textColor = ContextCompat.getColor(
+                activity,R.color.yellow_primary_color)
+        }
+        setUpStatusBarColorForUnderApi29Dark(activity)
+    }
+    fun setUpMenuItemUi(context: Context,menu: Menu){
+        val currentNightMode = context.resources.configuration
+            .uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        if(currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_NO){
+            menu.getItem(0)?.icon?.setTint(ContextCompat.getColor(context,R.color.dark_0))
+        }else if(currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES){
+            menu.getItem(0)?.icon?.setTint(ContextCompat.getColor(context,R.color.dark_7))
         }
     }
 

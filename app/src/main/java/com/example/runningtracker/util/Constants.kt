@@ -7,15 +7,15 @@ object Constants {
     const val ACTION_PAUSE_SERVICE = "actionPauseService"
     const val ACTION_STOP_SERVICE = "actionStopService"
     const val ACTION_SHOW_TRACKING_FRAGMENT = "actionShowTrackingFragment"
+    const val ACTION_SHOW_STEP_COUNTER_FRAGMENT = "actionShowStepCounterFragment"
 
     const val SHARED_PREFERENCES_NAME = "shared_preferences"
     const val KEY_NAME = "key_name"
     const val KEY_HEIGHT = "key_height"
     const val KEY_AGE = "key_age"
     const val KEY_WEIGHT = "key_weight"
+    const val KEY_STEPS = "key_steps"
     const val KEY_FIRST_TIME_TOGGLE = "key_first_time_toggle"
-
-    const val ACTION_CHANGE_THEME = "action_change_theme"
 
     const val ACTIVITY_RUN_OR_WALK = "activity_run_or_walk"
     const val ACTIVITY_CYCLING = "activity_bicycling"
@@ -30,6 +30,9 @@ object Constants {
     const val TIMER_UPDATE_INTERVAL = 100L
     const val LOCATION_UPDATE_INTERVAL = 5000L
     const val FASTEST_LOCATION_INTERVAL = 2000L
+
+    const val STATE_UP = "up"
+    const val STATE_DOWN = "down"
 
     const val THEME_DAY = "themeDay"
     const val THEME_NIGHT = "themeNight"
@@ -48,6 +51,9 @@ object Constants {
     const val SLIDE_BOTTOM = "slide_bottom"
 
     const val IMAGE_DIRECTORY = "RunningTrackerDirectory"
+
+    const val ACTION_START_COUNTING_SERVICE = "StartCountingService"
+    const val ACTION_STOP_COUNTING_SERVICE = "StopCountingService"
 
     var currentOrientation: Int? = null
     var currentTheme: String? = null

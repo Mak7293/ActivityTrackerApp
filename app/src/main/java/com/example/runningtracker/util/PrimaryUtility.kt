@@ -2,13 +2,16 @@ package com.example.runningtracker.util
 
 import android.Manifest
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.runningtracker.models.path.Polyline
+import com.example.runningtracker.services.step_counter_service.StepCountingService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.math.RoundingMode
@@ -64,6 +67,26 @@ object PrimaryUtility {
     }
     fun getAvgSpeed(distanceInMeter: Double, timeRun: Long): Double {
         return (round((distanceInMeter / (timeRun / 1000)) * 3.6)*100)/100
+    }
+    fun getDistanceBySteps(steps: Int, heightInMeter: Float): Float{
+        return (round(steps *(heightInMeter * 0.414)*10)/10).toFloat()
+    }
+    fun getCaloriesBurnedBySteps(steps: Int, weightInKg: Int): Float{
+        val caloriesPerStep: Float = when{
+            weightInKg < 45                       ->    0.028f
+            weightInKg in 45 until 55       ->    0.033f
+            weightInKg in 55 until 64       ->    0.038f
+            weightInKg in 64 until 73       ->    0.044f
+            weightInKg in 73 until 82       ->    0.049f
+            weightInKg in 82 until 91       ->    0.055f
+            weightInKg in 91 until 100      ->    0.06f
+            weightInKg in 100 until 114     ->    0.069f
+            weightInKg in 114 until 125     ->    0.075f
+            weightInKg in 125 until 136     ->    0.082f
+            else                                  ->    0.09f
+        }
+
+        return (round(steps * caloriesPerStep*10))/10
     }
     fun calculateBurnedCalories(time: Long, distance: Double, weight: Float,activity: String): Double{
         val speedInKmHr = getAvgSpeed(distance,time)
@@ -123,5 +146,19 @@ object PrimaryUtility {
                 "${ if (seconds < 10) "0" else "" }$seconds:" +
                 "${ if (milliseconds < 10) "0" else "" }$milliseconds"
     }
+    fun isServiceRunning(context: Context, serviceClassName: String): Boolean {
+        val manager = ContextCompat.getSystemService(
+            context,
+            ActivityManager::class.java
+        ) ?: return false
 
+        return manager.getRunningServices(Integer.MAX_VALUE).any { serviceInfo ->
+            serviceInfo.service.shortClassName.contains(serviceClassName)
+        }
+    }
+     fun sendCommandToStepCountingService(action: String,context: Context): Intent =
+        Intent(context, StepCountingService::class.java).also {
+            it.action = action
+            context.startService(it)
+        }
 }

@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -16,18 +15,21 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.navigation.NavOptions
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+
 import androidx.navigation.fragment.findNavController
+import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentStepCounterBinding
+import com.example.runningtracker.services.step_counter_service.StepCountingService
 import com.example.runningtracker.ui.MainActivity
+import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.NavUtils
+import com.example.runningtracker.util.PrimaryUtility
+import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,9 +39,12 @@ class StepCounterFragment : Fragment() {
     private var binding: FragmentStepCounterBinding? = null
     private var name: String? = null
 
+    private val viewModel: MainViewModel by viewModels()
+
     @Inject
     lateinit var sharedPref: SharedPreferences
 
+    private var isCounting: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +56,6 @@ class StepCounterFragment : Fragment() {
         //customizeTheme()
         return binding?.root
 
-
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -62,9 +64,63 @@ class StepCounterFragment : Fragment() {
 
         name = sharedPref.getString(Constants.KEY_NAME,"")
         setUpToolbar()
+        Theme.setUpStepCounterUi(requireActivity(),binding!!)
+
         binding?.fab?.setOnClickListener {
             getPermission()
         }
+
+        binding?.btnStepStartStop?.setOnClickListener {
+            if(!isCounting){
+                binding?.btnStepStartStop?.text = "Stop"
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ){
+                    sensorLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+                }else{
+                    PrimaryUtility.sendCommandToStepCountingService(
+                        Constants.ACTION_START_COUNTING_SERVICE,requireContext())
+                }
+            }else{
+                binding?.btnStepStartStop?.text = "Start"
+                PrimaryUtility.sendCommandToStepCountingService(
+                    Constants.ACTION_STOP_COUNTING_SERVICE,requireContext())
+            }
+        }
+        timeTextAdapter(0)
+        observeLiveData()
+    }
+    private fun observeLiveData(){
+        StepCountingService.isCounting.observe(viewLifecycleOwner, Observer {
+            isCounting = it
+            if(isCounting){
+                binding?.btnStepStartStop?.text = "Stop"
+                binding?.btnStepStartStop?.background = ContextCompat.getDrawable(
+                    requireContext(),R.drawable.btn_red_drawable)
+                binding?.tvAlert?.visibility = View.VISIBLE
+            }else{
+                binding?.btnStepStartStop?.text = "Start"
+                binding?.btnStepStartStop?.background = ContextCompat.getDrawable(
+                    requireContext(),R.drawable.btn_green_drawable)
+                binding?.tvAlert?.visibility = View.INVISIBLE
+            }
+        })
+        StepCountingService.steps.observe(viewLifecycleOwner, Observer {
+            val progress: Double = it.toDouble()/sharedPref.getInt(Constants.KEY_STEPS,0)
+            binding?.progressBar?.setProgress(progress,1.0)
+            binding?.progressBar?.setProgressTextAdapter(timeTextAdapter(it))
+            setUiStatistics(it)
+        })
+    }
+    private fun setUiStatistics(steps: Int){
+        val heightInMeter = sharedPref.getInt(Constants.KEY_HEIGHT,160).toFloat()/100
+        val weightInKg = sharedPref.getFloat(Constants.KEY_WEIGHT,70.0f).toInt()
+        val totalDistance = PrimaryUtility.getDistanceBySteps(steps,heightInMeter)
+        binding?.tvDistance?.text="Distance By Steps: $totalDistance m"
+        val caloriesBurnedBySteps = PrimaryUtility.getCaloriesBurnedBySteps(steps,weightInKg)
+        binding?.tvCalories?.text="Calories Burned By Steps: $caloriesBurnedBySteps Cal"
+    }
+    private fun timeTextAdapter(steps: Int): CircularProgressIndicator.ProgressTextAdapter{
+        return CircularProgressIndicator.ProgressTextAdapter { _ ->
+            "${steps}/${sharedPref.getInt(Constants.KEY_STEPS,0)}" }
     }
     private fun setUpToolbar(){
         (activity as AppCompatActivity).setSupportActionBar(binding?.toolbar)
@@ -127,35 +183,20 @@ class StepCounterFragment : Fragment() {
             show()
         }
     }
-    private fun customizeTheme(currentTheme: String){
-
-        if(currentTheme == Constants.THEME_NIGHT){
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                //setDefaultUiTheme()
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    private val sensorLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){
+                isGranted ->
+            if(isGranted){
+                PrimaryUtility.sendCommandToStepCountingService(
+                    Constants.ACTION_START_COUNTING_SERVICE,requireContext())
             }else{
-                //setNightUiTheme()
-            }
-        }else if(currentTheme == Constants.THEME_DAY){
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                //setDefaultUiTheme()
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }else{
-                //setDayUiTheme()
-            }
-        }else if(currentTheme == Constants.THEME_DEFAULT){
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                //setDefaultUiTheme()
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }else{
-                // This line will not be executed in under api 29 device
-                //setDayUiTheme()
+                Toast.makeText(requireContext(),"Permission Denied For Access To Sensor",
+                    Toast.LENGTH_LONG).show()
             }
         }
-    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
-
 }

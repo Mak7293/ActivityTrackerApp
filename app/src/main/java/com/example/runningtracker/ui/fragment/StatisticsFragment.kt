@@ -27,6 +27,7 @@ import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.ui.view_model.StatisticsViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.NavUtils
+import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
@@ -53,7 +54,12 @@ class StatisticsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Theme.setUpStatusBarColorForUnderApi29Light(requireActivity())
+        getMapOfActivityInSpecificDate(viewModel)
+    }
 
+    override fun onResume() {
+        super.onResume()
         getMapOfActivityInSpecificDate(viewModel)
     }
     private fun getMapOfActivityInSpecificDate(vm: StatisticsViewModel) {
@@ -99,7 +105,7 @@ class StatisticsFragment : Fragment() {
         if (days.isNotEmpty()){
             binding?.tvContent?.visibility = View.INVISIBLE
             binding?.rvStatistics?.visibility = View.VISIBLE
-            val adapter = StatisticsAdapter(requireContext(),days, sdf
+            val adapter = StatisticsAdapter(requireActivity(),days, sdf
             ) {  day ->
                 goToDetailsFragment(day)
             }

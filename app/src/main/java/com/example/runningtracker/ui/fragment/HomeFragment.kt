@@ -52,15 +52,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Theme.setUpHomeFragmentUi(requireContext(),binding!!)
-        binding?.tvName?.text =
-            "Name: " +sharedPref.getString(Constants.KEY_NAME,"")
-        binding?.tvWeight?.text =
-            "Weight: " +sharedPref.getFloat(Constants.KEY_WEIGHT,0F).toString()+" Kg"
-        binding?.tvHeight?.text =
-            "Height: " +sharedPref.getInt(Constants.KEY_HEIGHT,0).toString()+" Cm"
-        binding?.tvAge?.text =
-            "Age: " +sharedPref.getInt(Constants.KEY_AGE,0).toString()+" Years Old"
+        Theme.setUpHomeFragmentUi(requireActivity(),binding!!)
+        setUiTextView()
 
         binding?.ibEditName?.setOnClickListener {
             showEditText(binding!!.llName,binding!!.tvName,
@@ -77,6 +70,10 @@ class HomeFragment : Fragment() {
         binding?.ibEditAge?.setOnClickListener {
             showEditText(binding!!.llAge,binding!!.tvAge,
                 binding!!.llEtAge,binding!!.etAge,Constants.KEY_AGE)
+        }
+        binding?.ibEditStep?.setOnClickListener {
+            showEditText(binding!!.llStep,binding!!.tvStep,
+                binding!!.llEtStep,binding!!.etStep,Constants.KEY_STEPS)
         }
 
         binding?.ibSaveName?.setOnClickListener {
@@ -95,11 +92,26 @@ class HomeFragment : Fragment() {
             hideEditText(binding!!.llAge,binding!!.tvAge,binding!!.llEtAge,
                 binding!!.etAge,Constants.KEY_AGE)
         }
+        binding?.ibSaveStep?.setOnClickListener {
+            hideEditText(binding!!.llStep,binding!!.tvStep,binding!!.llEtStep,
+                binding!!.etStep,Constants.KEY_STEPS)
+        }
         binding?.themeRadioGroup?.setOnCheckedChangeListener {  group , checkId ->
             onRadioThemeButtonClicked(checkId)
         }
     }
-
+    private fun setUiTextView(){
+        binding?.tvName?.text =
+            "Name: " +sharedPref.getString(Constants.KEY_NAME,"")
+        binding?.tvWeight?.text =
+            "Weight: " +sharedPref.getFloat(Constants.KEY_WEIGHT,0F).toString()+" Kg"
+        binding?.tvHeight?.text =
+            "Height: " +sharedPref.getInt(Constants.KEY_HEIGHT,0).toString()+" Cm"
+        binding?.tvAge?.text =
+            "Age: " +sharedPref.getInt(Constants.KEY_AGE,0).toString()+" Years Old"
+        binding?.tvStep?.text =
+            "Daily Steps: " +sharedPref.getInt(Constants.KEY_STEPS,0).toString()+" steps"
+    }
     private fun showEditText(
         llView: LinearLayout, tvView: TextView,
         llEtView: LinearLayout, etView: EditText, key: String){
@@ -128,6 +140,7 @@ class HomeFragment : Fragment() {
                 Constants.KEY_WEIGHT  ->  etView.setText(sharedPref.getFloat(key,0F).toString())
                 Constants.KEY_HEIGHT  ->  etView.setText(sharedPref.getInt(key,0).toString())
                 Constants.KEY_AGE     ->  etView.setText(sharedPref.getInt(key,0).toString())
+                Constants.KEY_STEPS   ->  etView.setText(sharedPref.getInt(key,0).toString())
             }
         }
     }
@@ -173,6 +186,11 @@ class HomeFragment : Fragment() {
                         "Age: " + sharedPref.getInt(Constants.KEY_AGE, 0)
                             .toString() + " Years Old"
                 }
+                Constants.KEY_STEPS     -> {
+                    tvView.text =
+                        "Daily Steps: " + sharedPref.getInt(Constants.KEY_STEPS, 0)
+                            .toString() + " steps"
+                }
             }
             tvView.visibility = View.VISIBLE
         }
@@ -190,6 +208,9 @@ class HomeFragment : Fragment() {
                     sharedPref.edit().putInt(key, etView.text.toString().toFloat().toInt()).apply()
                 }
                 Constants.KEY_AGE     -> {
+                    sharedPref.edit().putInt(key, etView.text.toString().toFloat().toInt()).apply()
+                }
+                Constants.KEY_STEPS    -> {
                     sharedPref.edit().putInt(key, etView.text.toString().toFloat().toInt()).apply()
                 }
             }

@@ -1,9 +1,7 @@
 package com.example.runningtracker.ui.fragment
 
-import android.Manifest
 import android.Manifest.permission.*
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -36,28 +34,21 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentTrackingBinding
-import com.example.runningtracker.services.TrackingService
+import com.example.runningtracker.services.tracking_service.TrackingService
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavOptions
-import com.example.runningtracker.databinding.CancelRunDialogBinding
+import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.path.Polyline
-import com.example.runningtracker.test_db.TestDatabase
 import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.*
 import com.example.runningtracker.util.Constants.currentOrientation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import java.io.File
 import java.io.FileOutputStream
@@ -150,7 +141,7 @@ class TrackingFragment : Fragment() {
         }else{
             /* this line of code will be work when service is running and app is fully closed,
              but user decide to open app by clicking on notification*/
-            if(!isServiceRunning(requireContext(),"TrackingService")){
+            if(!PrimaryUtility.isServiceRunning(requireContext(),"TrackingService")){
                 fireBottomSheet()
             }else{
                 addPolyLines = true
@@ -181,7 +172,7 @@ class TrackingFragment : Fragment() {
             if(isGranted){
                 /* this line of code will be work when service is running and app is fully closed,
                 but user decide to open app by clicking on notification*/
-                if(!isServiceRunning(requireContext(),"TrackingService")){
+                if(!PrimaryUtility.isServiceRunning(requireContext(),"TrackingService")){
                     fireBottomSheet()
                 }else{
                     addPolyLines = true
@@ -265,16 +256,7 @@ class TrackingFragment : Fragment() {
 
         })
     }
-    fun isServiceRunning(context: Context, serviceClassName: String): Boolean {
-        val manager = ContextCompat.getSystemService(
-            context,
-            ActivityManager::class.java
-        ) ?: return false
 
-        return manager.getRunningServices(Integer.MAX_VALUE).any { serviceInfo ->
-            serviceInfo.service.shortClassName.contains(serviceClassName)
-        }
-    }
     private fun fireBottomSheet(){
         val modalBottomSheet = MaterialBottomSheet()
         modalBottomSheet.show(requireActivity().supportFragmentManager, MaterialBottomSheet.TAG)
@@ -435,10 +417,10 @@ class TrackingFragment : Fragment() {
         }
     }
     private fun sendCommandToService(action: String): Intent =
-        Intent(requireContext(),TrackingService::class.java).also {
+        Intent(requireContext(), TrackingService::class.java).also {
             it.action = action
             requireContext().startService(it)
-        }
+    }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.cancel_run_menu,menu)
@@ -450,6 +432,7 @@ class TrackingFragment : Fragment() {
         if(currentTimeInMillis > 0L){
             this.menu?.getItem(0)?.isVisible = true
         }
+        Theme.setUpMenuItemUi(requireContext(),menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -466,7 +449,7 @@ class TrackingFragment : Fragment() {
     }
     private fun showTrackingDialog(header: String, content: String, action: String){
         val dialog: Dialog = Dialog(requireContext(),R.style.DialogTheme)
-        val dialogBinding = CancelRunDialogBinding.inflate(layoutInflater)
+        val dialogBinding = DialogLayoutBinding.inflate(layoutInflater)
         dialog.apply {
             setContentView(dialogBinding.root)
             setCanceledOnTouchOutside(false)

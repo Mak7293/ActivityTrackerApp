@@ -3,6 +3,8 @@ package com.example.mvvmrunningtrackerapp.di
 import android.app.Application
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.runningtracker.R
 import com.example.runningtracker.ui.MainActivity
@@ -14,6 +16,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.scopes.ServiceScoped
+import javax.inject.Named
 
 
 @Module
@@ -28,28 +31,67 @@ object ServiceModule {
 
     @Provides
     @ServiceScoped
-    fun provideMainActivityPendingIntent(
+    @Named("tracking_fragment")
+    fun provideMainActivityPendingIntentForTracking(
         app: Application
-    ): PendingIntent = PendingIntent.getActivity(
-        app,
-        0,
-        Intent(app, MainActivity::class.java).also {
-            it.action = Constants.ACTION_SHOW_TRACKING_FRAGMENT
-        },
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-    )
+    ): PendingIntent {
+
+        return PendingIntent.getActivity(
+            app,
+            0,
+            Intent(app, MainActivity::class.java).also {
+                it.action = Constants.ACTION_SHOW_TRACKING_FRAGMENT
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
 
     @Provides
     @ServiceScoped
-    fun provideBaseNotificationBuilder(
+    @Named("tracking_fragment")
+    fun provideBaseNotificationBuilderForTracking(
         app: Application,
-        pendingIntent: PendingIntent
-    ) =  NotificationCompat.Builder(
-        app,Constants.NOTIFICATION_CHANNEL_ID)
-        .setAutoCancel(false)
-        .setOngoing(true)
-        .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
-        .setContentTitle("Running App")
-        .setContentText("00:00:00")
-        .setContentIntent(pendingIntent)
+        @Named("tracking_fragment")pendingIntent: PendingIntent
+    ):NotificationCompat.Builder {
+        return NotificationCompat.Builder(
+            app, Constants.NOTIFICATION_CHANNEL_ID)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
+            .setContentTitle("Running App")
+            .setContentText("00:00:00")
+            .setContentIntent(pendingIntent)
+    }
+
+    @Provides
+    @ServiceScoped
+    @Named("step_counter_fragment")
+    fun provideMainActivityPendingIntentForStepCounting(
+        app: Application
+    ): PendingIntent {
+        return PendingIntent.getActivity(
+            app,
+            0,
+            Intent(app, MainActivity::class.java).also {
+                it.action = Constants.ACTION_SHOW_STEP_COUNTER_FRAGMENT
+            },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+    @Provides
+    @ServiceScoped
+    @Named("step_counter_fragment")
+    fun provideBaseNotificationBuilderForStepCounting(
+        app: Application,
+        @Named("step_counter_fragment")pendingIntent: PendingIntent
+    ):NotificationCompat.Builder {
+        return NotificationCompat.Builder(
+            app, Constants.NOTIFICATION_CHANNEL_ID)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setSmallIcon(R.drawable.ic_notification_steps)
+            .setContentTitle("Step Counting")
+            .setContentText("00 Steps")
+            .setContentIntent(pendingIntent)
+    }
 }

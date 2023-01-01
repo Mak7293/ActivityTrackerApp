@@ -1,6 +1,7 @@
 package com.example.runningtracker.Adapters
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
@@ -18,7 +19,7 @@ import kotlin.math.round
 
 
 class StatisticsAdapter(
-    private val context: Context,
+    private val activity: Activity,
     private val list: List<Day>,
     private val sdf: SimpleDateFormat,
     private val btnListener:(day: Day) -> Unit):
@@ -86,7 +87,7 @@ class StatisticsAdapter(
                 holder.binding.iv3.setImageURI(imageList[2])
             }
         }
-        Theme.setUpStatisticsAdapterUi(context, holder)
+        Theme.setUpStatisticsAdapterUi(activity, holder)
     }
     private fun getStringFormattedDate(date: Date): String{
         return sdf.format(Date(date.time))

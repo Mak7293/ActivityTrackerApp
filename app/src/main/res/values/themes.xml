@@ -16,6 +16,9 @@
         <item name="android:textAllCaps">false</item>
 
     </style>
+    <style name="dialog_theme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@drawable/dialog_background_day</item>
+    </style>
     <style name="bottom_navigation_item_text_appearance">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/black</item>
@@ -79,13 +82,10 @@
     <style name="toolbar_with_navigation_btn" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/dark_4</item>
         <item name="navigationIcon">@drawable/ic_back_day</item>
-        <item name="colorControlNormal">@color/dark_0</item>
     </style>
     <style name="toolbar_text_overlay" parent="ThemeOverlay.MaterialComponents.Light">
         <item name="android:textColor">@color/dark_0</item>
     </style>
-
-
 
 
 </resources>

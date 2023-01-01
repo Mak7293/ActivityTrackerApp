@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_background"
+    android:theme="@style/dialog_theme"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
     android:orientation="vertical">
@@ -13,7 +13,7 @@
         android:gravity="center"
         android:fontFamily="@font/semi_bold"
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:theme="@style/general_text_view"
         android:text="!!!Header!!!"/>
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
         android:fontFamily="@font/regular"
         android:paddingBottom="10dp"
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:theme="@style/general_text_view_secondary"
         android:text="!!!Content!!!"/>
     <LinearLayout
         android:layout_width="match_parent"

@@ -8,7 +8,6 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,7 +15,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.runningtracker.Adapters.DailyReportAdapter
 import com.example.runningtracker.R
-import com.example.runningtracker.databinding.CancelRunDialogBinding
+import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.databinding.FragmentDailyReportDetailBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.day.Day
@@ -59,6 +58,7 @@ class DailyReportDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Theme.setUpDailyReportDetailUi(requireContext(),binding!!)
+        Theme.setUpStatusBarColorForUnderApi29Dark(requireActivity())
         setHasOptionsMenu(true)
         day = args.day
         setUpToolbar()
@@ -144,6 +144,10 @@ class DailyReportDetailFragment : Fragment() {
         inflater.inflate(R.menu.daily_report_menu,menu)
         this.menu = menu
     }
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        Theme.setUpMenuItemUi(requireContext(),menu)
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.delete_day  ->   {
@@ -157,7 +161,7 @@ class DailyReportDetailFragment : Fragment() {
     }
     private fun showDeleteDayDialog(header: String, content: String){
         val dialog: Dialog = Dialog(requireContext(),R.style.DialogTheme)
-        val dialogBinding = CancelRunDialogBinding.inflate(layoutInflater)
+        val dialogBinding = DialogLayoutBinding.inflate(layoutInflater)
         dialog.apply {
             setContentView(dialogBinding.root)
             setCanceledOnTouchOutside(false)

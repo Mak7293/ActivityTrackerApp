@@ -3,12 +3,14 @@ package com.example.runningtracker.ui
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -18,12 +20,13 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.ActivityMainBinding
-import com.example.runningtracker.databinding.CancelRunDialogBinding
+import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.ui.fragment.*
 import com.example.runningtracker.ui.view_model.StatisticsViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.NavUtils
+import com.example.runningtracker.util.PrimaryUtility
 import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -62,14 +65,22 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.menu.getItem(1).isChecked = true
         changeDestination()
 
-
+        if(PrimaryUtility.isServiceRunning(this,"TrackingService")){
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            navigateToTrackingFragment()
+        }
+        initializeDailySteps()
     }
     private fun observeLiveData(){
         currentTheme.observe(this) {
             Theme.setProperTheme(sharedPref,this@MainActivity,navController)
         }
     }
-
+    private fun initializeDailySteps(){
+        if(sharedPref.getInt(Constants.KEY_STEPS,0) == 0){
+            sharedPref.edit().putInt(Constants.KEY_STEPS,1000).apply()
+        }
+    }
     private fun changeDestination(){
 
         val host: NavHostFragment = supportFragmentManager
@@ -140,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         content: String = resources.getString(R.string.exit_app_content_dialog)
     ){
         val dialog: Dialog = Dialog(this,R.style.DialogTheme)
-        val dialogBinding = CancelRunDialogBinding.inflate(layoutInflater)
+        val dialogBinding = DialogLayoutBinding.inflate(layoutInflater)
         dialog.apply {
             setContentView(dialogBinding.root)
             setCanceledOnTouchOutside(false)
@@ -187,11 +198,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if(intent?.action == Constants.ACTION_SHOW_TRACKING_FRAGMENT){
+            navigateToTrackingFragment()
+        }
+    }
+    private fun navigateToTrackingFragment(){
+        navController.navigate(R.id.action_global_trackingFragment)
+    }
     override fun onBackPressed() {
         val currentFragment = NavUtils.getCurrentFragment(this).keys.last()
         Log.d("currentFragment",currentFragment.toString())
         when(currentFragment){
-            is SplashScreenFragment -> {
+            is SplashScreenFragment ->  {
                 showExitAppDialog()
             }
             is UserRegisterFragment ->  {
