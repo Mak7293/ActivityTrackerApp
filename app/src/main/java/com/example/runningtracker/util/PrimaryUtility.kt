@@ -1,7 +1,6 @@
 package com.example.runningtracker.util
 
 import android.Manifest
-import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -9,13 +8,11 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import com.example.runningtracker.models.path.Polyline
-import com.example.runningtracker.services.step_counter_service.StepCountingService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.round
 
@@ -156,9 +153,19 @@ object PrimaryUtility {
             serviceInfo.service.shortClassName.contains(serviceClassName)
         }
     }
-     fun sendCommandToStepCountingService(action: String,context: Context): Intent =
-        Intent(context, StepCountingService::class.java).also {
+    fun getCurrentDateInDateFormat(sdf: SimpleDateFormat): Date?{
+        val dateTimeStamp = Calendar.getInstance().timeInMillis
+        val dateString = sdf.format(Date(dateTimeStamp))
+        return sdf.parse(dateString)
+    }
+    fun <T> sendCommandToService(
+        action: String, context: Context, _class: Class<T>): Intent {
+        return Intent(context, _class).also {
             it.action = action
             context.startService(it)
         }
+
+
+    }
+
 }

@@ -49,7 +49,11 @@ class DailyReportAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.tvAvgSpeed.text = "Average Speed: ${item.runningAvgSpeedKMH} km/h"
-        holder.binding.tvTime.text = "Time: ${getFormattedStringTime(item.runningTimeInMillis)}"
+        holder.binding.tvTime.text = "Time: ${item.runningTimeInMillis?.let {
+            getFormattedStringTime(
+                it
+            )
+        }}"
         holder.binding.tvDistance.text = "Distance: ${item.runningDistanceInMeters} m"
         holder.binding.tvCaloriesBurned.text = "Calories Burned: ${item.caloriesBurned}"
         if(item.activity_type == Constants.ACTIVITY_CYCLING) {

@@ -226,7 +226,6 @@ class TrackingFragment : Fragment() {
             NavUtils.navOptions(activity as MainActivity)[Constants.SLIDE_BOTTOM]
         )
     }
-
     private fun observeLiveData(){
         TrackingService.isTracking.observe(viewLifecycleOwner, Observer {
             updateTracking(it)
@@ -256,7 +255,6 @@ class TrackingFragment : Fragment() {
 
         })
     }
-
     private fun fireBottomSheet(){
         val modalBottomSheet = MaterialBottomSheet()
         modalBottomSheet.show(requireActivity().supportFragmentManager, MaterialBottomSheet.TAG)
@@ -278,10 +276,17 @@ class TrackingFragment : Fragment() {
         if (isTracking){
             menu?.getItem(0)?.isVisible = true
             slideUp(1000)
-            sendCommandToService(Constants.ACTION_PAUSE_SERVICE)
+            PrimaryUtility.sendCommandToService(
+                Constants.ACTION_PAUSE_TRACKING_SERVICE,
+                requireContext(),
+                TrackingService::class.java)
         } else{
             slideDown(1000)
-            sendCommandToService(Constants.ACTION_START_OR_RESUME_SERVICE)
+            PrimaryUtility.sendCommandToService(
+                Constants.ACTION_START_OR_RESUME_TRACKING_SERVICE,
+                requireContext(),
+                TrackingService::class.java
+            )
         }
     }
     private fun updateTracking(isTracking: Boolean){
@@ -330,9 +335,7 @@ class TrackingFragment : Fragment() {
         val distanceInMeter = PrimaryUtility.calculateDistance(pathPoints).toInt()
         val avgSpeed = PrimaryUtility.getAvgSpeed(
             PrimaryUtility.calculateDistance(pathPoints),currentTimeInMillis)
-        val dateTimeStamp = Calendar.getInstance().timeInMillis
-        val dateString = simpleDateFormat.format(Date(dateTimeStamp))
-        val date: Date? = simpleDateFormat.parse(dateString)
+        val date: Date? = PrimaryUtility.getCurrentDateInDateFormat(simpleDateFormat)
         val activityType = sharedPref.getString(Constants.Activity_Type,"")
         val caloriesBurned = PrimaryUtility.calculateBurnedCalories(
             currentTimeInMillis,
@@ -347,7 +350,7 @@ class TrackingFragment : Fragment() {
             runningDistanceInMeters = distanceInMeter,
             runningTimeInMillis = currentTimeInMillis,
             activity_type = activityType,
-            stepCount = 0,
+            stepCount = null,
             caloriesBurned = caloriesBurned
         )
         viewModel.insertRun(run)
@@ -416,11 +419,6 @@ class TrackingFragment : Fragment() {
             binding?.osMap?.overlayManager?.add(line)
         }
     }
-    private fun sendCommandToService(action: String): Intent =
-        Intent(requireContext(), TrackingService::class.java).also {
-            it.action = action
-            requireContext().startService(it)
-    }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.cancel_run_menu,menu)
@@ -434,7 +432,6 @@ class TrackingFragment : Fragment() {
         }
         Theme.setUpMenuItemUi(requireContext(),menu)
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.cancel_run  ->   {
@@ -463,8 +460,11 @@ class TrackingFragment : Fragment() {
                         Constants.ACTION_RESET_RUN ->    {
                             Toast.makeText(requireContext(),"Track was reset",
                                 Toast.LENGTH_LONG).show()
-
-                            sendCommandToService(Constants.ACTION_STOP_SERVICE)
+                            PrimaryUtility.sendCommandToService(
+                                Constants.ACTION_STOP_TRACKING_SERVICE,
+                                requireContext(),
+                                TrackingService::class.java
+                            )
                             for(i in allPolyline) {
                                 binding?.osMap?.overlayManager?.remove(i)
                             }
@@ -484,7 +484,11 @@ class TrackingFragment : Fragment() {
     }
     private fun stopRun(){
         binding?.tvDuration?.text = "00:00:00:00"
-        sendCommandToService(Constants.ACTION_STOP_SERVICE)
+        PrimaryUtility.sendCommandToService(
+            Constants.ACTION_STOP_TRACKING_SERVICE,
+            requireContext(),
+            TrackingService::class.java
+        )
         backToStepCounterFragment()
         currentOrientation = null
     }
@@ -517,7 +521,6 @@ class TrackingFragment : Fragment() {
         constraintSet.applyTo(binding?.mainConstraintLayout)
 
     }
-
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onResume() {
         super.onResume()

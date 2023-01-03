@@ -174,5 +174,4 @@ object Theme {
             menu.getItem(0)?.icon?.setTint(ContextCompat.getColor(context,R.color.dark_7))
         }
     }
-
 }

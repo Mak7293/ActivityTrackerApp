@@ -1,5 +1,6 @@
 package com.example.runningtracker.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
@@ -44,24 +45,23 @@ class StatisticsFragment : Fragment() {
     @Inject
     lateinit var sdf: SimpleDateFormat
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentStatisticsBinding.inflate(layoutInflater)
+        binding?.rvStatistics?.adapter?.notifyDataSetChanged()
         return binding?.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Theme.setUpStatusBarColorForUnderApi29Light(requireActivity())
         getMapOfActivityInSpecificDate(viewModel)
+        Log.d("backstack",fragmentManager?.backStackEntryCount.toString())
     }
 
-    override fun onResume() {
-        super.onResume()
-        getMapOfActivityInSpecificDate(viewModel)
-    }
     private fun getMapOfActivityInSpecificDate(vm: StatisticsViewModel) {
         val days = mutableListOf<Day>()
         val dates = mutableSetOf<Date>()

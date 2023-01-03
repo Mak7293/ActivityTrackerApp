@@ -68,6 +68,9 @@ class MainActivity : AppCompatActivity() {
         if(PrimaryUtility.isServiceRunning(this,"TrackingService")){
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             navigateToTrackingFragment()
+        }else if(PrimaryUtility.isServiceRunning(this,"StepCountingService")){
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            navigateToStepCountingFragment()
         }
         initializeDailySteps()
     }
@@ -201,12 +204,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if(intent?.action == Constants.ACTION_SHOW_TRACKING_FRAGMENT){
-            navigateToTrackingFragment()
+        when(intent?.action){
+            Constants.ACTION_SHOW_TRACKING_FRAGMENT     ->   navigateToTrackingFragment()
+            Constants.ACTION_SHOW_STEP_COUNTER_FRAGMENT ->   navigateToStepCountingFragment()
         }
     }
     private fun navigateToTrackingFragment(){
         navController.navigate(R.id.action_global_trackingFragment)
+    }
+    private fun navigateToStepCountingFragment(){
+        navController.navigate(R.id.action_global_stepCountingFragment)
     }
     override fun onBackPressed() {
         val currentFragment = NavUtils.getCurrentFragment(this).keys.last()

@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -12,22 +13,17 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.fragment.app.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
+import com.example.runningtracker.R
 import com.example.runningtracker.services.tracking_service.TrackingService
-import com.example.runningtracker.ui.view_model.MainViewModel
-import com.example.runningtracker.ui.view_model.StatisticsViewModel
+import com.example.runningtracker.ui.fragment.StepCounterFragment
 
 import com.example.runningtracker.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -81,9 +77,6 @@ class StepCountingService: LifecycleService(), SensorEventListener {
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        /*StepCountingService.isCounting.observe(this, androidx.lifecycle.Observer{
-            updateNotificationStepCountingState(it)
-        })*/
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -92,6 +85,7 @@ class StepCountingService: LifecycleService(), SensorEventListener {
         intent?.let {
             when (it.action) {
                 Constants.ACTION_START_COUNTING_SERVICE -> {
+                    StepCountingService.steps.postValue(0)
                     Log.d(TAG, "Running service")
                     initializeSensor()
                     startForegroundService()
@@ -100,6 +94,7 @@ class StepCountingService: LifecycleService(), SensorEventListener {
                 Constants.ACTION_STOP_COUNTING_SERVICE -> {
                     Log.d(TAG, "Stopped service")
                     killService()
+
                 }
                 else -> {
 
@@ -128,35 +123,15 @@ class StepCountingService: LifecycleService(), SensorEventListener {
         stopSelf()
 
     }
-    private fun updateNotificationStepCountingState(isCounting: Boolean){
-        val intent = Intent(
-                this,
-                TrackingService::class.java).apply {
-                action = Constants.ACTION_PAUSE_SERVICE
-            }
-        val pendingIntent =  PendingIntent.getService(
-                this,
-                1,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        /*currentNotificationBuilder.javaClass.getDeclaredField("mActions").apply {
-            isAccessible = true
-            set(currentNotificationBuilder, ArrayList<NotificationCompat.Action>())
-        }
-        if(!serviceKilled) {
-            currentNotificationBuilder = baseNotificationBuilder
-                .addAction(R.drawable.ic_pause_black_color, notificationActionText, pendingIntent)
-            notificationManager.notify(
-                Constants.NOTIFICATION_ID,
-                currentNotificationBuilder.build()
-            )
-        }*/
-    }
     @RequiresApi(Build.VERSION_CODES.M)
     private fun startForegroundService(){
+        val currentNightMode = resources.configuration
+            .uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val icon = if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            R.drawable.ic_notification_steps_day
+        }else{
+            R.drawable.ic_notification_steps_night
+        }
         Log.d(TAG,"Foreground service is started")
         StepCountingService.isCounting.postValue(true)
 
@@ -167,26 +142,25 @@ class StepCountingService: LifecycleService(), SensorEventListener {
             createNotificationChannel(notificationManager)
         }
 
-        startForeground(Constants.NOTIFICATION_ID,baseNotificationBuilder.build())
+        startForeground(Constants.NOTIFICATION_ID_STEP_COUNTING,baseNotificationBuilder.build())
         StepCountingService.steps.observe(this, androidx.lifecycle.Observer {
             if(!serviceKilled) {
                 val notification = currentNotificationBuilder
-                    .setContentText("${steps.value} step")
-                notificationManager.notify(Constants.NOTIFICATION_ID, notification.build())
+                    .setContentText("${steps.value?.plus(StepCounterFragment.previousSteps)} step")
+                    .setSmallIcon(icon)
+                notificationManager.notify(Constants.NOTIFICATION_ID_STEP_COUNTING, notification.build())
             }
         })
     }
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager){
         val channel = NotificationChannel(
-            Constants.NOTIFICATION_CHANNEL_ID,
-            Constants.NOTIFICATION_CHANNEL_NAME,
+            Constants.NOTIFICATION_CHANNEL_ID_STEP_COUNTING,
+            Constants.NOTIFICATION_CHANNEL_NAME_STEP_COUNTING,
             NotificationManager.IMPORTANCE_LOW
         )
         notificationManager.createNotificationChannel(channel)
     }
-
     override fun onSensorChanged(event: SensorEvent?) {
         if(event?.sensor?.type == Sensor.TYPE_ACCELEROMETER){
             mRawAccelValues[0] = event.values[0]
@@ -213,7 +187,6 @@ class StepCountingService: LifecycleService(), SensorEventListener {
             }
         }
     }
-
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         //TODO("Not yet implemented")
     }

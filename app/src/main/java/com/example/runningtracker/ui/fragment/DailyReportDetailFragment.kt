@@ -19,14 +19,19 @@ import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.databinding.FragmentDailyReportDetailBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.day.Day
+import com.example.runningtracker.services.step_counter_service.StepCountingService
+import com.example.runningtracker.services.tracking_service.TrackingService
 import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.NavUtils
+import com.example.runningtracker.util.PrimaryUtility
 import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import javax.inject.Inject
@@ -56,11 +61,12 @@ class DailyReportDetailFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("backstack",fragmentManager?.backStackEntryCount.toString())
         Theme.setUpDailyReportDetailUi(requireContext(),binding!!)
         Theme.setUpStatusBarColorForUnderApi29Dark(requireActivity())
         setHasOptionsMenu(true)
         day = args.day
+        Log.d("listRunningDailyReport",day.day[day.day.keys.last()].toString())
         setUpToolbar()
         setupRecyclerView()
 
@@ -117,19 +123,39 @@ class DailyReportDetailFragment : Fragment() {
     private fun Int.toDp(): Int = (this/ Resources.getSystem().displayMetrics.density).toInt()
     private fun setupUi(){
         binding?.tvSteps?.text = "Steps: ${sumSteps()}"
-        binding?.tvDistance?.text = "///Not Implemented"
+        binding?.tvDistance?.text = "Distance by steps: ${sumDistanceBySteps()} m"
         binding?.tvTotalCalories?.text = "Total Calories Burned: ${sumTotalCaloriesBurned()} Cal"
-        binding?.tvCalories?.text = "///Not Implemented"
+        binding?.tvCalories?.text = "Burned calories by steps: ${sumCaloriesBySteps()} Cal"
     }
     private fun sumSteps(): Int{
         var steps = 0
         val runningList = day.day.get(day.day.keys.last())!!
         for(i in runningList){
-            if(i.activity_type == Constants.ACTIVITY_COUNTING_STEPS){
-                steps += i.stepCount
+            if(i.activity_type == Constants.ACTIVITY_STEPS){
+                steps += i.stepCount!!
             }
         }
         return steps
+    }
+    private fun sumDistanceBySteps(): Int{
+        var distance = 0
+        val runningList = day.day[day.day.keys.last()]!!
+        for(i in runningList){
+            if(i.activity_type == Constants.ACTIVITY_STEPS){
+                distance += i.runningDistanceInMeters!!
+            }
+        }
+        return distance
+    }
+    private fun sumCaloriesBySteps(): Double{
+        var calories = 0.0
+        val runningList = day.day[day.day.keys.last()]!!
+        for(i in runningList){
+            if(i.activity_type == Constants.ACTIVITY_STEPS){
+                calories += i.caloriesBurned!!
+            }
+        }
+        return (round(calories*10))/10
     }
     private fun sumTotalCaloriesBurned(): String{
         var totalCalories = 0.0
@@ -151,15 +177,27 @@ class DailyReportDetailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.delete_day  ->   {
-                showDeleteDayDialog(
-                    resources.getString(R.string.delete_day_header),
-                    resources.getString(R.string.delete_day_content)
-                )
+                if(!PrimaryUtility.isServiceRunning(requireContext(),"TrackingService") &&
+                    !PrimaryUtility.isServiceRunning(requireContext(),"StepCountingService")
+                ){
+                    showDialog(
+                        resources.getString(R.string.delete_day_header),
+                        resources.getString(R.string.delete_day_content),
+                        Constants.ACTION_DELETE_RUN
+                    )
+                }else{
+                    showDialog(
+                        resources.getString(R.string.stop_all_service_header),
+                        resources.getString(R.string.stop_all_service_content),
+                        Constants.ACTION_STOP_ALL_SERVICE
+                    )
+                }
+
             }
         }
         return super.onOptionsItemSelected(item)
     }
-    private fun showDeleteDayDialog(header: String, content: String){
+    private fun showDialog(header: String, content: String, action: String){
         val dialog: Dialog = Dialog(requireContext(),R.style.DialogTheme)
         val dialogBinding = DialogLayoutBinding.inflate(layoutInflater)
         dialog.apply {
@@ -170,20 +208,35 @@ class DailyReportDetailFragment : Fragment() {
                 tvContent.text = content
                 tvHeader.text = header
                 btnYes.setOnClickListener {
-                    dialog.dismiss()
-                    backToStatisticsFragment()
-                    lifecycleScope.launch(Dispatchers.Main){
-                        val list = day.day[day.day.keys.last()]!!
-                        for(i in list) {
-                            viewModel.deleteRun(i)
-                            if(i.runningImg != null) {
-                                val file = File(i.runningImg!!.path)
-                                file.delete()
+                    when(action){
+                        Constants.ACTION_DELETE_RUN   ->   {
+                            lifecycleScope.launch(Dispatchers.Main){
+                                val list = day.day[day.day.keys.last()]!!
+                                for(i in list){
+                                    viewModel.deleteRun(i)
+                                    if(i.runningImg != null){
+                                        val file = File(i.runningImg!!.path)
+                                        file.delete()
+                                        if(!file.exists()){
+                                            Log.d("delete", "file deleted")
+                                        }
+                                    }
+                                }
+                                withContext(Dispatchers.Main){
+                                    delay(500L)
+                                    backToStatisticsFragment()
+                                }
                             }
+                            Toast.makeText(requireContext(),"day deleted!!",Toast.LENGTH_SHORT).show()
                         }
-
+                        Constants.ACTION_STOP_ALL_SERVICE  ->   {
+                            stopAllService()
+                            Toast.makeText(requireContext(),
+                                "All service shouting down, you can delete day now.",
+                                Toast.LENGTH_SHORT).show()
+                        }
                     }
-                    Toast.makeText(requireContext(),"delete!!",Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
                 }
                 btnNo.setOnClickListener {
                     dialog.dismiss()
@@ -193,7 +246,23 @@ class DailyReportDetailFragment : Fragment() {
             show()
         }
     }
-
+    private fun stopAllService(){
+        if(PrimaryUtility.isServiceRunning(requireContext(),
+                "TrackingService")){
+            PrimaryUtility.sendCommandToService(
+                Constants.ACTION_STOP_TRACKING_SERVICE,
+                requireContext(),
+                TrackingService::class.java
+            )
+        }else if(PrimaryUtility.isServiceRunning(requireContext(),
+                "StepCountingService")){
+            PrimaryUtility.sendCommandToService(
+                Constants.ACTION_STOP_COUNTING_SERVICE,
+                requireContext(),
+                StepCountingService::class.java
+            )
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null

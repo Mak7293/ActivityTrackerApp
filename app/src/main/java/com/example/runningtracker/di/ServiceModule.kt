@@ -3,8 +3,7 @@ package com.example.mvvmrunningtrackerapp.di
 import android.app.Application
 import android.app.PendingIntent
 import android.content.Intent
-import android.content.SharedPreferences
-import android.util.Log
+import android.content.res.Configuration
 import androidx.core.app.NotificationCompat
 import com.example.runningtracker.R
 import com.example.runningtracker.ui.MainActivity
@@ -53,11 +52,18 @@ object ServiceModule {
         app: Application,
         @Named("tracking_fragment")pendingIntent: PendingIntent
     ):NotificationCompat.Builder {
+        val currentNightMode = app.resources.configuration
+            .uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val icon = if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            R.drawable.ic_notification_run_day_24dp
+        }else{
+            R.drawable.ic_notification_run_night_24dp
+        }
         return NotificationCompat.Builder(
-            app, Constants.NOTIFICATION_CHANNEL_ID)
+            app, Constants.NOTIFICATION_CHANNEL_ID_TRACKING)
             .setAutoCancel(false)
             .setOngoing(true)
-            .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
+            .setSmallIcon(icon)
             .setContentTitle("Running App")
             .setContentText("00:00:00")
             .setContentIntent(pendingIntent)
@@ -86,10 +92,9 @@ object ServiceModule {
         @Named("step_counter_fragment")pendingIntent: PendingIntent
     ):NotificationCompat.Builder {
         return NotificationCompat.Builder(
-            app, Constants.NOTIFICATION_CHANNEL_ID)
+            app, Constants.NOTIFICATION_CHANNEL_ID_STEP_COUNTING)
             .setAutoCancel(false)
             .setOngoing(true)
-            .setSmallIcon(R.drawable.ic_notification_steps)
             .setContentTitle("Step Counting")
             .setContentText("00 Steps")
             .setContentIntent(pendingIntent)

@@ -11,6 +11,8 @@
     <string name="edit_your_details">Edit your details</string>
     <string name="cancel_run_header_dialog">Do you want Cancel the Run?</string>
     <string name="cancel_run_content_dialog">Are you sure to cancel the current run and delete all its data?</string>
+    <string name="cancel_run_header_dialog_1">Tracking service is running.</string>
+    <string name="cancel_run_content_dialog_1">For starting step counting service, you need first shout down tracking service, Are you sure to shouting down the current tracking and delete all its data?</string>
     <string name="exit_app_header_dialog">Exit!!</string>
     <string name="exit_app_content_dialog">Are you sure to Exit this App?</string>
     <string name="reset_tracking_header_dialog">Reset Tracking!!</string>
@@ -18,6 +20,10 @@
     <string name="all_time_location_permission">Please allow all time access to this app for proper tracking of your activity.</string>
     <string name="delete_day_header">Delete this day!!</string>
     <string name="delete_day_content">Are you sure to delete all activity of this day?</string>
+    <string name="stop_all_service_header">Service is running in background.</string>
+    <string name="stop_all_service_content">For deleting this day, you need first stop all running service, do you want stop all service that related to this app?</string>
     <string name="step_counter_alert">If you don\'t need this app count your steps please press stop button, because this app would consume your device power in background.</string>
+    <string name="step_counter_Save_toDataBase_Header">Save steps Detail to Database</string>
+    <string name="step_counter_Save_toDataBase_Content">This app cant Count your steps and Tracking your walking in the same time, if your want tracking your walking Please save your steps detail to Database.</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

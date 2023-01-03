@@ -2,12 +2,14 @@ package com.example.runningtracker.ui.fragment
 
 import android.Manifest
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -18,19 +20,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
 import com.example.runningtracker.R
+import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.databinding.FragmentStepCounterBinding
+import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.services.step_counter_service.StepCountingService
 import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.ui.view_model.MainViewModel
+import com.example.runningtracker.ui.view_model.StatisticsViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.NavUtils
 import com.example.runningtracker.util.PrimaryUtility
 import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,12 +50,23 @@ class StepCounterFragment : Fragment() {
     private var binding: FragmentStepCounterBinding? = null
     private var name: String? = null
 
-    private val viewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
+    private val statisticsViewModel: StatisticsViewModel by viewModels()
 
     @Inject
     lateinit var sharedPref: SharedPreferences
+    @Inject
+    lateinit var simpleDateFormat: SimpleDateFormat
 
     private var isCounting: Boolean = false
+    private var totalDistanceBySteps: Float? = null
+    private var caloriesBurnedBySteps: Float? = null
+    private var currentSteps: Int = 0
+
+
+    companion object{
+        var previousSteps: Int = 0
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,10 +74,9 @@ class StepCounterFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentStepCounterBinding.inflate(layoutInflater)
+        previousSteps = 0
         requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        //customizeTheme()
         return binding?.root
-
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -67,31 +88,110 @@ class StepCounterFragment : Fragment() {
         Theme.setUpStepCounterUi(requireActivity(),binding!!)
 
         binding?.fab?.setOnClickListener {
-            getPermission()
+            if(!PrimaryUtility.isServiceRunning(requireContext(),"StepCountingService")){
+                getPermission()
+            }else{
+                showDialog(
+                    resources.getString(R.string.step_counter_Save_toDataBase_Header),
+                    resources.getString(R.string.step_counter_Save_toDataBase_Content),
+                    Constants.ACTION_SAVE_STEPS_TO_DATABASE
+                )
+            }
         }
 
         binding?.btnStepStartStop?.setOnClickListener {
-            if(!isCounting){
-                binding?.btnStepStartStop?.text = "Stop"
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ){
-                    sensorLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
-                }else{
-                    PrimaryUtility.sendCommandToStepCountingService(
-                        Constants.ACTION_START_COUNTING_SERVICE,requireContext())
+            if(!PrimaryUtility.isServiceRunning(requireContext(), "TrackingService")){
+                if (!isCounting) {
+                    binding?.btnStepStartStop?.text = "Stop"
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        sensorLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+                    } else {
+                        PrimaryUtility.sendCommandToService(
+                            Constants.ACTION_START_COUNTING_SERVICE,
+                            requireContext(),
+                            StepCountingService::class.java
+                        )
+                    }
+                } else {
+                    insertStepsToDatabase(mainViewModel)
+                    binding?.btnStepStartStop?.text = "Start"
+                    PrimaryUtility.sendCommandToService(
+                        Constants.ACTION_STOP_COUNTING_SERVICE,
+                        requireContext(),
+                        StepCountingService::class.java
+                    )
                 }
             }else{
-                binding?.btnStepStartStop?.text = "Start"
-                PrimaryUtility.sendCommandToStepCountingService(
-                    Constants.ACTION_STOP_COUNTING_SERVICE,requireContext())
+                showDialog(
+                    resources.getString(R.string.cancel_run_header_dialog_1),
+                    resources.getString(R.string.cancel_run_content_dialog_1),
+                    Constants.ACTION_STOP_TRACKING_SERVICE
+                )
             }
         }
-        timeTextAdapter(0)
+        if(PrimaryUtility.isServiceRunning(requireContext(),"StepCountingService")){
+            currentSteps = StepCountingService.steps.value!!
+            getPreviousStepsInDay(statisticsViewModel,currentSteps)
+        }else{
+            getPreviousStepsInDay(statisticsViewModel)
+        }
+
         observeLiveData()
+    }
+    private fun insertStepsToDatabase(vm: MainViewModel){
+        val date: Date? = PrimaryUtility.getCurrentDateInDateFormat(simpleDateFormat)
+        if(currentSteps != 0){
+            lifecycleScope.launch(Dispatchers.IO){
+                val run = RunningEntity(
+                    date = date,
+                    runningImg = null,
+                    runningAvgSpeedKMH = null,
+                    runningDistanceInMeters = PrimaryUtility.getDistanceBySteps(
+                        currentSteps,
+                        sharedPref.getInt(Constants.KEY_HEIGHT,160).toFloat()/100).toInt(),
+                    runningTimeInMillis = null,
+                    activity_type = Constants.ACTIVITY_STEPS,
+                    stepCount = currentSteps,
+                    caloriesBurned = PrimaryUtility.getCaloriesBurnedBySteps(currentSteps,
+                        sharedPref.getFloat(Constants.KEY_WEIGHT, 65.0f).toInt()).toDouble()
+                )
+                vm.insertRun(run)
+                delay(300L)
+                withContext(Dispatchers.Main){
+                    getPreviousStepsInDay(statisticsViewModel)
+                }
+            }
+        }
+    }
+    private fun getPreviousStepsInDay(vm: StatisticsViewModel,initialSteps: Int = 0){
+        previousSteps = 0
+        val currentDate = PrimaryUtility.getCurrentDateInDateFormat(simpleDateFormat)
+        val dates = mutableSetOf<Date>()
+        for (i in MainActivity.run) {
+            i.date?.let {
+                dates.add(it)
+            }
+        }
+        if(dates.contains(currentDate)){
+            lifecycleScope.launch(Dispatchers.IO) {
+                val list = vm.getTotalActivityInSpecificDay(currentDate!!)
+                for(i in list){
+                    if(i.activity_type == Constants.ACTIVITY_STEPS){
+                        previousSteps += i.stepCount!!
+                    }
+                }
+                Log.d("runpreviousInCo",previousSteps.toString())
+                withContext(Dispatchers.Main){
+                    setUiStatistics(previousSteps + initialSteps)
+                }
+            }
+        }
     }
     private fun observeLiveData(){
         StepCountingService.isCounting.observe(viewLifecycleOwner, Observer {
             isCounting = it
-            if(isCounting){
+            Log.d("isCounting!!",isCounting.toString())
+            if(it){
                 binding?.btnStepStartStop?.text = "Stop"
                 binding?.btnStepStartStop?.background = ContextCompat.getDrawable(
                     requireContext(),R.drawable.btn_red_drawable)
@@ -104,18 +204,25 @@ class StepCounterFragment : Fragment() {
             }
         })
         StepCountingService.steps.observe(viewLifecycleOwner, Observer {
-            val progress: Double = it.toDouble()/sharedPref.getInt(Constants.KEY_STEPS,0)
-            binding?.progressBar?.setProgress(progress,1.0)
-            binding?.progressBar?.setProgressTextAdapter(timeTextAdapter(it))
-            setUiStatistics(it)
+            currentSteps = it
+            if(isCounting){
+                Log.d("isCounting",isCounting.toString())
+                setUiStatistics(currentSteps + previousSteps)
+            }
         })
     }
-    private fun setUiStatistics(steps: Int){
+    private fun setUiStatistics(_steps: Int){
+        Log.d("run_step",_steps.toString())
+        val progress: Double = (_steps).toDouble()/sharedPref.getInt(Constants.KEY_STEPS,0)
+        lifecycleScope.launch(Dispatchers.Main) {
+            binding?.progressBar?.setProgress(progress,1.0)
+        }
+        binding?.progressBar?.setProgressTextAdapter(timeTextAdapter(_steps))
         val heightInMeter = sharedPref.getInt(Constants.KEY_HEIGHT,160).toFloat()/100
         val weightInKg = sharedPref.getFloat(Constants.KEY_WEIGHT,70.0f).toInt()
-        val totalDistance = PrimaryUtility.getDistanceBySteps(steps,heightInMeter)
-        binding?.tvDistance?.text="Distance By Steps: $totalDistance m"
-        val caloriesBurnedBySteps = PrimaryUtility.getCaloriesBurnedBySteps(steps,weightInKg)
+        totalDistanceBySteps = PrimaryUtility.getDistanceBySteps(_steps,heightInMeter)
+        binding?.tvDistance?.text="Distance By Steps: $totalDistanceBySteps m"
+        caloriesBurnedBySteps = PrimaryUtility.getCaloriesBurnedBySteps(_steps,weightInKg)
         binding?.tvCalories?.text="Calories Burned By Steps: $caloriesBurnedBySteps Cal"
     }
     private fun timeTextAdapter(steps: Int): CircularProgressIndicator.ProgressTextAdapter{
@@ -187,13 +294,59 @@ class StepCounterFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()){
                 isGranted ->
             if(isGranted){
-                PrimaryUtility.sendCommandToStepCountingService(
-                    Constants.ACTION_START_COUNTING_SERVICE,requireContext())
+                PrimaryUtility.sendCommandToService(
+                    Constants.ACTION_START_COUNTING_SERVICE,
+                    requireContext(),
+                    StepCountingService::class.java
+                )
             }else{
                 Toast.makeText(requireContext(),"Permission Denied For Access To Sensor",
                     Toast.LENGTH_LONG).show()
             }
         }
+    private fun showDialog(header: String, content: String, action: String){
+        val dialog: Dialog = Dialog(requireContext(),R.style.DialogTheme)
+        val dialogBinding = DialogLayoutBinding.inflate(layoutInflater)
+        dialog.apply {
+            setContentView(dialogBinding.root)
+            setCanceledOnTouchOutside(false)
+            setCancelable(false)
+            dialogBinding.apply {
+                tvContent.text = content
+                tvHeader.text = header
+                btnYes.setOnClickListener {
+                    when(action){
+                        Constants.ACTION_SAVE_STEPS_TO_DATABASE   ->{
+                            insertStepsToDatabase(mainViewModel)
+                            PrimaryUtility.sendCommandToService(
+                                Constants.ACTION_STOP_COUNTING_SERVICE,
+                                requireContext(),
+                                StepCountingService::class.java
+                            )
+                            findNavController().navigate(
+                                R.id.action_stepCounterFragment_to_trackingFragment,null,
+                                NavUtils.navOptions(activity as MainActivity)[Constants.SLIDE_TOP]
+                            )
+                        }
+                        Constants.ACTION_STOP_TRACKING_SERVICE  ->   {
+                            PrimaryUtility.sendCommandToService(
+                                Constants.ACTION_STOP_COUNTING_SERVICE,
+                                requireContext(),
+                                StepCountingService::class.java
+                            )
+                        }
+                    }
+
+                    dialog.dismiss()
+                }
+                btnNo.setOnClickListener {
+                    dialog.dismiss()
+                }
+            }
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

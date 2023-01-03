@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
 
         Theme.setUpHomeFragmentUi(requireActivity(),binding!!)
         setUiTextView()
-
+        Log.d("backstack",fragmentManager?.backStackEntryCount.toString())
         binding?.ibEditName?.setOnClickListener {
             showEditText(binding!!.llName,binding!!.tvName,
                 binding!!.llEtName,binding!!.etName,Constants.KEY_NAME)

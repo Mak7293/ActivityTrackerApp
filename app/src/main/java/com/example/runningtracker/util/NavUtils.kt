@@ -38,11 +38,17 @@ object NavUtils {
             .setLaunchSingleTop(true)
             .setEnterAnim(R.anim.slide_in_top)
             .setExitAnim(R.anim.slide_out_top)
+            .setPopEnterAnim(R.anim.slide_in_top)
+            .setPopExitAnim(R.anim.slide_out_top)
+            .setPopUpTo(getCurrentFragment(activity).values.first(),true)
             .build()
         val optionsSlideInBottom = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .setEnterAnim(R.anim.slide_in_bottom)
             .setExitAnim(R.anim.slide_out_bottom)
+            .setPopEnterAnim(R.anim.slide_in_bottom)
+            .setPopExitAnim(R.anim.slide_out_bottom)
+            .setPopUpTo(getCurrentFragment(activity).values.first(),true)
             .build()
         return mapOf(Constants.SLIDE_LEFT to optionsSlideInLeft,
             Constants.SLIDE_RIGHT to optionsSlideInRight,
@@ -50,5 +56,4 @@ object NavUtils {
             Constants.SLIDE_BOTTOM to optionsSlideInBottom
         )
     }
-
 }

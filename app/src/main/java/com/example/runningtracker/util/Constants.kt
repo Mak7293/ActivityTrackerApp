@@ -1,11 +1,10 @@
 package com.example.runningtracker.util
 
-import javax.inject.Inject
-
 object Constants {
-    const val ACTION_START_OR_RESUME_SERVICE = "actionStartOrResumeService"
-    const val ACTION_PAUSE_SERVICE = "actionPauseService"
-    const val ACTION_STOP_SERVICE = "actionStopService"
+    const val ACTION_SAVE_STEPS_TO_DATABASE = "actionSaveStepsToDatabase"
+    const val ACTION_START_OR_RESUME_TRACKING_SERVICE = "actionStartOrResumeTrackingService"
+    const val ACTION_PAUSE_TRACKING_SERVICE = "actionPauseTrackingService"
+    const val ACTION_STOP_TRACKING_SERVICE = "actionStopTrackingService"
     const val ACTION_SHOW_TRACKING_FRAGMENT = "actionShowTrackingFragment"
     const val ACTION_SHOW_STEP_COUNTER_FRAGMENT = "actionShowStepCounterFragment"
 
@@ -19,11 +18,13 @@ object Constants {
 
     const val ACTIVITY_RUN_OR_WALK = "activity_run_or_walk"
     const val ACTIVITY_CYCLING = "activity_bicycling"
-    const val ACTIVITY_COUNTING_STEPS = "activity_counting_steps"
+    const val ACTIVITY_STEPS = "activity_counting_steps"
     const val Activity_Type = "Activity_type"
 
     const val ACTION_STOP_RUN = "action_stop_run"
     const val ACTION_RESET_RUN = "action_reset_run"
+    const val ACTION_DELETE_RUN = "action_delete_run"
+    const val ACTION_STOP_ALL_SERVICE = "action_stop_all_service"
 
     const val RUNNING_DATABASE_NAME = "running_db"
 
@@ -41,9 +42,13 @@ object Constants {
 
     const val MAP_ZOOM = 18.5
 
-    const val NOTIFICATION_CHANNEL_ID = "tracking_channel"
-    const val NOTIFICATION_CHANNEL_NAME= "tracking"
-    const val NOTIFICATION_ID= 1
+    const val NOTIFICATION_CHANNEL_ID_TRACKING = "tracking_channel"
+    const val NOTIFICATION_CHANNEL_NAME_TRACKING= "tracking"
+    const val NOTIFICATION_ID_TRACKING= 1
+
+    const val NOTIFICATION_CHANNEL_ID_STEP_COUNTING = "step_counting_channel"
+    const val NOTIFICATION_CHANNEL_NAME_STEP_COUNTING= "step_counting"
+    const val NOTIFICATION_ID_STEP_COUNTING= 2
 
     const val SLIDE_LEFT = "slide_left"
     const val SLIDE_RIGHT = "slide_right"

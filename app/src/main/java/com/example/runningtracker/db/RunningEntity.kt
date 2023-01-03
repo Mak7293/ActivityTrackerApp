@@ -13,11 +13,11 @@ data class RunningEntity(
     var id: Int? = null,
     val date: Date? = null,
     var runningImg: Uri? = null,
-    var runningAvgSpeedKMH: Double = 0.0,
+    var runningAvgSpeedKMH: Double? = null,
     var runningDistanceInMeters: Int = 0,
-    var runningTimeInMillis: Long = 0L,
+    var runningTimeInMillis: Long? = null,
     var activity_type: String = "",
-    val stepCount: Int = 0,
+    val stepCount: Int? = null,
     var caloriesBurned: Double = 0.0
 )
 
