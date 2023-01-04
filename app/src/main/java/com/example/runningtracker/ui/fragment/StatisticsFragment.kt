@@ -63,7 +63,9 @@ class StatisticsFragment : Fragment() {
     }
 
     private fun getMapOfActivityInSpecificDate(vm: StatisticsViewModel) {
-        val days = mutableListOf<Day>()
+        //val days = mutableListOf<Day>()
+        val days = mutableListOf<Pair<Date,MutableList<RunningEntity>>>()
+
         val dates = mutableSetOf<Date>()
         for (i in MainActivity.run) {
             i.date?.let {
@@ -71,14 +73,15 @@ class StatisticsFragment : Fragment() {
             }
         }
         Log.d("date set", dates.toString())
-        val datesList = dates.toMutableList()
+        //val datesList = dates.toMutableList()
         lifecycleScope.launch(Dispatchers.IO) {
-            for (i in datesList) {
-                val d = Day(mutableMapOf())
-                val list = vm.getTotalActivityInSpecificDay(i)
-                val a = mutableMapOf(i to list)
-                d.day = a
-                days.add(d)
+            for (i in dates) {
+                //val d = Day(mutableMapOf())
+                val list = vm.getTotalActivityInSpecificDay(i).toMutableList()
+                //val a = mutableMapOf(i to list)
+                //d.day = a
+                //days.add(d)
+                days.add(Pair(i,list))
             }
             Log.d("Day-ssss", days.toString())
             withContext(Dispatchers.Main){
@@ -101,12 +104,12 @@ class StatisticsFragment : Fragment() {
             binding?.rvStatistics?.requestLayout()
         }
     }
-    private fun setupRecyclerView(days: MutableList<Day>){
+    private fun setupRecyclerView(days: MutableList<Pair<Date, MutableList<RunningEntity>>>){
         if (days.isNotEmpty()){
             binding?.tvContent?.visibility = View.INVISIBLE
             binding?.rvStatistics?.visibility = View.VISIBLE
             val adapter = StatisticsAdapter(requireActivity(),days, sdf
-            ) {  day ->
+            ){  day ->
                 goToDetailsFragment(day)
             }
             binding?.rvStatistics?.layoutManager = LinearLayoutManager(
@@ -118,11 +121,11 @@ class StatisticsFragment : Fragment() {
             binding?.rvStatistics?.visibility = View.INVISIBLE
         }
     }
-    private fun goToDetailsFragment(day:Day){
+    private fun goToDetailsFragment(day: Pair<Date, MutableList<RunningEntity>>){
         Log.d("detailDay",day.toString())
-
+        val mDay = Day(day)
         val bundle = Bundle().apply {
-            putSerializable("day",day)
+            putSerializable("day",mDay)
         }
         findNavController().navigate(
             R.id.action_statisticsFragment_to_dailyReportDetailFragment

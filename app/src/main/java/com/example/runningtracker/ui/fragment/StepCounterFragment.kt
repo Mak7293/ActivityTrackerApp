@@ -28,6 +28,7 @@ import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.databinding.FragmentStepCounterBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.services.step_counter_service.StepCountingService
+import com.example.runningtracker.services.tracking_service.TrackingService
 import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.ui.view_model.StatisticsViewModel
@@ -113,7 +114,7 @@ class StepCounterFragment : Fragment() {
                         )
                     }
                 } else {
-                    insertStepsToDatabase(mainViewModel)
+                    saveStepsToDatabase(mainViewModel)
                     binding?.btnStepStartStop?.text = "Start"
                     PrimaryUtility.sendCommandToService(
                         Constants.ACTION_STOP_COUNTING_SERVICE,
@@ -138,7 +139,7 @@ class StepCounterFragment : Fragment() {
 
         observeLiveData()
     }
-    private fun insertStepsToDatabase(vm: MainViewModel){
+    private fun saveStepsToDatabase(vm: MainViewModel){
         val date: Date? = PrimaryUtility.getCurrentDateInDateFormat(simpleDateFormat)
         if(currentSteps != 0){
             lifecycleScope.launch(Dispatchers.IO){
@@ -317,7 +318,7 @@ class StepCounterFragment : Fragment() {
                 btnYes.setOnClickListener {
                     when(action){
                         Constants.ACTION_SAVE_STEPS_TO_DATABASE   ->{
-                            insertStepsToDatabase(mainViewModel)
+                            saveStepsToDatabase(mainViewModel)
                             PrimaryUtility.sendCommandToService(
                                 Constants.ACTION_STOP_COUNTING_SERVICE,
                                 requireContext(),
@@ -330,9 +331,9 @@ class StepCounterFragment : Fragment() {
                         }
                         Constants.ACTION_STOP_TRACKING_SERVICE  ->   {
                             PrimaryUtility.sendCommandToService(
-                                Constants.ACTION_STOP_COUNTING_SERVICE,
+                                Constants.ACTION_STOP_TRACKING_SERVICE,
                                 requireContext(),
-                                StepCountingService::class.java
+                                TrackingService::class.java
                             )
                         }
                     }

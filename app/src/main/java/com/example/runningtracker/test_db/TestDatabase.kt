@@ -118,6 +118,61 @@ class TestDatabase(
                 activity_type = Constants.ACTIVITY_CYCLING,
                 stepCount = 0,
                 caloriesBurned = 20.3
+            ),
+            RunningEntity(
+                id = null,
+                date = generateDate(5.2f),
+                runningImg = null,
+                runningAvgSpeedKMH = 10.0,
+                runningDistanceInMeters = 5000,
+                runningTimeInMillis = generateTimeInMillis(10.0f),
+                activity_type = Constants.ACTIVITY_RUN_OR_WALK,
+                stepCount = 0,
+                caloriesBurned = 27.5
+            ),
+            RunningEntity(
+                id = null,
+                date = generateDate(5.45f),
+                runningImg = null,
+                runningAvgSpeedKMH = 10.0,
+                runningDistanceInMeters = 5000,
+                runningTimeInMillis = generateTimeInMillis(10.0f),
+                activity_type = Constants.ACTIVITY_CYCLING,
+                stepCount = 0,
+                caloriesBurned = 16.7
+            ),
+            RunningEntity(
+                id = null,
+                date = generateDate(6.5f),
+                runningImg = null,
+                runningAvgSpeedKMH = 10.0,
+                runningDistanceInMeters = 5000,
+                runningTimeInMillis = generateTimeInMillis(10.0f),
+                activity_type = Constants.ACTIVITY_RUN_OR_WALK,
+                stepCount = 0,
+                caloriesBurned = 25.0
+            ),
+            RunningEntity(
+                id = null,
+                date = generateDate(7.68f),
+                runningImg = null,
+                runningAvgSpeedKMH = 10.0,
+                runningDistanceInMeters = 5000,
+                runningTimeInMillis = generateTimeInMillis(10.0f),
+                activity_type = Constants.ACTIVITY_CYCLING,
+                stepCount = 0,
+                caloriesBurned = 31.25
+            ),
+            RunningEntity(
+                id = null,
+                date = generateDate(7.9f),
+                runningImg = null,
+                runningAvgSpeedKMH = 10.0,
+                runningDistanceInMeters = 5000,
+                runningTimeInMillis = generateTimeInMillis(10.0f),
+                activity_type = Constants.ACTIVITY_RUN_OR_WALK,
+                stepCount = 0,
+                caloriesBurned = 33.2
             )
         )
         return run

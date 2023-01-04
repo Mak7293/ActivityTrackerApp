@@ -75,6 +75,7 @@ class TrackingService: LifecycleService() {
         isTracking.observe(this, Observer{
             updateLocationTracking(it)
             updateNotificationTrackingState(it)
+            Log.d("isTracking", isTracking.value.toString())
         })
 
     }
@@ -126,8 +127,6 @@ class TrackingService: LifecycleService() {
         timer.cancel()
 
     }
-
-
 
     @SuppressLint("MissingPermission")
     private fun updateLocationTracking(isTracking: Boolean) {
@@ -227,7 +226,6 @@ class TrackingService: LifecycleService() {
     }
     @RequiresApi(Build.VERSION_CODES.M)
     private fun startForegroundService(){
-
         Log.d(TAG,"Foreground service is started")
         startTimer()
         isTracking.postValue(true)

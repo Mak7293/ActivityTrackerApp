@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.runningtracker.databinding.StaticRecyclerItemRowBinding
+import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.day.Day
 import com.example.runningtracker.util.Theme
 import java.text.SimpleDateFormat
@@ -20,9 +21,9 @@ import kotlin.math.round
 
 class StatisticsAdapter(
     private val activity: Activity,
-    private val list: List<Day>,
+    private val list: MutableList<Pair<Date, MutableList<RunningEntity>>>,
     private val sdf: SimpleDateFormat,
-    private val btnListener:(day: Day) -> Unit):
+    private val btnListener:(day: Pair<Date, MutableList<RunningEntity>>) -> Unit):
     RecyclerView.Adapter<StatisticsAdapter.ViewHolder>(){
 
     class ViewHolder(val binding: StaticRecyclerItemRowBinding)
@@ -36,7 +37,7 @@ class StatisticsAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        holder.binding.tvDate.text = "Date: ${getStringFormattedDate(item.day.keys.first())}"
+        holder.binding.tvDate.text = "Date: ${getStringFormattedDate(item.first)}"
         holder.binding.tvCalories.text = "Calories Burned:" +
                 " ${AllBurnedCaloriesInSpecificDay(item)} Cal"
         holder.binding.btnDetails.setOnClickListener {
@@ -48,8 +49,9 @@ class StatisticsAdapter(
     override fun getItemCount(): Int {
         return list.size
     }
-    private fun getListOfTrackingImageView(item: Day,holder: ViewHolder){
-        val runningEntity = item.day[item.day.keys.last()]!!
+    private fun getListOfTrackingImageView(
+        item: Pair<Date, MutableList<RunningEntity>>,holder: ViewHolder){
+        val runningEntity = item.second
         val imageList: MutableList<Uri> = mutableListOf()
         for(i in runningEntity){
             if(i.runningImg != null){
@@ -92,9 +94,9 @@ class StatisticsAdapter(
     private fun getStringFormattedDate(date: Date): String{
         return sdf.format(Date(date.time))
     }
-    private fun AllBurnedCaloriesInSpecificDay(day: Day): Float{
+    private fun AllBurnedCaloriesInSpecificDay(day: Pair<Date, MutableList<RunningEntity>>): Float{
         var totalCalories: Float = 0.0F
-        for(i in day.day.get(day.day.keys.last())!!){
+        for(i in day.second){
             totalCalories += i.caloriesBurned.toFloat()
         }
         return (round(totalCalories*10) /10)

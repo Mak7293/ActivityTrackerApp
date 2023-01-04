@@ -6,5 +6,5 @@ import java.util.*
 
 
 data class Day(
-    var day: MutableMap<Date,List<RunningEntity>>
+    var day: Pair<Date, MutableList<RunningEntity>>
 ):Serializable

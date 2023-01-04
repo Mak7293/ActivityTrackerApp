@@ -1,14 +1,12 @@
 package com.example.runningtracker.ui.fragment
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.os.Build
+import android.graphics.Color
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,17 +15,29 @@ import android.view.animation.AnticipateOvershootInterpolator
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.FragmentHomeBinding
+import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.ui.MainActivity
+import com.example.runningtracker.ui.view_model.StatisticsViewModel
 import com.example.runningtracker.util.Constants
 import com.example.runningtracker.util.Theme
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.days
+
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -37,6 +47,10 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var sharedPref: SharedPreferences
 
+    @Inject
+    lateinit var sdf: SimpleDateFormat
+
+    private val statisticsViewModel: StatisticsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -99,6 +113,7 @@ class HomeFragment : Fragment() {
         binding?.themeRadioGroup?.setOnCheckedChangeListener {  group , checkId ->
             onRadioThemeButtonClicked(checkId)
         }
+        calculateBurnedCaloriesPerDay(statisticsViewModel)
     }
     private fun setUiTextView(){
         binding?.tvName?.text =
@@ -241,6 +256,106 @@ class HomeFragment : Fragment() {
             }
             Constants.THEME_NIGHT -> {
                 binding?.radioBtnNight?.isChecked = true
+            }
+        }
+    }
+    private fun calculateBurnedCaloriesPerDay(vm: StatisticsViewModel){
+        val dates = mutableSetOf<Date>()
+        for (i in MainActivity.run) {
+            if(dates.size <= 10) {
+                i.date?.let {
+                    dates.add(it)
+                }
+            }
+        }
+        lifecycleScope.launch(Dispatchers.IO) {
+            val runningList = mutableListOf<Pair<Date,List<RunningEntity>>>()
+            for (i in dates) {
+                val list = vm.getTotalActivityInSpecificDay(i)
+                runningList.add(Pair(i,list))
+            }
+            val caloriesPerDay = mutableListOf<Pair<Date,Double>>()
+            for(i in runningList){
+                var calories = 0.0
+                for(j in i.second){
+                    calories += j.caloriesBurned
+                }
+                caloriesPerDay.add(Pair(i.first,calories))
+            }
+            withContext(Dispatchers.Main){
+                createGraph(caloriesPerDay)
+            }
+        }
+    }
+    private fun createGraph(caloriesPerDay: MutableList<Pair<Date,Double>>){
+        val currentNightMode = requireActivity().resources.configuration
+            .uiMode and Configuration.UI_MODE_NIGHT_MASK
+        Log.d("calories",caloriesPerDay.toString())
+        val barEntryList = caloriesPerDay.indices.map{  i  ->
+            BarEntry(i.toFloat(), caloriesPerDay[i].second.toFloat())
+        }
+        val xAxisFormatter = DayAxisValueFormatter(caloriesPerDay)
+        binding?.chartCaloriesBurned?.xAxis.apply {
+            this?.position = XAxis.XAxisPosition.BOTTOM
+            this?.setDrawGridLines(false)
+            this?.granularity = 1f
+            this?.labelRotationAngle = 30.0f
+            this?.valueFormatter = xAxisFormatter
+            if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+                this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
+                this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_1)
+            }else{
+                this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
+                this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_5)
+            }
+        }
+        binding?.chartCaloriesBurned?.axisLeft.apply {
+            this?.setDrawGridLines(true)
+            if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+                this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
+                this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_1)
+            }else{
+                this?.textColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
+                this?.axisLineColor = ContextCompat.getColor(requireContext(),R.color.dark_5)
+            }
+        }
+        binding?.chartCaloriesBurned?.axisRight.apply {
+            this?.axisLineColor = Color.TRANSPARENT
+            this?.textColor = Color.TRANSPARENT
+            this?.setDrawGridLines(false)
+        }
+        val barDataSet: BarDataSet = if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            BarDataSet(barEntryList, "Calories Burned").apply {
+
+                valueTextColor = ContextCompat.getColor(requireContext(),R.color.dark_0)
+                valueTextSize = 10.0f
+                color = ContextCompat.getColor(requireContext(),R.color.green_primary_color)
+            }
+        }else{
+            BarDataSet(barEntryList, "Calories Burned").apply {
+                valueTextColor = ContextCompat.getColor(requireContext(),R.color.dark_7)
+                valueTextSize = 10.0f
+                color = ContextCompat.getColor(requireContext(),R.color.yellow_primary_color)
+            }
+        }
+        binding?.chartCaloriesBurned?.data = BarData(barDataSet)
+        if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
+            binding?.chartCaloriesBurned?.legend?.textColor =
+                ContextCompat.getColor(requireContext(),R.color.dark_0)
+        }else{
+            binding?.chartCaloriesBurned?.legend?.textColor =
+                ContextCompat.getColor(requireContext(),R.color.dark_7)
+        }
+
+        binding?.chartCaloriesBurned?.invalidate()
+    }
+    inner class DayAxisValueFormatter(private val list: MutableList<Pair<Date,Double>>): ValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return if(value - value.toInt() == 0.0f){
+                val date = list[value.toInt()].first
+                sdf.format(date)
+            }else{
+                ""
             }
         }
     }

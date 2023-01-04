@@ -2,6 +2,7 @@ package com.example.runningtracker.Adapters
 
 import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -26,23 +27,21 @@ class DailyReportAdapter(
     private fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
+        Log.d("dailyReportAdapter.size",list.size.toString())
         if(list.size>1){
-            val layoutParams = LinearLayout.LayoutParams((parent.width*0.85).toInt()
-                , LinearLayout.LayoutParams.WRAP_CONTENT)
-
+            val layoutParams = LinearLayout.LayoutParams(parent.width*1.15.toInt(),parent.height*1.1.toInt()
+                , LinearLayout.LayoutParams.WRAP_CONTENT.toFloat()
+            )
             layoutParams.setMargins((15.toDp()).toPx(),0,(40.toDp()).toPx(),0)
             val view = LayoutInflater.from(context).inflate(R.layout.daily_report_recycler_item,
                 parent, false)
             view.layoutParams = layoutParams
-
             return ViewHolder(DailyReportRecyclerItemBinding.bind(view))
         }else{
             return ViewHolder(
                 DailyReportRecyclerItemBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
-                )
-            )
+                ))
         }
     }
 
@@ -55,7 +54,7 @@ class DailyReportAdapter(
             )
         }}"
         holder.binding.tvDistance.text = "Distance: ${item.runningDistanceInMeters} m"
-        holder.binding.tvCaloriesBurned.text = "Calories Burned: ${item.caloriesBurned}"
+        holder.binding.tvCaloriesBurned.text = "Calories Burned: ${item.caloriesBurned} Cal"
         if(item.activity_type == Constants.ACTIVITY_CYCLING) {
             holder.binding.ivActivity.setImageResource(R.drawable.ic_bycicle)
         }else if(item.activity_type == Constants.ACTIVITY_RUN_OR_WALK){
@@ -72,23 +71,23 @@ class DailyReportAdapter(
     }
     private fun setUiConfig(holder: ViewHolder){
         if(list.size>1){
-            holder.binding.tvAvgSpeed.textSize = 14.0f
-            holder.binding.tvTime.textSize =  14.0f
-            holder.binding.tvDistance.textSize =  14.0f
-            holder.binding.tvCaloriesBurned.textSize = 14.0f
-            holder.binding.cvImageHolder.layoutParams?.height = 1200.toDp()
-            holder.binding.cvImageHolder.layoutParams?.width = 1200.toDp()
-            holder.binding.cvImageHolder.requestLayout()
-            holder.binding.ivActivity.layoutParams?.height = 375.toDp()
-            holder.binding.ivActivity.layoutParams?.width = 3750.toDp()
-            holder.binding.ivActivity.requestLayout()
+            holder.binding.tvAvgSpeed.textSize = 16.0f
+            holder.binding.tvTime.textSize =  16.0f
+            holder.binding.tvDistance.textSize =  16.0f
+            holder.binding.tvCaloriesBurned.textSize = 16.0f
+
         }
     }
     private fun getFormattedStringTime(timeInMillis: Long): String{
         val timeInSeconds = timeInMillis/1000
         val minute = if (timeInSeconds/60 < 10) "0${timeInSeconds / 60}" else timeInSeconds/60
         val seconds = if(timeInSeconds - ((timeInSeconds/60 ) * 60) != 0L) {
-            "${timeInSeconds - ((timeInSeconds/60 ) * 60)}"
+            val a =  timeInSeconds - ((timeInSeconds/60 ) * 60)
+            if(a < 10){
+                "0${ timeInSeconds - ((timeInSeconds / 60) * 60) }"
+            }else{
+                "${ timeInSeconds - ((timeInSeconds / 60) * 60) }"
+            }
         }else{
             "00"
         }

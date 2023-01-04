@@ -45,9 +45,6 @@
             android:foregroundServiceType="location"/>
         <service
             android:name=".services.step_counter_service.StepCountingService" />
-        <service
-            android:name=".services.DemoJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

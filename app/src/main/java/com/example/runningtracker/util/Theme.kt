@@ -96,8 +96,12 @@ object Theme {
         if(currentNightMode == Configuration.UI_MODE_NIGHT_NO){
             binding.contentLayout.background = ContextCompat
                 .getDrawable(activity,R.drawable.card_background_day)
+            binding.chartLayout.background = ContextCompat
+                .getDrawable(activity,R.drawable.card_background_day)
         }else if(currentNightMode == Configuration.UI_MODE_NIGHT_YES){
             binding.contentLayout.background = ContextCompat
+                .getDrawable(activity,R.drawable.card_background_night)
+            binding.chartLayout.background = ContextCompat
                 .getDrawable(activity,R.drawable.card_background_night)
         }
         setUpStatusBarColorForUnderApi29Light(activity)

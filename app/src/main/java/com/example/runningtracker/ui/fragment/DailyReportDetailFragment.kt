@@ -66,7 +66,7 @@ class DailyReportDetailFragment : Fragment() {
         Theme.setUpStatusBarColorForUnderApi29Dark(requireActivity())
         setHasOptionsMenu(true)
         day = args.day
-        Log.d("listRunningDailyReport",day.day[day.day.keys.last()].toString())
+        Log.d("listRunningDailyReport",day.day.second.toString())
         setUpToolbar()
         setupRecyclerView()
 
@@ -76,7 +76,7 @@ class DailyReportDetailFragment : Fragment() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
-            binding?.toolbarTv?.text = "Date: ${sdf.format(day.day.values.first().first().date!!)}"
+            binding?.toolbarTv?.text = "Date: ${sdf.format(day.day.first)}"
             binding?.toolbar?.setNavigationOnClickListener {
                 backToStatisticsFragment()
             }
@@ -90,7 +90,7 @@ class DailyReportDetailFragment : Fragment() {
         )
     }
     private fun setupRecyclerView(){
-        val totalList = day.day[day.day.keys.last()]!!
+        val totalList = day.day.second
         val list = mutableListOf<RunningEntity>()
         for (i in totalList){
             if(i.activity_type == Constants.ACTIVITY_CYCLING ||
@@ -101,9 +101,6 @@ class DailyReportDetailFragment : Fragment() {
         if (list.isNotEmpty()){
             binding?.rvStatistics?.visibility = View.VISIBLE
             binding?.divider?.visibility = View.VISIBLE
-            if (list.size>1){
-                changeHeightOfRecyclerView()
-            }
             val adapter = DailyReportAdapter(list,requireContext())
             binding?.rvStatistics?.layoutManager = LinearLayoutManager(
                 requireContext(), LinearLayoutManager.HORIZONTAL,false)
@@ -116,11 +113,6 @@ class DailyReportDetailFragment : Fragment() {
             setupUi()
         }
     }
-    private fun changeHeightOfRecyclerView(){
-        binding?.rvStatistics?.layoutParams?.height = 1500.toDp()
-        binding?.rvStatistics?.requestLayout()
-    }
-    private fun Int.toDp(): Int = (this/ Resources.getSystem().displayMetrics.density).toInt()
     private fun setupUi(){
         binding?.tvSteps?.text = "Steps: ${sumSteps()}"
         binding?.tvDistance?.text = "Distance by steps: ${sumDistanceBySteps()} m"
@@ -129,7 +121,7 @@ class DailyReportDetailFragment : Fragment() {
     }
     private fun sumSteps(): Int{
         var steps = 0
-        val runningList = day.day.get(day.day.keys.last())!!
+        val runningList = day.day.second
         for(i in runningList){
             if(i.activity_type == Constants.ACTIVITY_STEPS){
                 steps += i.stepCount!!
@@ -139,7 +131,7 @@ class DailyReportDetailFragment : Fragment() {
     }
     private fun sumDistanceBySteps(): Int{
         var distance = 0
-        val runningList = day.day[day.day.keys.last()]!!
+        val runningList = day.day.second
         for(i in runningList){
             if(i.activity_type == Constants.ACTIVITY_STEPS){
                 distance += i.runningDistanceInMeters!!
@@ -149,7 +141,7 @@ class DailyReportDetailFragment : Fragment() {
     }
     private fun sumCaloriesBySteps(): Double{
         var calories = 0.0
-        val runningList = day.day[day.day.keys.last()]!!
+        val runningList = day.day.second
         for(i in runningList){
             if(i.activity_type == Constants.ACTIVITY_STEPS){
                 calories += i.caloriesBurned!!
@@ -159,7 +151,7 @@ class DailyReportDetailFragment : Fragment() {
     }
     private fun sumTotalCaloriesBurned(): String{
         var totalCalories = 0.0
-        val runningList = day.day.get(day.day.keys.last())!!
+        val runningList = day.day.second
         for(i in runningList){
             totalCalories += i.caloriesBurned
         }
@@ -192,7 +184,6 @@ class DailyReportDetailFragment : Fragment() {
                         Constants.ACTION_STOP_ALL_SERVICE
                     )
                 }
-
             }
         }
         return super.onOptionsItemSelected(item)
@@ -211,7 +202,7 @@ class DailyReportDetailFragment : Fragment() {
                     when(action){
                         Constants.ACTION_DELETE_RUN   ->   {
                             lifecycleScope.launch(Dispatchers.Main){
-                                val list = day.day[day.day.keys.last()]!!
+                                val list = day.day.second
                                 for(i in list){
                                     viewModel.deleteRun(i)
                                     if(i.runningImg != null){

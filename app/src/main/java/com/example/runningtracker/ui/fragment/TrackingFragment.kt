@@ -42,6 +42,7 @@ import androidx.lifecycle.Observer
 import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.path.Polyline
+import com.example.runningtracker.test_db.TestDatabase
 import com.example.runningtracker.ui.MainActivity
 import com.example.runningtracker.ui.view_model.MainViewModel
 import com.example.runningtracker.util.*
@@ -353,9 +354,8 @@ class TrackingFragment : Fragment() {
             stepCount = null,
             caloriesBurned = caloriesBurned
         )
-        viewModel.insertRun(run)
-
-        //TestDatabase(simpleDateFormat,viewModel,requireContext()).saveFakeDateToDb()
+        //viewModel.insertRun(run)
+        TestDatabase(simpleDateFormat,viewModel,requireContext()).saveFakeDateToDb()
         Toast.makeText(requireContext(),"Track Was Saved to Database successfully.",
             Toast.LENGTH_LONG).show()
         stopRun()
