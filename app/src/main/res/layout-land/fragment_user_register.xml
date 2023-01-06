@@ -2,17 +2,16 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:id="@+id/main_layout"
     android:theme="@style/main_background"
-    android:paddingTop="80dp"
-    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
         android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="30dp">
+        android:paddingVertical="35dp"
+        android:paddingHorizontal="150dp">
         <LinearLayout
             android:id="@+id/content_layout"
             android:background="@drawable/card_background_day"

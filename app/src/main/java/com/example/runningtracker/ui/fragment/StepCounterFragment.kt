@@ -11,13 +11,15 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.*
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -37,13 +39,11 @@ import com.example.runningtracker.util.NavUtils
 import com.example.runningtracker.util.PrimaryUtility
 import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class StepCounterFragment : Fragment() {
@@ -168,6 +168,7 @@ class StepCounterFragment : Fragment() {
         previousSteps = 0
         val currentDate = PrimaryUtility.getCurrentDateInDateFormat(simpleDateFormat)
         val dates = mutableSetOf<Date>()
+
         for (i in MainActivity.run) {
             i.date?.let {
                 dates.add(it)
@@ -283,12 +284,21 @@ class StepCounterFragment : Fragment() {
                 intent.data = uri
                 startActivity(intent)
             }
-            builder.setNegativeButton(resources.getString(R.string.negative)){  dialogInterface , which ->
+            setNegativeButton(resources.getString(R.string.negative)){  dialogInterface , which ->
                 dialogInterface.dismiss()
             }
-            create()
             setCancelable(false)
-            show()
+            val dialog = create()
+            dialog.show()
+            val positiveButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            val negativeButton: Button = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+            val layoutParamsPositiveBtn: LinearLayout.LayoutParams =  positiveButton.layoutParams as LinearLayout.LayoutParams
+            val layoutParamsNegativeBtn: LinearLayout.LayoutParams =  negativeButton.layoutParams as LinearLayout.LayoutParams
+            layoutParamsPositiveBtn.gravity = Gravity.START
+            layoutParamsNegativeBtn.gravity = Gravity.START
+            positiveButton.layoutParams = layoutParamsPositiveBtn
+            positiveButton.layoutParams = layoutParamsNegativeBtn
+
         }
     }
     private val sensorLauncher: ActivityResultLauncher<String> =

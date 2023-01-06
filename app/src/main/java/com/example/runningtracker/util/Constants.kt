@@ -29,8 +29,8 @@ object Constants {
     const val RUNNING_DATABASE_NAME = "running_db"
 
     const val TIMER_UPDATE_INTERVAL = 100L
-    const val LOCATION_UPDATE_INTERVAL = 5000L
-    const val FASTEST_LOCATION_INTERVAL = 2000L
+    const val LOCATION_UPDATE_INTERVAL = 3000L
+    const val FASTEST_LOCATION_INTERVAL = 1000L
 
     const val STATE_UP = "up"
     const val STATE_DOWN = "down"

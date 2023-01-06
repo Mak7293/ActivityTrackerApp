@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="5dp"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragment.StatisticsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/tv_content"
+        android:fontFamily="@font/regular"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="You dont have any saved activity"
+        android:theme="@style/general_text_view" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_statistics"
+        android:layout_width="match_parent"
+        android:paddingHorizontal="80dp"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        app:layout_constraintTop_toBottomOf="@+id/tvName"
+        android:visibility="visible" />
+
+</FrameLayout>

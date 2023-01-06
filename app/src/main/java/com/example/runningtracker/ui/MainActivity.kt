@@ -30,6 +30,7 @@ import com.example.runningtracker.util.PrimaryUtility
 import com.example.runningtracker.util.Theme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         initializeDailySteps()
     }
     private fun observeLiveData(){
-        currentTheme.observe(this) {
+        currentTheme.observe(this){
             Theme.setProperTheme(sharedPref,this@MainActivity,navController)
         }
     }
@@ -242,6 +243,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             is TrackingFragment  ->  {
+                Constants.currentOrientation = null
                 navController.navigate(
                     R.id.action_trackingFragment_to_stepCounterFragment,
                     null,

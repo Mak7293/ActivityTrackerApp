@@ -1,15 +1,21 @@
 package com.example.runningtracker.util
 
+import android.R
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.example.runningtracker.databinding.BottomSheetBinding
-import com.example.runningtracker.util.Constants
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MaterialBottomSheet : BottomSheetDialogFragment() {
@@ -31,7 +37,6 @@ class MaterialBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         bottomSheetBinding?.ivActivityCycling?.setOnClickListener {
             sharedPref
                 .edit()
@@ -46,7 +51,11 @@ class MaterialBottomSheet : BottomSheetDialogFragment() {
                 .apply()
             dismiss()
         }
+
         dialog?.setCancelable(false)
+        val modalBottomSheetBehavior = (dialog as BottomSheetDialog).behavior
+        modalBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
 
     }
 

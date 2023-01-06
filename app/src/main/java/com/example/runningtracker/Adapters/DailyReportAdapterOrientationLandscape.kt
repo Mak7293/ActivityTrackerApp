@@ -9,42 +9,24 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.runningtracker.R
-import com.example.runningtracker.databinding.DailyReportRecyclerItemBinding
+import com.example.runningtracker.databinding.DailyReportRecyclerItemOrientationHorizontalBinding
+import com.example.runningtracker.databinding.DailyReportRecyclerItemOrientationVerticalBinding
 
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.util.Constants
 
-class DailyReportAdapter(
+class DailyReportAdapterOrientationLandscape(
     private val list: List<RunningEntity>,
     private val context: Context):
-    RecyclerView.Adapter<DailyReportAdapter.ViewHolder>() {
+    RecyclerView.Adapter<DailyReportAdapterOrientationLandscape.ViewHolder>() {
 
-    class ViewHolder(val binding: DailyReportRecyclerItemBinding):
+    class ViewHolder(val binding: DailyReportRecyclerItemOrientationVerticalBinding):
         RecyclerView.ViewHolder(binding.root)
 
-
-    private fun Int.toDp(): Int = (this/ Resources.getSystem().displayMetrics.density).toInt()
-    private fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        Log.d("dailyReportAdapter.size",list.size.toString())
-        if(list.size>1){
-            val layoutParams = LinearLayout.LayoutParams(parent.width*1.15.toInt(),parent.height*1.1.toInt()
-                , LinearLayout.LayoutParams.WRAP_CONTENT.toFloat()
-            )
-            layoutParams.setMargins((15.toDp()).toPx(),0,(40.toDp()).toPx(),0)
-            val view = LayoutInflater.from(context).inflate(R.layout.daily_report_recycler_item,
-                parent, false)
-            view.layoutParams = layoutParams
-            return ViewHolder(DailyReportRecyclerItemBinding.bind(view))
-        }else{
-            return ViewHolder(
-                DailyReportRecyclerItemBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                ))
-        }
+        return ViewHolder(DailyReportRecyclerItemOrientationVerticalBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false))
     }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         holder.binding.tvAvgSpeed.text = "Average Speed: ${item.runningAvgSpeedKMH} km/h"
@@ -93,6 +75,4 @@ class DailyReportAdapter(
         }
         return "$minute:$seconds"
     }
-
-
 }

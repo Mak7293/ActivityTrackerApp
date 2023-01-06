@@ -283,7 +283,15 @@ class HomeFragment : Fragment() {
                 caloriesPerDay.add(Pair(i.first,calories))
             }
             withContext(Dispatchers.Main){
-                createGraph(caloriesPerDay)
+                Log.d("caloriesBurn",caloriesPerDay.toString())
+                if(!caloriesPerDay.isNullOrEmpty()) {
+                    binding?.chartCaloriesBurned?.visibility = View.VISIBLE
+                    binding?.tvNoData?.visibility = View.GONE
+                    createGraph(caloriesPerDay)
+                }else{
+                    binding?.chartCaloriesBurned?.visibility = View.INVISIBLE
+                    binding?.tvNoData?.visibility = View.VISIBLE
+                }
             }
         }
     }

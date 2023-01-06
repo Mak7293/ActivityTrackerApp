@@ -1,7 +1,8 @@
 package com.example.runningtracker.ui.fragment
 
 import android.app.Dialog
-import android.content.res.Resources
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -13,7 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.runningtracker.Adapters.DailyReportAdapter
+import com.example.runningtracker.Adapters.DailyReportAdapterOrientationLandscape
+import com.example.runningtracker.Adapters.DailyReportAdapterOrientationPortrait
 import com.example.runningtracker.R
 import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.databinding.FragmentDailyReportDetailBinding
@@ -99,13 +101,23 @@ class DailyReportDetailFragment : Fragment() {
             }
         }
         if (list.isNotEmpty()){
-            binding?.rvStatistics?.visibility = View.VISIBLE
-            binding?.divider?.visibility = View.VISIBLE
-            val adapter = DailyReportAdapter(list,requireContext())
-            binding?.rvStatistics?.layoutManager = LinearLayoutManager(
-                requireContext(), LinearLayoutManager.HORIZONTAL,false)
-            binding?.rvStatistics?.adapter = adapter
-            Log.d("recyclerview",list.toString())
+            if(requireContext().resources.configuration.orientation == ORIENTATION_PORTRAIT){
+                binding?.rvStatistics?.visibility = View.VISIBLE
+                binding?.divider?.visibility = View.VISIBLE
+                val adapter = DailyReportAdapterOrientationPortrait(list,requireContext())
+                binding?.rvStatistics?.layoutManager = LinearLayoutManager(
+                    requireContext(), LinearLayoutManager.HORIZONTAL,false)
+                binding?.rvStatistics?.adapter = adapter
+                Log.d("recyclerview",list.toString())
+            }else if(requireContext().resources.configuration.orientation == ORIENTATION_LANDSCAPE){
+                binding?.rvStatistics?.visibility = View.VISIBLE
+                binding?.divider?.visibility = View.VISIBLE
+                val adapter = DailyReportAdapterOrientationLandscape(list,requireContext())
+                binding?.rvStatistics?.layoutManager = LinearLayoutManager(
+                    requireContext(), LinearLayoutManager.VERTICAL,false)
+                binding?.rvStatistics?.adapter = adapter
+                Log.d("recyclerview",list.toString())
+            }
             setupUi()
         }else{
             binding?.rvStatistics?.visibility = View.GONE

@@ -36,7 +36,7 @@ class SplashScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launchWhenResumed {
-            delay(1000L)
+            delay(2000L)
             val navOptions = NavOptions
                 .Builder()
                 .setPopUpTo(R.id.splashScreenFragment, true)

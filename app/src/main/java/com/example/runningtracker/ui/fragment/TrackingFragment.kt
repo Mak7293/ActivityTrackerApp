@@ -4,14 +4,12 @@ import android.Manifest.permission.*
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -39,6 +37,7 @@ import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import androidx.lifecycle.Observer
+import com.example.runningtracker.change_internet_state_receiver.InternetStateReceiver
 import com.example.runningtracker.databinding.DialogLayoutBinding
 import com.example.runningtracker.db.RunningEntity
 import com.example.runningtracker.models.path.Polyline
@@ -80,10 +79,12 @@ class TrackingFragment : Fragment() {
     private var isTracking = false
     private var pathPoints = mutableListOf<Polyline>()
     private var allPolyline = mutableListOf<org.osmdroid.views.overlay.Polyline>()
-
+    private var modalBottomSheet: MaterialBottomSheet? = null
 
     private var currentTimeInMillis = 0L
     private var menu: Menu? = null
+
+    lateinit var  receiver: InternetStateReceiver
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -131,12 +132,11 @@ class TrackingFragment : Fragment() {
                 Toast.makeText(requireContext(),
                     "There is no Track to save in DataBase.",Toast.LENGTH_SHORT).show()
             }
-
         }
         binding?.fabPauseStart?.setOnClickListener {
             toggleRun()
         }
-        observeLiveData()
+        /////observeLivedata
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ) {
             accessBackgroundLocation.launch(ACCESS_BACKGROUND_LOCATION)
         }else{
@@ -148,6 +148,13 @@ class TrackingFragment : Fragment() {
                 addPolyLines = true
             }
         }
+        observeLiveData()
+        registerReceiver()
+    }
+    private fun registerReceiver() {
+        receiver = InternetStateReceiver(requireContext(),binding!!)
+        requireActivity().registerReceiver(receiver,
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
     }
     private fun getPositionMarker(): Marker { //Singelton
         if (marker == null) {
@@ -194,7 +201,8 @@ class TrackingFragment : Fragment() {
 
             binding?.toolbar?.setNavigationOnClickListener {
                 backToStepCounterFragment()
-                currentOrientation = null
+
+
             }
         }
     }
@@ -221,6 +229,7 @@ class TrackingFragment : Fragment() {
         }
     }
     private fun backToStepCounterFragment(){
+        currentOrientation = null
         findNavController().navigate(
             R.id.action_trackingFragment_to_stepCounterFragment,
             null,
@@ -241,6 +250,7 @@ class TrackingFragment : Fragment() {
             //polyline survive from screen rotation
             if(currentOrientation != requireContext().resources.configuration.orientation){
                 addAllPolyLines()
+
                 currentOrientation = requireContext().resources.configuration.orientation
             }
             //polyline survive from screen reopening app
@@ -257,9 +267,12 @@ class TrackingFragment : Fragment() {
         })
     }
     private fun fireBottomSheet(){
-        val modalBottomSheet = MaterialBottomSheet()
-        modalBottomSheet.show(requireActivity().supportFragmentManager, MaterialBottomSheet.TAG)
+        if(currentOrientation == requireContext().resources.configuration.orientation){
+            modalBottomSheet = MaterialBottomSheet()
+            modalBottomSheet?.show(requireActivity().supportFragmentManager, MaterialBottomSheet.TAG)
+        }
     }
+
     @SuppressLint("SetTextI18n")
     private fun updateUiText(){
         val distance = PrimaryUtility.calculateDistance(pathPoints)
@@ -271,7 +284,7 @@ class TrackingFragment : Fragment() {
         )
         binding?.tvCalories?.text = "$caloriesBurned Cal"
         binding?.tvDistance?.text = PrimaryUtility.getFormattedDistance(distance)
-        binding?.tvAvgSpeed?.text = "${PrimaryUtility.getAvgSpeed(distance,currentTimeInMillis)} km"
+        binding?.tvAvgSpeed?.text = "${PrimaryUtility.getAvgSpeed(distance,currentTimeInMillis)} km/hr"
     }
     private fun toggleRun(){
         if (isTracking){
@@ -332,7 +345,6 @@ class TrackingFragment : Fragment() {
         return geoPointList
     }
     private fun endRunAndSaveToDb(savedImageUri: Uri){
-
         val distanceInMeter = PrimaryUtility.calculateDistance(pathPoints).toInt()
         val avgSpeed = PrimaryUtility.getAvgSpeed(
             PrimaryUtility.calculateDistance(pathPoints),currentTimeInMillis)
@@ -490,7 +502,6 @@ class TrackingFragment : Fragment() {
             TrackingService::class.java
         )
         backToStepCounterFragment()
-        currentOrientation = null
     }
     private fun slideUp(duration: Long = 500){
         constraintSet.clone(binding?.mainConstraintLayout)
@@ -521,6 +532,7 @@ class TrackingFragment : Fragment() {
         constraintSet.applyTo(binding?.mainConstraintLayout)
 
     }
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onResume() {
         super.onResume()
@@ -535,9 +547,11 @@ class TrackingFragment : Fragment() {
         super.onPause()
         binding?.osMap?.onPause()
     }
+
     override fun onDestroyView() {
-        super.onDestroyView()
         binding?.osMap?.onDetach()
         binding = null
+        requireActivity().unregisterReceiver(receiver)
+        super.onDestroyView()
     }
 }

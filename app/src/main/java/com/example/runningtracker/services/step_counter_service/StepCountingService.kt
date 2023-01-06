@@ -121,7 +121,6 @@ class StepCountingService: LifecycleService(), SensorEventListener {
         sensorManager?.unregisterListener(this)
         stopForeground(true)
         stopSelf()
-
     }
     @RequiresApi(Build.VERSION_CODES.M)
     private fun startForegroundService(){
@@ -176,12 +175,12 @@ class StepCountingService: LifecycleService(), SensorEventListener {
             }else{
                 calculateMeanLast20()
                 calculateMeanLast3()
-                if((meanLast3 > meanLast20) && (meanLast3 > meanLast20 * 1.16) && state == Constants.STATE_UP){
+                if((meanLast3 > meanLast20) && (meanLast3 > meanLast20 * 1.14) && state == Constants.STATE_UP){
                     var s  = steps.value
                     s = s?.plus(1)
                     steps.postValue(s!!)
                     state = Constants.STATE_DOWN
-                }else if((meanLast3 < meanLast20) && (meanLast3 < meanLast20 * 0.84)){
+                }else if((meanLast3 < meanLast20) && (meanLast3 < meanLast20 * 0.86)){
                     state = Constants.STATE_UP
                 }
             }

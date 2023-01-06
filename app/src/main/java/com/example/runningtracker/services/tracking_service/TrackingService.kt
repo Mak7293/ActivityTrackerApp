@@ -109,30 +109,25 @@ class TrackingService: LifecycleService() {
         }
         return super.onStartCommand(intent, flags, startId)
     }
-
     private fun startTimer() {
-
         addEmptyPolyline()
         isTracking.postValue(true)
-        Log.d("!!!!!!", timeRunInMillis.value.toString())
         timer.schedule(object : TimerTask() {
             override fun run() {
                 timeRunInMillis.postValue(timeRunInMillis.value?.plus(100L) ?: 100L)
             }
         }, 0, Constants.TIMER_UPDATE_INTERVAL)
     }
-
     private fun pauseService(){
         isTracking.postValue(false)
         timer.cancel()
 
     }
-
     @SuppressLint("MissingPermission")
     private fun updateLocationTracking(isTracking: Boolean) {
         if(isTracking){
             if (PrimaryUtility.hasLocationPermissions(this)){
-                val request = LocationRequest().apply {
+                val request = LocationRequest.create().apply {
                     interval = Constants.LOCATION_UPDATE_INTERVAL
                     fastestInterval = Constants.FASTEST_LOCATION_INTERVAL
                     priority = Priority.PRIORITY_HIGH_ACCURACY
@@ -148,7 +143,7 @@ class TrackingService: LifecycleService() {
         }
     }
 
-    val locationCallback = object: LocationCallback(){
+    private val locationCallback = object: LocationCallback(){
         override fun onLocationResult(result: LocationResult) {
             super.onLocationResult(result)
             if (isTracking.value!!){
