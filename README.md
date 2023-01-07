@@ -28,4 +28,16 @@ Minimum android version **SDK21+** or **Android 5.0+**.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Programing Feature
-aaa
+- [Osmdroid library](https://github.com/osmdroid/osmdroid)
+- [MPAndroidChart library](https://github.com/PhilJay/MPAndroidChart) for creating burned calories graph.
+- [Circular ProgressBar library](https://github.com/antonKozyriatskyi/CircularProgressIndicator) for step counting progress bar
+- Android Room Database Library
+- Mvvm Artichecture
+- Dagger Hilt
+- Broadcast Receiver for checking Internet
+- Android Background Service
+- Sensor manager for step counting funcrionality
+- Kotlin Coroutine
+- Android Livedata
+- etc
+
