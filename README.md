@@ -11,5 +11,4 @@ with some data such as time duration, speed, calories burned, activity image on 
 |    💻    |  Programing Feature |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Preview 
-![](https://github.com/Mak7293/ActivityTrackerApp/blob/master/screenshots/Screenshot_20230106-223456_RunningTracker.jpg =250x500)
-
+<img src="https://github.com/Mak7293/ActivityTrackerApp/blob/master/screenshots/Screenshot_20230106-223456_RunningTracker.jpg =250x500" width=50% height=50%>
