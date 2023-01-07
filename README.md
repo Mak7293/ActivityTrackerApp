@@ -29,7 +29,7 @@ Minimum android version **SDK21+** or **Android 5.0+**.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Programing Feature
 - [Osmdroid library](https://github.com/osmdroid/osmdroid)
-- [MPAndroidChart library](https://github.com/PhilJay/MPAndroidChart) for creating burned calories graph.
+- [MPAndroidChart library](https://github.com/PhilJay/MPAndroidChart) for creating burned calories graph
 - [Circular ProgressBar library](https://github.com/antonKozyriatskyi/CircularProgressIndicator) for step counting progress bar
 - Android Room Database Library
 - Mvvm Artichecture
