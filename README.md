@@ -3,6 +3,6 @@ Activity tracker is a simple application that track sport activity such as runni
 with some data such as time duration, speed, calories burned, activity image on map and etc.  
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
-| 📺        | Preview |
+|    📺    |  Preview  |
 | :-------- | :------- |
-| `api_key` | `string` |
+|     📱    | Compatibility |
