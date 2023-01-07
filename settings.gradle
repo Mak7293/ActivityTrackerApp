@@ -18,5 +18,5 @@ dependencyResolutionManagement {
         }
     }
 }
-rootProject.name = "RunningTracker"
+rootProject.name = "ActivityTracker"
 include ':app'

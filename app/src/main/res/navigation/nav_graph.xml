@@ -16,12 +16,12 @@
         />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.runningtracker.ui.fragment.HomeFragment"
+        android:name="com.example.activity_tracker.ui.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/statisticsFragment"
-        android:name="com.example.runningtracker.ui.fragment.StatisticsFragment"
+        android:name="com.example.activity_tracker.ui.fragment.StatisticsFragment"
         android:label="fragment_statistics"
         tools:layout="@layout/fragment_statistics" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/stepCounterFragment"
-        android:name="com.example.runningtracker.ui.fragment.StepCounterFragment"
+        android:name="com.example.activity_tracker.ui.fragment.StepCounterFragment"
         android:label="fragment_step_counter"
         tools:layout="@layout/fragment_step_counter" >
         <action
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/trackingFragment"
-        android:name="com.example.runningtracker.ui.fragment.TrackingFragment"
+        android:name="com.example.activity_tracker.ui.fragment.TrackingFragment"
         android:label="fragment_tracking"
         tools:layout="@layout/fragment_tracking" >
         <action
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/dailyReportDetailFragment"
-        android:name="com.example.runningtracker.ui.fragment.DailyReportDetailFragment"
+        android:name="com.example.activity_tracker.ui.fragment.DailyReportDetailFragment"
         android:label="fragment_daily_report_detail"
         tools:layout="@layout/fragment_daily_report_detail" >
         <action
@@ -56,11 +56,11 @@
             app:destination="@id/statisticsFragment" />
         <argument
             android:name="day"
-            app:argType="com.example.runningtracker.models.day.Day" />
+            app:argType="com.example.activity_tracker.models.day.Day" />
     </fragment>
     <fragment
         android:id="@+id/userRegisterFragment"
-        android:name="com.example.runningtracker.ui.fragment.UserRegisterFragment"
+        android:name="com.example.activity_tracker.ui.fragment.UserRegisterFragment"
         android:label="fragment_user_register"
         tools:layout="@layout/fragment_user_register" >
         <action
@@ -69,7 +69,7 @@
     </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.example.runningtracker.ui.fragment.SplashScreenFragment"
+        android:name="com.example.activity_tracker.ui.fragment.SplashScreenFragment"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action

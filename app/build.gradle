@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.runningtracker'
+    namespace 'com.example.activity_tracker'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.runningtracker"
+        applicationId "com.example.activity_tracker"
         minSdk 21
         targetSdk 33
         versionCode 1
