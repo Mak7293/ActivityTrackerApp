@@ -8,7 +8,7 @@ with some data such as time duration, speed, calories burned, activity image on 
 |    📺    |      [Preview](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#preview)    |
 |     📱    |    [Compatibility](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#compatibility) |
 |    📣    |   [Description](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#description) |
-|    💻    |  [Programing_Feature](https://github.com/Mak7293/ActivityTrackerApp/edit/master/README.md#programing-feature) |
+|    💻    |  [Programing_Feature](https://github.com/Mak7293/ActivityTrackerApp/edit/master/README.md#programing_feature) |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Preview 
 This app has dark and light theme
