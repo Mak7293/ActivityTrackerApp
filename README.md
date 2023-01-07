@@ -3,12 +3,13 @@ Activity tracker is a simple application that track sport activity such as runni
 with some data such as time duration, speed, calories burned, activity image on map and etc.  
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
-|    📺    |      Preview    |
+|    Icon    |      Item    |
 | :-------- | :------- |
+|    📺    |      Preview    |
 |     📱    |    Compatibility |
 |    📣    |    Description |
 |    💻    |  Programing Feature |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Preview 
-![App Screenshot]([https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://github.com/Mak7293/ActivityTrackerApp/blob/master/screenshots/Screenshot_20230106-223456_RunningTracker.jpg))
+![App Screenshot](https://github.com/Mak7293/ActivityTrackerApp/blob/master/screenshots/Screenshot_20230106-223456_RunningTracker.jpg)
 
