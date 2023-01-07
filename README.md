@@ -8,7 +8,7 @@ with some data such as time duration, speed, calories burned, activity image on 
 |    📺    |      [Preview](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#preview)    |
 |     📱    |    [Compatibility](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#compatibility) |
 |    📣    |   [Description](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#description) |
-|    💻    |  [Programing_Feature](https://github.com/Mak7293/ActivityTrackerApp/edit/master/README.md#programing_feature) |
+|    💻    |  [Feature](https://github.com/Mak7293/ActivityTrackerApp/edit/master/README.md#feature) |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Preview 
 This app has dark and light theme
@@ -27,7 +27,7 @@ Minimum android version **SDK21+** or **Android 5.0+**.
 - This app is using Mvvm Artichecture design pattern Along with Dagger Hilt android library for dependency Injection. 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
-# Programing_Feature
+# Feature
 - [Osmdroid library](https://github.com/osmdroid/osmdroid)
 - [MPAndroidChart library](https://github.com/PhilJay/MPAndroidChart) for creating burned calories graph
 - [Circular ProgressBar library](https://github.com/antonKozyriatskyi/CircularProgressIndicator) for step counting progress bar
