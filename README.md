@@ -6,7 +6,7 @@ with some data such as time duration, speed, calories burned, activity image on 
 |    Icon    |      Item    |
 | :-------- | :------- |
 |    📺    |      [Preview](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#preview)    |
-|     📱    |    Compatibility |
+|     📱    |    [Compatibility](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#compatibility) |
 |    📣    |    Description |
 |    💻    |  Programing Feature |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -17,5 +17,5 @@ This app has dark and light theme
 
 for More screen shot click [here](https://github.com/Mak7293/ActivityTrackerApp/tree/master/screenshots).
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
+# Compatibility 
+SDK21+ or Android 5.0+
