@@ -7,8 +7,8 @@ with some data such as time duration, speed, calories burned, activity image on 
 | :-------- | :------- |
 |    📺    |      [Preview](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#preview)    |
 |     📱    |    [Compatibility](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#compatibility) |
-|    📣    |    Description |
-|    💻    |  Programing Feature |
+|    📣    |   [Description](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#description) |
+|    💻    |  [Programing Feature](https://github.com/Mak7293/ActivityTrackerApp/edit/master/README.md#programing-feature) |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Preview 
 This app has dark and light theme
@@ -19,4 +19,12 @@ for More screen shot click [here](https://github.com/Mak7293/ActivityTrackerApp/
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Compatibility 
-SDK21+ or Android 5.0+
+Minimum android version **SDK21+** or **Android 5.0+**.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Description
+- This app is using [Osmdroid library](https://github.com/osmdroid/osmdroid) for loading map texture.
+- This app is using Mvvm Artichecture design pattern Along with Dagger Hilt android library for dependency Injection. 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Programing Feature
