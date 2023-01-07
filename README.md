@@ -11,7 +11,7 @@ with some data such as time duration, speed, calories burned, activity image on 
 |    💻    |  [Programing Feature](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#programing-feature) |
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Preview 
-This app has dark and light theme
+This app has dark and light theme.
 
 <img src="https://github.com/Mak7293/ActivityTrackerApp/blob/master/screenshots/Screenshot_20230107_152014.png" width=20% height=20%> <img src="https://github.com/Mak7293/ActivityTrackerApp/blob/master/screenshots/Screenshot_20230106_223129.png" width=20% height=20%> <img src="https://github.com/Mak7293/ActivityTrackerApp/blob/master/screenshots/Screenshot_20230106_224129.png" width=20% height=20%>  <img src="https://github.com/Mak7293/ActivityTrackerApp/blob/master/screenshots/Screenshot_20230106_224756.png" width=20% height=20%>
 
