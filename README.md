@@ -5,7 +5,7 @@ with some data such as time duration, speed, calories burned, activity image on 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 |    Icon    |      Item    |
 | :-------- | :------- |
-|    📺    |      [here](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#preview)    |
+|    📺    |      [Preview](https://github.com/Mak7293/ActivityTrackerApp/blob/master/README.md#preview)    |
 |     📱    |    Compatibility |
 |    📣    |    Description |
 |    💻    |  Programing Feature |
