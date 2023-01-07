@@ -4,6 +4,7 @@ with some data such as time duration, speed, calories burned, activity image on 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 |    📺    |    Preview    |
+| :-------- | :------- |
 |     📱    | Compatibility |
 |    📣    |  Description |
 |    💻    |  Programing Feature |
