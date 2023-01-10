@@ -1,4 +1,4 @@
-package com.example.mvvmrunningtrackerapp.di
+package com.example.activity_tracker.di
 
 import android.app.Application
 import android.app.PendingIntent
